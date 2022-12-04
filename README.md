@@ -25,6 +25,13 @@ python manage.py totalizeで自分のオリジナルpythonファイルを実行�
 
 YOUTUBE APIは日本時間16時にリセットされる。
 
+gitにプッシュした際は
+```
+git pull
+python manage.py collectstatic
+sudo systemctl restart httpd.service
+```
+
 SECRETの中にAPI_KEYとDBのパスワードを設定するファイルを配置する必要があります
 SECRET/API_KEYs.txt
 SECRET/AWS_PASSWORD2.txt

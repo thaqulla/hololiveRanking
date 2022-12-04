@@ -4,25 +4,9 @@
 {% load simple_calc %}
 {% block title %}編集{% endblock title %}
 {% block content %}
-  
-<form action="" method="post">{% csrf_token %}
-  <div style="
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            ">
-    {% comment %}
-      <!-- <div class="form-group row" style="min-width: 360px;">
-        <label for="{{ form.composer.id_for_label }}" class="col-sm-4 col-form-label" style="background-color: red;">composer</label>
-        <div class="col-sm-8" style="background-color: blue;">
-          {{ form.composer | add_class:'form-control' }}
-          {% for error in form.composer.errors %}
-            <span class="help-block">{{ error }}</span>
-          {% endfor %}
-        </div>
-      </div> -->
-    {% endcomment %}
+<hr>
+<form method="post">{% csrf_token %}
+  <div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
       <span class="" style="background-color: green;">作詞家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
@@ -30,7 +14,22 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'lyricist' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <div style="margin: 15px;"><!--作曲家一覧-->
+          <details>
+            <summary class="concerned_summary" style="background-color: #202020;">追加登録</summary>
+            {% for person in people %}<!--item.performer.all-->
+            
+            {% if person not in form.lyricist %}
+            <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
+            <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
+            {% endif %}
+
+            {% endfor %}
+          </details>
+        </div>
+        <a href="{% url 'addNew' %}" class="tag_box2 update_choice_add">新規追加</a>
       </div>
+      
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
       <span class="" style="background-color: green;">作曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
@@ -39,6 +38,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'composer' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -48,6 +48,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'arranger' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'arranger' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -57,6 +58,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'mix' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'mix' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -66,6 +68,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'inst' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'inst' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -75,6 +78,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'movie' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'movie' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -84,6 +88,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'illust' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'illust' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -93,6 +98,7 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'coStar' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'coStar' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
     <div class="" style="min-width: 360px;"><!--form-group row-->
@@ -102,74 +108,17 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'originalSinger' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'originalSinger' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
+        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <!----------------------------------------------------------->
+    <div>
+      <span class="" style="background-color: green;">詳細情報</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
+      <div class="update_choice description">
+        {{ description|linebreaksbr }}
+      </div>
+    </div>
     
-    <!-- <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.arranger.id_for_label }}" class="col-sm-4 col-form-label">arranger</label>
-      <div class="col-sm-8">
-        {{ form.arranger | add_class:'form-control' }}
-        {% for error in form.arranger.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.mix.id_for_label }}" class="col-sm-4 col-form-label">mix</label>
-      <div class="col-sm-8">
-        {{ form.mix | add_class:'form-control' }}
-        {% for error in form.mix.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.inst.id_for_label }}" class="col-sm-4 col-form-label">inst</label>
-      <div class="col-sm-8">
-        {{ form.inst | add_class:'form-control' }}
-        {% for error in form.inst.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.movie.id_for_label }}" class="col-sm-4 col-form-label">movie</label>
-      <div class="col-sm-8">
-        {{ form.movie | add_class:'form-control' }}
-        {% for error in form.movie.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.illust.id_for_label }}" class="col-sm-4 col-form-label">illust</label>
-      <div class="col-sm-8">
-        {{ form.illust | add_class:'form-control' }}
-        {% for error in form.illust.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.coStar.id_for_label }}" class="col-sm-4 col-form-label">coStar</label>
-      <div class="col-sm-8">
-        {{ form.coStar | add_class:'form-control' }}
-        {% for error in form.coStar.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="form-group row" style="min-width: 360px;">
-      <label for="{{ form.originalSinger.id_for_label }}" class="col-sm-4 col-form-label">originalSinger</label>
-      <div class="col-sm-8">
-        {{ form.originalSinger | add_class:'form-control' }}
-        {% for error in form.originalSinger.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    </div>
-  </div> -->
+    <!----------------------------------------------------------->
 <!--https://hodalog.com/how-to-use-bootstrap-4-forms-with-django/-->
 
   <hr>

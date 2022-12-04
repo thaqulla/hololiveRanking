@@ -28,7 +28,11 @@
   color: #f1f1f1;
 }
 
-
+.description {
+  height: 360px;
+  /* min-width: 360px; */
+  overflow-y: scroll;
+}
 
 .layout_how_to_use {
   display: flex;
@@ -213,11 +217,25 @@ hololiver_checkbox 2d517c
 }
 
 .update_choice {
-  padding: 10px;
+  position: relative;
+  padding: 30px;
   color: #fff;
   background-color: #0f0f0f;
-  
   border-radius: 10px;
+}
+
+.update_choice_add  {
+  position: absolute;
+  background-color: blue;
+  bottom: 0;
+  right: 0;
+}
+
+.update_choice_addOld  {
+  position: absolute;
+  background-color: red;
+  bottom: 0;
+  right: 90px;
 }
 
 .rankingTableList_random {

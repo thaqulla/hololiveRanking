@@ -10,13 +10,14 @@ from django.db.models import Max, Min
 from django.db.models import Q
 
 from .forms import LoginForm
+from .forms import VideoInfoForm, ConcernedCreateForm
 from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
   videoTypeJudgement, Lyricist,Composer,Arranger,Mixer,Musician,VideoEditor,\
-  Illustrator,CoStar,OriginalSinger
+  Illustrator,CoStar,OriginalSinger,AnotherPerson
 
 from io import BytesIO
 from matplotlib import pyplot
-from tqdm import tqdm
+from matplotlib.ticker import ScalarFormatter
 
 import base64
 import datetime
@@ -131,22 +132,45 @@ class VideoInfoCreateView(CreateView):
   model = VideoInfo
   template_name = 'hololiveRankingApp/create.html'
   
-  fields = ["performer","title","videoId"]#"__all__"
-  success_url = reverse_lazy("list") 
+  fields = ["performer","title","videoId"] #"fields = '__all__'
+  success_url = reverse_lazy("list")
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
+
+class ConcernedCreateView(ListView):
+  model = AnotherPerson
+  template_name = 'hololiveRankingApp/concerned_create.html'
+  form_class = ConcernedCreateForm
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
+  # fields = '__all__' #"__all__"
+
+  
+class ConcernedAddView(CreateView):
+  model = AnotherPerson
+  template_name = 'hololiveRankingApp/add.html'
+  form_class = ConcernedCreateForm
+  success_url = reverse_lazy("list")
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
+  
 
 class VideoInfoListView(ListView):
   model = VideoInfo
   template_name = 'hololiveRankingApp/list.html'
   
-  
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
-    
-    
-    # nameList = self.model.objects.get(pk=5266).performer.values("name")
-    # context["performer"] = [dat["name"] for dat in nameList]
-    # context["performers"] = self.model.objects.get(pk=5266).performer.values("name")
     return context
 
 class WorkListView(ListView):#DetailView
@@ -211,18 +235,19 @@ class WorkListView(ListView):#DetailView
     
 class VideoUpdateView(UpdateView):
   model = VideoInfo
-  fields = ["lyricist","composer","arranger","mix","inst","movie","illust","coStar","originalSinger"]
+  form_class = VideoInfoForm
   template_name = 'hololiveRankingApp/update.html'
-  
-  ordering = '-name'
-  # def get_success_url(self):
-    # return reverse("video_info", kwargs={"pk": self.kwargs["pk"]})
+  def get_success_url(self):
+    return reverse("video_info", kwargs={"pk": self.kwargs["pk"]})
     # def get_absolute_url(self):
     #   return reverse('video_info', kwargs={'pk' : self.kwargs["pk"]})
-  success_url = reverse_lazy('list')
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
+    # context["pk"] = self.kwargs["pk"]
+    context["description"] = self.model.objects.get(pk=self.kwargs["pk"]).description
+    context["people"] = AnotherPerson.objects.all().order_by("name")
+    
     return context
 
 class VideoInfoView(DetailView):#個々の動画情報を表示する
