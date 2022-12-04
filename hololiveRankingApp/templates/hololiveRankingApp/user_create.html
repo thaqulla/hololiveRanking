@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}編集{% endblock title %}
+{% block content %}
+
+    <div>
+        <form method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">登録</button>
+        </form>
+    </div>
+    <!-- <input type="button" onclick="window.history.back();" value="前のページに戻る"> -->
+    <button type="button" onclick="window.history.back();">前のページに戻る</button>
+    <!-- <a href="{% url 'top' %}">登録せず利用する</a> -->
+
+{% endblock content %}

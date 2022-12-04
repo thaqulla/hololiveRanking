@@ -1,0 +1,593 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<meta>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ホロ歌集計部[アルファ版]</title>
+  <meta name="description" content="sample text sample text sample text sample text sample text sample text sample text">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body class="body">
+  <header>
+    {% include "hololiveRankingApp/header.html" %}
+  </header>
+  <div>
+    <h1 class="section-headline">ホロ歌集計部[アルファ版]</h1>
+  </div>
+  <div class="container" style="background-color: green;">
+    <div class="row">
+      <div class="col col-xl-6" style="background-color: red; width: 480px; text-align: center;">
+
+        <img src="https://dummyimage.com/600x400/000/fff" style="margin: 0;
+                                                                padding: 0;
+                                                                
+                                                                max-width: 480px;
+                                                                height: auto;
+                                                                " alt="About Image">
+      </div>
+      <div class="col col-xl-6" style="background-color: blue; width: 480px;">
+        <h2 class="about-headline">本当の歌ランキング、</h2>
+        <h2>作りませんか？</h2>
+        <p class="about-description">
+          2017年9月7日、ときのそらデビューを皮切りに多くの動画を投稿してくださり、<br/>
+          また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br/>
+          特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br/>
+          オリジナルソングは彼女たちの努力が詰まったものが提供されている。
+          しかし、世界をつなぐ動画投稿サイトに混じり、歌を切り抜き、自分のチャンネルで加工をしたもの公開している動画も見受けられる。<br/>
+          確かに様々なチャンネルを通じて彼女たちの歌声、技量、存在そのものは大衆に届くがしかし、<br/>
+          彼女たちのチャンネルではないが故、100%は彼女たちの動画の価値（再生回数、高評価数）には還元されていないのが現状である。<br/>
+          そんな現状を鑑み今回のサイトを立ち上げることにした次第である。
+        </p>
+      </div>
+    </div>
+  </div>
+  <section class="section">
+    
+    <figure class="about">
+      
+      <figcaption class="about-caption">
+        
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="section section-secoundary" style="border-radius: 10px;">
+    <h1 class="section-headline">使い方</h1>
+    <div class="layout_how_to_use">
+      <figure>
+        <p>1.お気に入りの子をチェック</p>
+        <img src="{% static 'images/001-settings.png' %}" width="200" height="200" alt="check">
+        <figcaption>gifみたいなものをここに</figcaption>
+      </figure>
+      <figure>
+        <p>2.何のランキングにするかチェック</p>
+        <img src="{% static 'images/002-feature.png' %}" width="200" height="200" alt="High Performance">
+        <figcaption>gifみたいなものをここに</figcaption>
+      </figure>
+      <figure>
+        <p>3.ランキング完成</p>
+        <img src="{% static 'images/004-layout.png' %}" width="200" height="200" alt="Strong Responsibility">
+        <figcaption>gifみたいなものをここに</figcaption>
+      </figure>
+      <figure>
+        <p>+α.ログインしてサイトを完成させよう</p>
+        <img src="{% static 'images/003-product.png' %}" width="200" height="200" alt="Excellent Technology">
+        <figcaption>動画情報の「調査中」に情報の追加、<br>ご協力をお願いいたします<br><br>※セキュリティの問題のため受付停止中</figcaption>
+      </figure>
+
+    </div>
+  
+  </section>
+
+  <section class="section">
+    <h1 class="section-headline">絞り込み検索</h1>
+      <form method="get" action="{% url 'searchResult' %}">{% csrf_token %}
+        <h4>楽曲種類(選択しなかった場合、すべて出力されます)</h4>
+        <ul>
+          <label>オリジナルソング</label><input type="checkbox" id="original" name="targetSongType" value="original">
+          <label>歌ってみた</label><input type="checkbox" id="covered" name="targetSongType" value="covered" checked>
+          <!-- <label>記念祭</label><input type="checkbox" id="festival" name="targetSongType" value="festival"> -->
+        </ul>
+        <h4>並び順</h4>
+          <ul>
+            <label>
+              <input type="radio" id="likeCountDesc" name="orderType" value="likeCountDesc">
+              <span>高評価数(多い順)</span>
+            </label>
+            <!-- <label>
+              <input type="radio" id="likeCountAsc" name="orderType" value="likeCountAsc">
+              <span>高評価数(少ない順)</span>
+            </label> -->
+            <label>
+              <input type="radio" id="viewCountDesc" name="orderType" value="viewCountDesc" checked>
+              <span>再生回数(多い順)</span>
+            </label>
+            <!-- <label>
+              <input type="radio" id="viewCountAsc" name="orderType" value="viewCountAsc">
+              <span>再生回数(少ない順)</span>
+            </label> -->
+          </ul>
+        <h4>表示範囲</h4>
+        <input type="range">
+        <iframe id="ytplayer" type="text/html" width="640" height="360"
+                src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
+                frameborder="0"></iframe>
+        <h4>メンバー一覧</h4>
+        <div>
+          <label>
+            <input id="HOLOall" type="checkbox" name="HOLOall">
+            <span>全て選択</span>
+          </label>
+          <br>
+          <hr><!--------------------------------------------------------------->
+          <label>
+            <input id="JPall" type="checkbox" name="JPall">
+            <span>JP選択</span>
+          </label>
+          <br>
+          <div class="layout_performer_checkbox">
+            <div class="checkbox_div"><!--0-->
+              <label>
+                <input id="gen0JP" type="checkbox" name="gen0JP">
+                <span>０期生</span>
+              </label>
+              <br>
+              {% for channel in gen0JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen0JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span> 
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--1-->
+            <label>
+              <input id="gen1JP" type="checkbox" name="gen1JP">
+              <span>１期生</span>
+            </label>
+            <br>
+              {% for channel in gen1JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen1JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--2-->
+              <label>
+                <input id="gen2JP" type="checkbox" name="gen2JP">
+                <span>２期生</span>
+              </label>
+              <br>
+              {% for channel in gen2JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen2JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--g-->
+            <label>
+              <input id="gameJP" type="checkbox" name="gameJP">
+              <span>ホロライブゲーマーズ</span>
+            </label>
+            <br>
+              {% for channel in gameJPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gameJP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--3-->
+              <label>
+                <input id="gen3JP" type="checkbox" name="gen3JP">
+                <span>３期生</span>
+              </label>
+              <br>
+              {% for channel in gen3JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen3JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--4-->
+              <label>
+                <input id="gen4JP" type="checkbox" name="gen4JP">
+                <span>４期生</span>
+              </label>    
+              <br>       
+              {% for channel in gen4JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen4JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--5-->
+              <label>
+                <input id="gen5JP" type="checkbox" name="gen5JP">
+                <span>５期生</span>
+              </label>
+              <br>
+              {% for channel in gen5JPs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen5JP JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--holoX-->
+              <label>
+                <input id="holoX" type="checkbox" name="holoX">
+                <span>秘密結社holoX</span>
+              </label>
+              <br>
+              {% for channel in holoXs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="holoX JPall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+          </div>
+          <hr><!--------------------------------------------------------------->
+          <label>
+            <input id="ENall" type="checkbox" name="ENall">
+            <span>EN選択</span>
+          </label>
+          <br>
+          <div class="layout_performer_checkbox">
+            <div class="checkbox_div"><!--myths-->
+              <label>
+                <input id="myth" type="checkbox" name="myth">
+                <span>Myth</span>
+              </label>
+              <br>
+              {% for channel in myths %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="myth ENall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--projectHOPEs-->
+              <label>
+                <input id="projectHOPE" type="checkbox" name="projectHOPE">
+                <span>Project:HOPE</span>
+              </label>
+              <br>
+              {% for channel in projectHOPEs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="projectHOPE ENall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--councils-->
+              <label>
+                <input id="council" type="checkbox" name="council">
+                <span>Council</span>
+              </label>
+              <br>
+              {% for channel in councils %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="council ENall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+              {% endfor %}
+          </div>
+        </div>
+
+
+          <hr><!--------------------------------------------------------------->
+          <label>
+            <input id="IDall" type="checkbox" name="IDall">
+            <span>ID選択</span>
+          </label>
+          <br>
+          <div class="layout_performer_checkbox">
+            <div class="checkbox_div"><!--gen1IDs-->
+              <label>
+                <input id="gen1ID" type="checkbox" name="gen1ID">
+                <span>gen1ID</span>
+              </label>
+              <br>
+              {% for channel in gen1IDs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen1ID IDall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+              {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--gen2IDs-->
+              <label>
+                <input id="gen2ID" type="checkbox" name="gen2ID">
+                <span>gen2ID</span>
+              </label>
+              <br>
+              {% for channel in gen2IDs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen2ID IDall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+              {% endfor %}
+            </div>
+            <div class="checkbox_div"><!--gen3IDs-->
+              <label>
+                <input id="gen3ID" type="checkbox" name="gen3ID">
+                <span>gen3ID</span>
+              </label>
+              <br>
+              {% for channel in gen3IDs %}
+              <label class="avator" for="{{ channel.channelId }}">
+                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                <input class="gen3ID IDall HOLOall" type="checkbox" 
+                id="{{ channel.channelId }}" name="targetChannelId" 
+                        value="{{ channel.channelId }}">
+                <span>{{ channel.name }}&nbsp;&nbsp;</span>
+              </label>
+              <br>
+            {% endfor %}
+            </div>
+          </div>
+          
+          <hr><!--------------------------------------------------------------->
+
+        </div>
+        <h4>関係者絞り込み[実装途中]</h4>
+        <div class="layout" >
+          <div style="margin: 15px;"><!--作詞家一覧-->
+            <details>
+              <summary class="concerned_summary">作詞家一覧↓</summary>
+              {% for name in lyricists %}
+              <label for="{{ name.lyricist }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.lyricist" checked>
+                <span>{{ name.lyricist }}</span>
+              </label><br>
+              {% endfor %}
+            </details>            
+          </div>
+          <div style="margin: 15px;"><!--作曲家一覧-->
+            <details>
+              <summary class="concerned_summary">作曲家一覧↓</summary>
+              {% for name in composers %}
+              <label for="{{ name.composer }}">
+                <input type="checkbox" id="{{ name.pk }}" name="{{ name.composer }}" checked>
+                <span>{{ name.composer }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--編曲家一覧-->
+            <details>
+              <summary class="concerned_summary">編曲家一覧↓</summary>
+              {% for name in arrangers %}
+              <label for="{{ name.arranger }}">
+                <input type="checkbox" id="{{ name.pk }}" name="{{ name.arranger }}" checked>
+                <span>{{ name.arranger }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--ミックス一覧-->
+            <details>
+              <summary class="concerned_summary">ミックス一覧↓</summary>
+              {% for name in mixers %}
+              <label for="{{ name.mixer }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.mixer" checked>
+                <span>{{ name.mixer }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--音楽家一覧-->
+            <details>
+              <summary class="concerned_summary">音楽家一覧↓</summary>
+              {% for name in musicians %}
+              <label for="{{ name.musician }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.musician" checked>
+                <span>{{ name.musician }}</span>
+              </label><br>
+              {% endfor %}
+            </details>            
+          </div>
+          <div style="margin: 15px;"><!--動画編集者一覧-->
+            <details>
+              <summary class="concerned_summary">動画編集者一覧↓</summary>
+              {% for name in videoEditors %}
+              <label for="{{ name.videoEditor }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.videoEditor" checked>
+                <span>{{ name.videoEditor }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--イラストレーター一覧-->
+            <details>
+              <summary class="concerned_summary">イラストレーター一覧↓</summary>
+              {% for name in illustrators %}
+              <label for="{{ name.illustrator }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.illustrator" checked>
+                <span>{{ name.illustrator }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--外部共演者一覧-->
+            <details>
+              <summary class="concerned_summary">外部共演者一覧↓</summary>
+              {% for name in coStars %}
+              <label for="{{ name.coStar }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.coStar" checked>
+                <span>{{ name.coStar }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+          </div>
+          <div style="margin: 15px;"><!--原曲歌い手一覧-->
+            <details>
+              <summary class="concerned_summary">原曲歌い手一覧↓</summary>
+              {% for name in originalSingers %}
+              <label for="{{ name.originalSinger }}">
+                <input type="checkbox" id="{{ name.pk }}" name="name.originalSinger" checked>
+                <span>{{ name.originalSinger }}</span>
+              </label><br>
+              {% endfor %}
+            </details>
+            <h5></h5>
+          </div>
+        </div>
+        <h4>期間設定</h4>
+        <div style="
+                  display: grid;
+                  grid-template-columns: 33% 33% 33%;
+                  ">
+          <div><!--単純絞り込み-->
+            <h5>総合、週間、月間</h5>
+            <label>
+              <input type="radio" id="daily" name="dateType" value="total" checked>
+              <span>総合</span>
+            </label>
+            <label>
+              <input type="radio" id="weekly" name="dateType" value="weekly">
+              <span>週間</span>
+            </label>
+            <label>
+              <input type="radio" id="monthly" name="dateType" value="monthly">
+              <span>月間</span>
+            </label>
+            <!-- <label>
+              <input type="radio" id="personally" name="dateType" value="personally">
+              <span>期間設定</span>
+            </label> -->
+          </div>
+          <div><!--年別範囲絞り込み-->
+            <h5>年別[実装途中]</h5>
+            <label>
+              <input type="checkbox" id="" name="year">
+              <span>全ての年</span>
+            </label>
+            <br>
+            {% for year in years %}
+              <label>
+                <input type="checkbox" id="" name="year" checked>
+                <span>{{year}}</span>
+              </label>
+              <br>
+            {% endfor %}
+          </div>
+          <div><!--月別範囲絞り込み-->
+            <h5>月別[実装途中]</h5>
+            <label>
+              <input type="checkbox" id="" name="month">
+              <span>全月</span>
+            </label>
+            <br>
+            {% for month in months %}
+              <label>
+                <input type="checkbox" id="" name="month" checked>
+                <span>{{month}}</span>
+              </label>
+              <br>
+            {% endfor %}
+          </div>
+          <div><!--任意範囲絞り込み-->
+
+          </div>
+        </div>
+        
+
+        <!-- <div class="row align-items-center">
+          <div class="col-6">朝メニュー</div><div class="col-6 text-right"><input id="breakfast" class="input_chk" type="checkbox" name="breakfast" checked><label class="chk_label" for="breakfast"></label></div>
+          <div class="col-6">昼メニュー</div><div class="col-6 text-right"><input id="lunch"     class="input_chk" type="checkbox" name="lunch"     checked><label class="chk_label" for="lunch"    ></label></div>
+          <div class="col-6">夜メニュー</div><div class="col-6 text-right"><input id="dinner"    class="input_chk" type="checkbox" name="dinner"    checked><label class="chk_label" for="dinner"   ></label></div>
+          <div class="col-6">持ち帰り</div><div class="col-6   text-right"><input id="takeout"   class="input_chk" type="checkbox" name="takeout"   checked><label class="chk_label" for="takeout"  ></label></div>
+        </div>
+
+        <div class="py-1">
+          <div>含有</div>
+          {% for alle in alles %}
+            <input id="{{ alle.id }}" class="input_chk" type="checkbox" name="{{ alle.id }}">
+            <label class="surround_label" for="{{ alle.id }}">{{ alle.name }}</label>
+          {% endfor %}
+        </div> -->
+      <div>
+        <span>ランキング作成</span>
+        <input class="form-control" style="background-color: #62f4ff;" type="submit" value="送信">
+      </div>
+        
+      </form>
+  </section>
+
+  <a class="pagetop" href="#"><div class="pagetop__arrow"></div></a>
+
+  <footer style="text-align: center; margin: 10px;">
+    <span>©2022</span>
+    <a href="https://twitter.com/thaqulla">thaqulla</a>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="{% static 'js/app.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+{% load numeral_system %}
+{% load humanize %}
+
+    {% if forloop.counter|divisibleby:"25" %}
+      <div class="rankingTableList_cell"><!--ランダム-->
+        <a class="rankingTableList_cell_a" href="#{{ songList.info.videoId }}">
+          <figure>
+            <span class="rankingTableList_rank rank_normal">{{ forloop.counter|add:letNum }}</span>
+            {% if songList.info.videoAge > oneWeekAgo %}
+              <p class="rankingTableList_new">NEW</p>
+            {% endif %}
+            <img style="width: 180px;
+                        height: auto;"
+                  src="{{ songList.info.getThumbnailHigh }}" alt="miniThumbNail">
+            <figcaption class="rankingTableList_figcaption">            
+              &nbsp;{{ songList.info.title }}   
+            </figcaption>
+            
+              {% if dateType == "total" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount | mixedKanji }}回視聴・高評価{{ songList.likeCount | mixedKanji }}&nbsp;&nbsp;</span>
+              {% elif dateType == "weekly" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount7 | mixedKanji }}回視聴・高評価{{ songList.likeCount7 | mixedKanji }}&nbsp;&nbsp;</span>
+              {% elif dateType == "monthly" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount30 | mixedKanji }}回視聴・高評価{{ songList.likeCount30 | mixedKanji }}&nbsp;&nbsp;</span>
+              {% endif %}
+            
+          </figure>
+            
+        </a>
+      </div>
+      <!--ランダム--><!--ランダム--><!--ランダム--><!--ランダム--><!--ランダム-->
+      {% for randomVideo in randomVideos %}
+        <div class="rankingTableList_cell"><!--ランダム-->
+          <a class="rankingTableList_cell_a" href="{{ randomVideo.videoURL }}" target="_blank" rel="noopener noreferrer">
+            <figure>
+              <span class="rankingTableList_random">Random</span>
+              <img style="width: 180px;
+                          height: auto;"
+                    src="{{ randomVideo.videoJPG }}" alt="miniThumbNail">
+              <figcaption class="rankingTableList_figcaption"><!--font-size: 7px;-->
+                &nbsp;{{ randomVideo.title }}
+              </figcaption>
+            </figure>
+          </a>
+        </div>
+      {% endfor %}
+      <!--ランダム--><!--ランダム--><!--ランダム--><!--ランダム--><!--ランダム-->
+    {% else %}
+      <div class="rankingTableList_cell"><!--メイン-->
+        <a class="rankingTableList_cell_a" href="#{{ songList.info.videoId }}">
+          <figure>
+            {% if  forloop.counter|add:letNum == 1 %}
+            <span class="rankingTableList_rank rank_gold">{{ forloop.counter }}</span>
+            {% elif  forloop.counter|add:letNum == 2 %}
+            <span class="rankingTableList_rank rank_silver">{{ forloop.counter }}</span>
+            {% elif  forloop.counter|add:letNum == 3 %}
+            <span class="rankingTableList_rank rank_bronze">{{ forloop.counter }}</span>
+            {% else %}
+            <span class="rankingTableList_rank rank_normal">{{ forloop.counter|add:letNum }}</span>
+            {% endif %}
+            {% if songList.info.videoAge > oneWeekAgo %}
+              <p class="rankingTableList_new">NEW</p>
+            {% endif %}
+            <img style="width: 180px;
+                        height: auto;"
+                  src="{{ songList.info.getThumbnailHigh }}" alt="miniThumbNail">
+            <figcaption class="rankingTableList_figcaption"><!--font-size: 7px;-->
+              &nbsp;{{ songList.info.title }}
+            </figcaption>
+            
+              {% if dateType == "total" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount | mixedKanji }}回視聴・高評価{{ songList.likeCount | mixedKanji }}&nbsp;&nbsp;</span>
+              {% elif dateType == "weekly" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount7 | mixedKanji }}回視聴・高評価{{ songList.likeCount7 | mixedKanji }}&nbsp;&nbsp;</span>
+              {% elif dateType == "monthly" %}
+                <span class="rankingTableList_counts">
+                  &nbsp;&nbsp;{{ songList.viewCount30 | mixedKanji }}回視聴・高評価{{ songList.likeCount30 | mixedKanji }}&nbsp;&nbsp;</span>
+              {% endif %}
+          </figure>
+        </a>
+      </div>
+    {% endif %}

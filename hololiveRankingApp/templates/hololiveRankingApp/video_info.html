@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}歌唱曲詳細:{{ object.title }} {% endblock title %}
+{% block content %}
+{% load humanize %}
+<br>
+<div  class="container" 
+      style="
+            background-size:contain;
+            object-fit: cover;
+            background-color: #000000;
+            background-blend-mode: lighten;"><!--background-image: url({{ object.getThumbnailHigh }});-->
+  <div class="row">
+    <div>
+      <h1  class="title_position title_link">{{ object.title }}</h1><!--タイトル-->
+      
+      
+    </div>
+    <div class="col col-lg-8 ">
+      <div>
+        <span>投稿日:{{ object.videoAge }}</span>
+        <a href="{{ object.getVideoUrl }}" target="_blank" rel="noopener noreferrer" alt="performerImage">
+          <img style="width: 100%;" src="{{ object.getThumbnailHigh }}" alt="thumbnailImage">
+        </a>
+        <div class="layout_Counts">
+          {% for result in object.hololivesongsresult_set.all|dictsortreversed:"aggregationDate"|slice:":1" %}
+          <div style="padding: 5px;
+                      background-color:red;
+                      border-radius: 100vh;
+                      text-align: left;
+                      ">&nbsp;総合再生回数:{{result.viewCount | intcomma }}&nbsp;</div>
+          <div style="padding: 5px;
+                      background-color:blue;
+                      border-radius: 100vh;
+                      text-align: left;
+                      ">&nbsp;総合高評価数:{{result.likeCount | intcomma }}&nbsp;</div>
+          <!-- <div class="col-lg-6">週間再生回数:{{result.viewCount7}} 週間高評価数:{{result.likeCount7}}</div>
+          <div class="col-lg-6">月間再生回数:{{result.viewCount30}} 月間高評価数:{{result.likeCount30}}</div> -->
+          {% endfor %}
+        </div>
+      </div>
+      <div class="layout_performer">
+        {% for pfmr in object.performer.all %}
+        <img style="margin: 5px;
+                    width: 50px;
+                    border-radius: 50%;"
+             src="{{ pfmr.thumbnailDefault }}" href="{% url 'performerInfo' %}">
+        {% endfor %}
+      </div>
+      <div id="resultCount">
+
+      </div>
+      <img style="width: 100%;
+                  min-width :450px;            
+                  border:dotted;"
+      src="data:image/png;base64,{{ mygraph | safe }}" id="viewGraph" alt="視聴回数推移" />
+    </div>
+
+    <div class="col col-lg-4"><!--推移表-->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation" onclick="showimg0()">
+          <button class="nav-link active" id="totalSheetTab" data-bs-toggle="tab"
+                  data-bs-target="#totalSheet" type="button" role="tab"
+                  aria-controls="totalSheet" aria-selected="true">総計推移</button>
+        </li>
+        <li class="nav-item" role="presentation" onclick="showimg7()">
+          <button class="nav-link" id="weeklySheetTab" data-bs-toggle="tab"
+                  data-bs-target="#weeklySheet" type="button" role="tab"
+                  aria-controls="weeklySheet" aria-selected="false">週間推移</button>
+        </li>
+        <li class="nav-item" role="presentation" onclick="showimg30()">
+          <button class="nav-link" id="monthlySheetTab" data-bs-toggle="tab"
+                  data-bs-target="#monthlySheet" type="button" role="tab"
+                  aria-controls="monthlySheet" aria-selected="false">月間推移</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="totalSheet"
+              role="tabpanel" aria-labelledby="totalSheetTab">
+          <table class="table table-striped">
+            <thead>
+              <tr class="table-primary">
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">集計日</th>
+                <th scope="col">再生回数</th>
+                <th scope="col">高評価数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for result in results %}
+              <tr class="table-info">
+                <!-- <th scope="row">1</th> -->
+                <td>{{result.aggregationDate|date:"Y-m-j"}}</td>
+                <td>{{result.viewCount}}</td>
+                <td>{{result.likeCount}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="weeklySheet"
+              role="tabpanel" aria-labelledby="weeklySheetTab">
+          <table class="table table-striped">
+            <thead>
+              <tr class="table-primary">
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">集計日</th>
+                <th scope="col">再生回数</th>
+                <th scope="col">高評価数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for result in results %}
+              <tr class="table-info">
+                <!-- <th scope="row">1</th> -->
+                <td>{{result.aggregationDate|date:"Y-m-j"}}</td>
+                <td>{{result.viewCount7}}</td>
+                <td>{{result.likeCount7}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="monthlySheet"
+              role="tabpanel" aria-labelledby="monthlySheetTab">
+          <table class="table table-striped">
+            <thead>
+              <tr class="table-primary">
+                <!-- <th scope="col">#</th> -->
+                <th scope="col">集計日</th>
+                <th scope="col">再生回数</th>
+                <th scope="col">高評価数</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for result in results %}
+              <tr class="table-info">
+                <!-- <th scope="row">1</th> -->
+                <td>{{result.aggregationDate|date:"Y-m-j"}}</td>
+                <td>{{result.viewCount30}}</td>
+                <td>{{result.likeCount30}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <script type="text/javascript">
+        function showimg0() {
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph | safe }}";
+        }
+        function showimg7() {
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph7 | safe }}";
+        }
+        function showimg30() {
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph30 | safe }}";
+        }
+      </script>
+    </div>
+
+  </div>
+
+</div>
+
+<a class="pagetop" href="#"><div class="pagetop__arrow"></div></a>
+{% endblock content %}

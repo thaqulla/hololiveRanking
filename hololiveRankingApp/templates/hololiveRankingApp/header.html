@@ -1,0 +1,134 @@
+{% load simple_calc %}
+<nav class="navbar navbar-expand-lg navbar-dark " style="background-color: #0f0f0f; border-radius : 10px;">
+  <div class="container-fluid">
+    <a class="navbar-brand" style="font-size:25px; color: #f1f1f1; font-weight:bold;" href=" {% url 'top' %} ">ホロ歌集計部[アルファ版]</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href=" {% url 'top' %} ">Home</a>
+        </li> -->
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="#">Link</a> bg-secondary
+        </li> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            公式ch.リンク
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCJFZiqLMntJufDCHc6bQixg">JP公式チャンネル</a></li>
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCotXwY6s8pWmuWd_snKYjhg">EN公式チャンネル</a></li>
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCfrWoRGlawPQDQxxeIDRP0Q">ID公式チャンネル</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://hololive.hololivepro.com/">ホロライブ公式サイト</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;"  href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            新旧所属タレント
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div style="text-align: center;">
+              <span>Youtubeへ飛びます</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 33% 33% 33% ;">
+              <div><!--JPall-->
+                {% for talent in JPall %}
+                {% if talent.channelId not in exChannelId %}
+                  <li>
+                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
+                      <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                      {{ talent.name }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              </div>
+              <div><!--ENIDall-->
+              <!--ENall-->
+                {% for talent in ENall %}
+                  {% if talent.channelId not in exChannelId %}
+                    <li>
+                      <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
+                        <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                        {{ talent.name }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              <hr>
+              <!--IDall-->
+                {% for talent in IDall %}
+                  {% if talent.channelId  not in exChannelId %}
+                  <li>
+                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
+                      <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                      {{ talent.name }}
+                    </a>
+                  </li>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              <div><!-- <span>リンク切れの可能性あり</span> -->
+                {% for talent in exChannelId %}
+                  <li>
+                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent 0 %}">
+                      <img class="avator-image" src="{% plusCalc2 'https://i.ytimg.com/vi/' talent }}" alt="Author">
+                      {{ talent }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </div>
+            
+            </div>
+          </ul>
+
+        </li>
+        {% if request.user.is_anonymous %}
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">管理者権限</a>
+        </li>
+        {% else %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" style="color: white; font-weight:bold;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            管理者権限
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div style="text-align: center;">
+              <span>追加項目</span>
+            </div>
+            <li><a class="dropdown-item" href="#">チャンネル[実装途中]</a></li>
+            <li><a class="dropdown-item" href="{% url 'list' %}">楽曲</a></li>
+            <li><a class="dropdown-item" href="#">楽曲の情報[実装途中]</a></li>
+            <li><a class="dropdown-item" href="#">関係者の追加[実装途中]</a></li>
+          </ul>
+        </li>
+        {% endif %}
+        
+      </ul>
+      
+      
+      {% if request.user.is_anonymous %}
+        <form class="d-flex" action="{% url 'login' %}">
+          <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+          <!-- <button class="btn btn-outline-dark" style="background-color: #31d2f2;" type="submit">ログイン</button> -->
+          <!--https://getbootstrap.jp/docs/5.0/components/buttons/#outline-buttons-->
+          <button class="btn btn-outline-dark" style="background-color: #31d2f2;">
+            <a style="text-decoration: none;
+                      color: #323f5c;
+                      font-weight: bold;"
+               href="{% url 'login' %}">ログイン</a></button>
+          <button class="btn btn-outline-dark" style="background-color: #fff;"><a href="{% url 'user_create' %}">新規登録</a></button>
+        </form>
+      {% else %}
+      
+      <button class="btn btn-outline-dark" style="background-color: #31d2f2;">
+        <a href="{% url 'logout' %}">{{ request.user }}さん</a>
+      </button>
+      {% endif %}
+      
+    </div>
+  </div>
+</nav>

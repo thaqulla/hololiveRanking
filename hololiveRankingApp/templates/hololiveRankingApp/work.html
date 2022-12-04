@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if lyricist == "!!調査中" %}
+    調査中
+  {% else %}
+    作詞者:{{lyricist}}氏が関わった作品一覧
+  {% endif %}
+{% endblock title %}
+
+{% block content %}
+{% load numeral_system %}
+{% load humanize %}
+<br>
+<hr>
+{% if lyricist == "!!調査中" %}
+  <h1>調査中のためデータがありません</h1>
+{% else %}
+  <h1>作曲者:{{ lyricist }}氏が関わった作品一覧</h1>
+{% endif %}
+<hr>
+{% if lyricist == "!!調査中" %}
+  <span></span>
+{% else %}
+<div class="list_sheet_layout">
+
+    <span class="list_cell_layout">&nbsp;サムネイル<br>&nbsp;(随時更新中...)</span>
+    <span class="list_cell_layout">&nbsp;タイトル<br>&nbsp;(随時更新中...)</span>
+    <span class="list_cell_layout">&nbsp;動画ID<br>&nbsp;(随時更新中...)</span>
+    <span class="list_cell_layout">&nbsp;投稿日<br>&nbsp;(随時更新中...)</span>
+    <span class="list_cell_layout">&nbsp;ホロライブ出演者<br>&nbsp;(随時更新中...)</span>
+</div>
+
+<div class="list_sheet_layout">
+  {% for item in object_list reversed %}
+    <div class="list_cell_layout" style="text-align: center;">
+      <a href="{{ item.getVideoUrl }}" target="_blank" rel="noopener noreferrer">
+        <img src="{{ item.getThumbnailDefault }}" alt="thumbnailImage">
+      </a>
+    </div>
+
+    <span class="list_cell_layout">&nbsp;{{ item.title }}</span>
+    <span class="list_cell_layout">&nbsp;{{ item.videoId }}</span>
+    <span class="list_cell_layout">&nbsp;{{ item.videoAge }}</span>
+    
+    <div  class="list_cell_layout">
+      {% for person in item.performer.all %}
+      <span class="tag_box2">&nbsp;{{ person.name }}</span><br>
+      
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock content %}

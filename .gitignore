@@ -1,0 +1,18 @@
+db.sqlite3
+SECRET/API_KEYs.txt
+SECRET/AWS_PASSWORD2.txt
+old
+########
+TXT 
+########
+#一旦TXTはignore
+venv
+# pycファイルはgit管理しないのが一般的 pycファイルが何者かは次を参照 https://magazine.techacademy.jp/magazine/19131
+*.pyc
+*/__pycache__
+# Macがファイル管理に勝手に作成するファイル gitで共有しても意味がない(むしろ邪魔)なのでignoreするのが一般的
+.DS_Store
+hololive.json
+.vscode
+CSV
+hololiveRankingApp/management/commands/oldDef.py

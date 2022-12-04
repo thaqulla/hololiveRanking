@@ -1,0 +1,163 @@
+{% load numeral_system %}
+{% load humanize %}
+<div class="row detail_block">
+<!-------------------------------------------------------------------------------------------------->
+  <div class="col col-md-4"><!--リンク付き画像と再生回数、高評価数-->
+      <div class="song_img">
+        {% if songList.info.videoAge > oneWeekAgo %}
+        <p>NEW</p><!--new--> <!--if文で表示か非表示か分けたい-->
+        {% endif %}
+        <span>{{ songList.info.videoAge|date:"Y-m-j" }}</span><!--videoType-->
+        {% comment %}<a href="{% url 'video_info' pk=songList.info.pk ranking=forloop.counter %}">{% endcomment %}
+        <a href="{% url 'video_info' pk=songList.info.pk %}">
+          <img style="width: 100%; min-width: 300px;" src="{{ songList.info.getThumbnailHigh }}"alt="thumbnailImage"></a>
+        <span></span><!--動画のタイプ-->
+      </div>
+      <div class="songResultInfo_box" style="background-color: red;"><!--再生回数、高評価数-->
+        {% if dateType == "total" %}
+          <div class="">
+            <span>
+              &nbsp;総合再生回数:{{ songList.viewCount | intcomma }}&nbsp;
+            </span>
+          </div>
+          <div class="">
+            <span>
+              &nbsp;総合高評価数:{{ songList.likeCount | intcomma }}&nbsp;
+            </span>
+          </div>
+        {% elif dateType == "weekly" %}
+          <div class="">
+            <span>
+              &nbsp;週間再生回数:{{ songList.viewCount7 | intcomma }}&nbsp;
+            </span>
+          </div>
+          <div class="">
+            <span>
+              &nbsp;週間高評価数:{{ songList.likeCount7 | intcomma }}&nbsp;
+            </span>
+          </div>
+        {% elif dateType == "monthly" %}
+          <div class="">
+            <span>
+              &nbsp;月間再生回数:{{ songList.viewCount30 | intcomma }}&nbsp;
+            </span>
+          </div>
+          <div class="">
+            <span>&nbsp;月間高評価数:{{ songList.likeCount30 | intcomma }}&nbsp;</span>
+            
+          </div>
+        {% endif %}
+    </div>
+  </div>
+<!-------------------------------------------------------------------------------------------------->
+  <div class="col col-md-8"><!--動画の種類-->
+    <div class="title_link">
+      {% comment %}<a id="{{ songList.info.videoId }}" href="{% url 'video_info' pk=songList.info.pk ranking=forloop.counter%}"></a>{% endcomment%}
+      <a id="{{ songList.info.videoId }}" href="{% url 'video_info' pk=songList.info.pk %}">
+        &nbsp;{{ forloop.counter|add:letNum }}:{{ songList.info.title }}&nbsp;
+      </a>
+    </div>
+    <!-- <div class="songResultInfo_box" style="background-color: red;">
+      <div class="">
+        <span>
+          &nbsp;総合再生回数:{{ songList.viewCount | intcomma }}&nbsp;
+        </span>
+      </div>
+      <div class="">
+        <span>
+          &nbsp;総合高評価数:{{ songList.likeCount | intcomma }}&nbsp;
+        </span>
+      </div>
+    </div> -->
+    <div class="collaborator_box">
+      <!-- <div>
+        <span>作詞家:</span><br>
+        {% for name in songList.info.lyricist.all %}
+        <a class="tag_box" href="{% url 'work' pk=name.pk %}" type="submit" id="{{ name.pk }}" name="lyricist" value="{{ name.pk }}">{{ name }}</a>
+        {% endfor %}
+      </div> -->
+      <div>
+        <span>作詞家:</span><br>
+        {% for name in songList.info.lyricist.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="lyricist" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>作曲家:</span><br>
+        {% for name in songList.info.composer.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="composer" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>編曲家:</span><br>
+        {% for name in songList.info.arranger.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="arranger" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>ミックス:</span><br>
+        {% for name in songList.info.mix.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="mix" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>音楽:</span><br>
+        {% for name in songList.info.inst.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="inst" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>動画:</span><br>
+        {% for name in songList.info.movie.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="movie" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>イラスト:</span><br>
+        {% for name in songList.info.illust.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="illust" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>外部共演者:</span><br>
+        {% for name in songList.info.coStar.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="coStar" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+      <div>
+        <span>本家歌い手:</span><br>
+        {% for name in songList.info.originalSinger.all %}
+          <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+            <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="originalSinger" value="{{ name }}">
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+    {% if request.user.is_anonymous %}
+    <div class="" style="background-color: #63f4ff;  text-align: right;"><!--データの編集-->
+      <a class="tag_box2" href="#">編集</a>
+      <span>&nbsp;(ログイン後可能)&nbsp;</span>
+    </div>
+    {% else %}
+    <div class="" style="background-color: #63f4ff;  text-align: right;"><!--データの編集-->
+        <a class="tag_box2" href="{% url 'update' pk=songList.info.pk  %}">編集</a>
+    </div>
+    {% endif %}
+  </div>
+</div>

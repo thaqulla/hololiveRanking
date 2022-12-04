@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}追加楽曲{% endblock title %}
+{% block content %}
+{% load numeral_system %}
+{% load humanize %}
+<br>
+<div class="list_sheet_layout">
+
+    <span class="list_cell_layout">&nbsp;サムネイル</span>
+    <span class="list_cell_layout">&nbsp;タイトル</span>
+    <span class="list_cell_layout">&nbsp;動画ID</span>
+    <span class="list_cell_layout">&nbsp;投稿日</span>
+    <span class="list_cell_layout">&nbsp;ホロライブ出演者</span>
+</div>
+<div class="list_sheet_layout">
+
+  {% for item in object_list reversed  %}
+    {% if item.pk >= 7550 %}
+      <div class="list_cell_layout" style="text-align: center;">
+        <a href="{{ item.getVideoUrl }}" target="_blank" rel="noopener noreferrer">
+          <img src="{{ item.getThumbnailDefault }}" alt="thumbnailImage">
+        </a>
+        
+      </div>
+      <span class="list_cell_layout">&nbsp;{{ item.title }}</span>
+      <span class="list_cell_layout">&nbsp;{{ item.videoId }}</span>
+      <span class="list_cell_layout">&nbsp;{{ item.videoAge }}</span>
+      
+      <div  class="list_cell_layout">
+        {% for person in item.performer.all %}
+        &nbsp;{{ person.name }}<br>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endfor %}
+  
+</div>
+<div class="list_sheet_layout">
+    <span class="list_cell_layout">&nbsp;機密保持...</span>
+    <span class="list_cell_layout">&nbsp;機密保持...</span>
+    <span class="list_cell_layout">&nbsp;機密保持...</span>
+    <span class="list_cell_layout">&nbsp;機密保持...</span>
+    <span class="list_cell_layout">&nbsp;機密保持...</span>
+</div>
+
+{% endblock content %}

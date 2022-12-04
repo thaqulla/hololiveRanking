@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}編集{% endblock title %}
+{% block content %}
+
+    <form action="" method="POST">
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            {{ field }}
+            {{ field.errors }}
+            <hr>
+        {% endfor %}
+        <button type="submit">ログイン</button>{% csrf_token %}
+    </form>
+
+    <a href="{% url 'top' %}">ログインせず利用する</a>
+
+{% endblock content %}
