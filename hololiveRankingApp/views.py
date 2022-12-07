@@ -246,6 +246,18 @@ class VideoUpdateView(UpdateView):
     context = get_header_context_data(context)
     # context["pk"] = self.kwargs["pk"]
     context["description"] = self.model.objects.get(pk=self.kwargs["pk"]).description
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    '''
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    '''
+
     context["people"] = AnotherPerson.objects.all().order_by("name")
     
     return context
@@ -558,31 +570,32 @@ class SearchResultView(ListView):
         Q_DateType = Q_SongType.order_by("viewCount30").reverse().distinct()
       elif "viewCountAsc" in self.request.GET.getlist("orderType"):
         Q_DateType = Q_SongType.order_by("viewCount30").distinct()
+        
     
-    # queryset = Q_DateType
-    # return queryset
-  
-    queryset = Q_DateType.select_related(
-      'info'
-    ).prefetch_related(
-      'info__performer'
-    ).prefetch_related(
-      'info__lyricist__lyricist'
-    ).prefetch_related(
-      'info__composer__composer'
-    ).prefetch_related(
-      'info__arranger__arranger'
-    ).prefetch_related(
-      'info__mix__mixer'
-    ).prefetch_related(
-      'info__inst__musician'
-    ).prefetch_related(
-      'info__movie__videoEditor'
-    ).prefetch_related(
-      'info__illust__illustrator'
-    ).prefetch_related(
-      'info__coStar__coStar'
-    ).prefetch_related(
-      'info__originalSinger__originalSinger'
-    )
+    
+    Q_optimization = Q_DateType.select_related('info')\
+                              .prefetch_related('info__performer')\
+                              .prefetch_related('info__lyricist__lyricist')\
+                              .prefetch_related('info__composer__composer')\
+                              .prefetch_related('info__arranger__arranger')\
+                              .prefetch_related('info__mix__mixer')\
+                              .prefetch_related('info__inst__musician')\
+                              .prefetch_related('info__movie__videoEditor')\
+                              .prefetch_related('info__illust__illustrator')\
+                              .prefetch_related('info__coStar__coStar')\
+                              .prefetch_related('info__originalSinger__originalSinger')
+    
+    targetLyricist = self.request.GET.getlist("checkbox_lyricist")
+    # targetLyricistList = list([int(datum) for datum in targetLyricist])
+    # print("aaa")
+    print(targetLyricist)
+    # print(targetLyricistList)
+    # print(Q_optimization)
+    # print("aaa")
+    Q_Concerned = Q_optimization.filter(
+      info__lyricist__lyricist__pk__in=targetLyricist
+      ).distinct()
+    
+    queryset = Q_Concerned
+    
     return queryset

@@ -79,6 +79,7 @@ class Command(BaseCommand):
             main.collectVideoInfo(API_KEY, dt0, self.keyword,
                                   self.autoModuleNumber, self.moduleNumber,
                                   self.maxresults, maxPkRslt)
+            main.manualAdd(API_KEY)
             
         ##################今は絶対回すな###########################
         # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
@@ -91,15 +92,12 @@ class Command(BaseCommand):
         # cll = incompC.composer.all()
         print([datum.name for datum in all])
         # print([datum.composer.name for datum in cll])
+        aaa=[3,5,56]
+        test = hololiveSongsResult.objects.filter(aggregationDate=dt,
+                                                  info__lyricist__lyricist__pk__in=aaa)
         
-        # baseDate = dt
-        # latestCheck = hololiveSongsResult.objects.filter(aggregationDate=dt).count()
-        # if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
-        #     thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
-        #     baseDate = thaDayBefore
-        # test = hololiveSongsResult.objects.filter(aggregationDate=baseDate,info__lyricist__lyricist__pk=7).distinct()
-        
-        # print(test)
+       
+        print(test)
         
         # querysetAll = VideoInfo.objects.filter(composer__composer__pk=7).distinct().order_by("-pk")
         # print([[datum.title,datum.videoId] for datum in querysetAll])

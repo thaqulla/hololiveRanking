@@ -7,6 +7,7 @@ TXT
 ########
 #一旦TXTはignore
 venv
+static
 # pycファイルはgit管理しないのが一般的 pycファイルが何者かは次を参照 https://magazine.techacademy.jp/magazine/19131
 *.pyc
 */__pycache__

@@ -334,9 +334,9 @@ def complementerAve(maxPkRslt,x):
         df = pd.concat([dfN,dfS,dfE], axis=1)
 
         for dat in df.itertuples():
-            x0 = vAge+datetime.timedelta(days=dat[1])
-            x1 = vAge+datetime.timedelta(days=dat[2])
-            x2 = vAge+datetime.timedelta(days=dat[3])
+            x0 = vAge + datetime.timedelta(days=dat[1])
+            x1 = vAge + datetime.timedelta(days=dat[2])
+            x2 = vAge + datetime.timedelta(days=dat[3])
             x = (x2 - x1)/datetime.timedelta(days=1)
             
             try:

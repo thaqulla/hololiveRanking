@@ -1,4 +1,5 @@
 {% load static %}
+{% load simple_calc %}
 <!DOCTYPE html>
 <html lang="ja">
 <meta>
@@ -383,7 +384,7 @@
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen3ID IDall HOLOall" type="checkbox" 
-                id="{{ channel.channelId }}" name="targetChannelId" 
+                        id="{{ channel.channelId }}" name="targetChannelId" 
                         value="{{ channel.channelId }}">
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
@@ -401,20 +402,21 @@
             <details>
               <summary class="concerned_summary">作詞家一覧↓</summary>
               {% for name in lyricists %}
-              <label for="{{ name.lyricist }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.lyricist" checked>
-                <span>{{ name.lyricist }}</span>
+              <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' name.pk 2 %}" name="checkbox_lyricist" value="{{ name.pk }}" checked>
+              <label  class="tag_box2" for="{% plusCalc2 'lyricist' name.pk 2 %}">
+                {{ name.lyricist }}
               </label><br>
               {% endfor %}
             </details>            
           </div>
-          <div style="margin: 15px;"><!--作曲家一覧-->
+          <style>/*
+          <div style="margin: 15px;"><!--作曲家一覧 未実装-->
             <details>
               <summary class="concerned_summary">作曲家一覧↓</summary>
               {% for name in composers %}
-              <label for="{{ name.composer }}">
-                <input type="checkbox" id="{{ name.pk }}" name="{{ name.composer }}" checked>
-                <span>{{ name.composer }}</span>
+              <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' name.pk 2 %}" checked>
+              <label  class="tag_box2" for="{% plusCalc2 'composer' name.pk 2 %}">
+                {{ name.composer }}
               </label><br>
               {% endfor %}
             </details>
@@ -497,6 +499,7 @@
             </details>
             <h5></h5>
           </div>
+          */</style>
         </div>
         <h4>期間設定</h4>
         <div style="
@@ -522,6 +525,7 @@
               <span>期間設定</span>
             </label> -->
           </div>
+          <style>/*
           <div><!--年別範囲絞り込み-->
             <h5>年別[実装途中]</h5>
             <label>
@@ -555,6 +559,8 @@
           <div><!--任意範囲絞り込み-->
 
           </div>
+            */</style>
+
         </div>
         
 

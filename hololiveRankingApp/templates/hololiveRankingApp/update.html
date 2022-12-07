@@ -6,8 +6,7 @@
 {% block content %}
 <hr>
 <form method="post">{% csrf_token %}
-  <div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">作詞家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.lyricist %}
@@ -18,12 +17,10 @@
           <details>
             <summary class="concerned_summary" style="background-color: #202020;">追加登録</summary>
             {% for person in people %}<!--item.performer.all-->
-            
-            {% if person not in form.lyricist %}
-            <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
-            <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
-            {% endif %}
-
+              {% if person.name not in lyricists %}
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
+                <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
+              {% endif %}
             {% endfor %}
           </details>
         </div>
@@ -31,7 +28,7 @@
       </div>
       
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">作曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.composer %}
@@ -41,7 +38,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">編曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.arranger %}
@@ -51,7 +48,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">ミックス</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.mix %}
@@ -61,7 +58,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">音楽家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.inst %}
@@ -71,7 +68,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">動画編集者</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.movie %}
@@ -81,7 +78,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">イラストレーター</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.illust %}
@@ -91,7 +88,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">外部共演者</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.coStar %}
@@ -101,7 +98,7 @@
         <a href="#" class="tag_box2 update_choice_add">新規追加</a>
       </div>
     </div>
-    <div class="" style="min-width: 360px;"><!--form-group row-->
+    <div class="" style="min-width: 360px; user-select: none;"><!--form-group row-->
       <span class="" style="background-color: green;">本家歌い手</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice"><!--col-sm-11-->
         {% for name in form.originalSinger %}
