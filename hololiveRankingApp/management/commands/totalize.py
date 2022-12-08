@@ -95,7 +95,6 @@ class Command(BaseCommand):
         aaa=[3,5,56]
         test = hololiveSongsResult.objects.filter(aggregationDate=dt,
                                                   info__lyricist__lyricist__pk__in=aaa)
-        
        
         print(test)
         

@@ -26,6 +26,9 @@ import numpy as np
 import pandas as pd
 import random
 
+#N+1問題が解決されていないため全体的にコードの見直しが必須
+#pep8に基づいたコードの書き方に変更予定
+
 dt = datetime.date.today()  # ローカルな現在の日付と時刻を取得
 dtstr = dt.strftime("%Y-%m-%d")
   
@@ -140,15 +143,15 @@ class VideoInfoCreateView(CreateView):
     context = get_header_context_data(context)
     return context
 
-class ConcernedCreateView(ListView):
-  model = AnotherPerson
-  template_name = 'hololiveRankingApp/concerned_create.html'
-  form_class = ConcernedCreateForm
+# class ConcernedCreateView(ListView):
+#   model = AnotherPerson
+#   template_name = 'hololiveRankingApp/concerned_create.html'
+#   form_class = ConcernedCreateForm
   
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context = get_header_context_data(context)
-    return context
+#   def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     context = get_header_context_data(context)
+#     return context
   # fields = '__all__' #"__all__"
 
   
@@ -156,11 +159,14 @@ class ConcernedAddView(CreateView):
   model = AnotherPerson
   template_name = 'hololiveRankingApp/add.html'
   form_class = ConcernedCreateForm
-  success_url = reverse_lazy("list")
-  
+  # success_url = reverse_lazy("list")
+  def get_success_url(self):
+        return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})
+      
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
     return context
   
 
@@ -244,20 +250,17 @@ class VideoUpdateView(UpdateView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
-    # context["pk"] = self.kwargs["pk"]
+    context["pk"] = self.kwargs["pk"]
     context["description"] = self.model.objects.get(pk=self.kwargs["pk"]).description
     context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    '''
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    '''
-
+    context["composers"] = [datum.composer.name for datum in Composer.objects.all()]
+    context["arrangers"] = [datum.arranger.name for datum in Arranger.objects.all()]
+    context["mixers"] = [datum.mixer.name for datum in Mixer.objects.all()]
+    context["musicians"] = [datum.musician.name for datum in Musician.objects.all()]
+    context["videoEditors"] = [datum.videoEditor.name for datum in VideoEditor.objects.all()]
+    context["illustrators"] = [datum.illustrator.name for datum in Illustrator.objects.all()]
+    context["coStars"] = [datum.coStar.name for datum in CoStar.objects.all()]
+    context["originalSingers"] = [datum.originalSinger.name for datum in OriginalSinger.objects.all()]
     context["people"] = AnotherPerson.objects.all().order_by("name")
     
     return context

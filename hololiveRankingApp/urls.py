@@ -16,8 +16,9 @@ urlpatterns = [
   path('hololiveRankingApp/list/', views.VideoInfoListView.as_view(), name='list'),
   path('hololiveRankingApp/<int:pk>/work/', views.WorkListView.as_view(), name='work'),
   path('hololiveRankingApp/<int:pk>/update/', views.VideoUpdateView.as_view(), name='update'),
-  # path('hololiveRankingApp/add/', views.ConcernedCreateView.as_view(), name='addOld'),
-  path('hololiveRankingApp/add/', views.ConcernedAddView.as_view(), name='addNew'),
+  # path('hololiveRankingApp/add/', views.ConcernedCreateView.as_view(), name='addNew'),
+  path('hololiveRankingApp/<int:redirectPk>/add/', views.ConcernedAddView.as_view(), name='addNew'),
+  
   
   path('hololiveRankingApp/login/', Login.as_view(), name='login'),
   path('hololiveRankingApp/logout/', Logout.as_view(), name='logout'),

@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}追加楽曲{% endblock title %}
+{% block title %}新規追加{% endblock title %}
 {% block content %}
 {% load numeral_system %}
 {% load humanize %}
 {% load simple_calc %}
 <form action="" method="POST"> {% csrf_token %}
-  <span>{{ form.name }}</span><br>
+
+  {{form.as_p}}
+  
+  <!--
+    このコメントアウト部分だとうまくいかない
+
+    {% comment %}<span>{{ pk }}</span>{% endcomment %}
+  
+    <span>関係者名:{{ form.name }}</span><br>
   <div>
     {% for item in form.category %}
     <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'category' forloop.counter 2 %}">
@@ -13,9 +21,11 @@
     {% endfor %}
   </div>
   
-  <span>{{ form.snsURL }}</span><br>
-  <span>{{ form.snsUserName }}</span><br>
+  <span>関係者URL:{{ form.snsURL }}</span><br>
+  <span>関係者SNS(Twitter):{{ form.snsUserName }}</span><br> -->
+
   <button class="btn btn-primary form-control" type="submit">登録</button>
+
 </form>
 
 {% endblock content %}
