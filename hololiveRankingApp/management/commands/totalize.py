@@ -84,39 +84,44 @@ class Command(BaseCommand):
         ##################今は絶対回すな###########################
         # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
         ##########################################################
-        incomp = VideoInfo.objects.prefetch_related("performer").get(id=7617)#7617
-        all = incomp.performer.all()
-        # if all.count()==0:
-        #     print("aa")
-        # incompC = VideoInfo.objects.prefetch_related("composer").get(id=5266)#7617
-        # cll = incompC.composer.all()
-        print([datum.name for datum in all])
-        # print([datum.composer.name for datum in cll])
-        aaa=[3,5,56]
-        test = hololiveSongsResult.objects.filter(aggregationDate=dt,
-                                                  info__lyricist__lyricist__pk__in=aaa)
-       
-        print(test)
         
         # querysetAll = VideoInfo.objects.filter(composer__composer__pk=7).distinct().order_by("-pk")
         # print([[datum.title,datum.videoId] for datum in querysetAll])
         
-
-       
         #not_inputed = SakushikaModlel.objects.get(pk=[0:未記入の作詞家モデルとしてのpk(not AnotherPersonのpk)])
         #VideoInfo.objects.sakusika.remove(not_inputed)
         
-        
-        # double01 = VideoInfo.objects.filter(mix__pk=4)
-        # double02 = VideoInfo.objects.filter(mix__pk=14)
+        concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
+                                    .prefetch_related('composer__composer')\
+                                    .prefetch_related('arranger__arranger')\
+                                    .prefetch_related('mix__mixer')\
+                                    .prefetch_related('inst__musician')\
+                                    .prefetch_related('movie__videoEditor')\
+                                    .prefetch_related('illust__illustrator')\
+                                    .prefetch_related('coStar__coStar')\
+                                    .prefetch_related('originalSinger__originalSinger')
+        anotherAll = AnotherPerson.objects.all()
+        anotherPk = [datum.pk for datum in anotherAll]
+        print(anotherPk)
+        x = 61
+        anotherL = concerned.filter(Q(lyricist__lyricist__pk=x)|\
+                                  Q(composer__composer__pk=x)|\
+                                  Q(arranger__arranger__pk=x)|\
+                                  Q(mix__mixer__pk=x)|\
+                                  Q(inst__musician__pk=x)|\
+                                  Q(movie__videoEditor__pk=x)|\
+                                  Q(illust__illustrator__pk=x)|\
+                                  Q(coStar__coStar__pk=x)|\
+                                  Q(originalSinger__originalSinger__pk=x))
+        print(anotherL)#.count()==0
+            
+        # double01 = VideoInfo.objects.filter(mix__pk=61)
+        # double02 = VideoInfo.objects.filter(mix__pk=18)
         # for mi in double01:
         #     print(mi.title,mi.pk)
         # print("2222222222222222222")
         # for mi in double02:
         #     print(mi.title,mi.pk)
 
-        # 検索かけたいディレクトリに移動
-        # cd path/to/my/dir/
-        # ディレクトリ配下のすべてのファイルで スペルミスの文字列 (Lylic) を検索
-        # grep -r Lylic ./
+
         

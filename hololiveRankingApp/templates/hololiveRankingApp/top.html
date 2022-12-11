@@ -397,27 +397,26 @@
 
         </div>
         <h4>関係者絞り込み[実装途中]</h4>
-        <div class="layout" >
+        <div class="layout">
           <div style="margin: 15px;"><!--作詞家一覧-->
             <details>
               <summary class="concerned_summary">作詞家一覧↓</summary>
               {% for name in lyricists %}
-              <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' name.pk 2 %}" name="checkbox_lyricist" value="{{ name.pk }}" checked>
-              <label  class="tag_box2" for="{% plusCalc2 'lyricist' name.pk 2 %}">
-                {{ name.lyricist }}
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' name.pk 2 %}" name="checkbox_lyricist" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'lyricist' name.pk 2 %}">
+                  {{ name.lyricist }}
+                </label><br>
               {% endfor %}
             </details>            
           </div>
-          <style>/*
-          <div style="margin: 15px;"><!--作曲家一覧 未実装-->
+          <div style="margin: 15px;"><!--作曲家一覧-->
             <details>
               <summary class="concerned_summary">作曲家一覧↓</summary>
               {% for name in composers %}
-              <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' name.pk 2 %}" checked>
-              <label  class="tag_box2" for="{% plusCalc2 'composer' name.pk 2 %}">
-                {{ name.composer }}
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' name.pk 2 %}" name="checkbox_composer" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'composer' name.pk 2 %}">
+                  {{ name.composer }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -425,10 +424,10 @@
             <details>
               <summary class="concerned_summary">編曲家一覧↓</summary>
               {% for name in arrangers %}
-              <label for="{{ name.arranger }}">
-                <input type="checkbox" id="{{ name.pk }}" name="{{ name.arranger }}" checked>
-                <span>{{ name.arranger }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'arranger' name.pk 2 %}" name="checkbox_arranger" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'arranger' name.pk 2 %}">
+                  {{ name.arranger }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -436,10 +435,10 @@
             <details>
               <summary class="concerned_summary">ミックス一覧↓</summary>
               {% for name in mixers %}
-              <label for="{{ name.mixer }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.mixer" checked>
-                <span>{{ name.mixer }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'mixer' name.pk 2 %}" name="checkbox_mixer" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'mixer' name.pk 2 %}">
+                  {{ name.mixer }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -447,10 +446,10 @@
             <details>
               <summary class="concerned_summary">音楽家一覧↓</summary>
               {% for name in musicians %}
-              <label for="{{ name.musician }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.musician" checked>
-                <span>{{ name.musician }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'musician' name.pk 2 %}" name="checkbox_musician" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'musician' name.pk 2 %}">
+                  {{ name.musician }}
+                </label><br>
               {% endfor %}
             </details>            
           </div>
@@ -458,10 +457,10 @@
             <details>
               <summary class="concerned_summary">動画編集者一覧↓</summary>
               {% for name in videoEditors %}
-              <label for="{{ name.videoEditor }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.videoEditor" checked>
-                <span>{{ name.videoEditor }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'videoEditor' name.pk 2 %}" name="checkbox_videoEditor" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'videoEditor' name.pk 2 %}">
+                  {{ name.videoEditor }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -469,10 +468,10 @@
             <details>
               <summary class="concerned_summary">イラストレーター一覧↓</summary>
               {% for name in illustrators %}
-              <label for="{{ name.illustrator }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.illustrator" checked>
-                <span>{{ name.illustrator }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'illustrator' name.pk 2 %}" name="checkbox_illustrator" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'illustrator' name.pk 2 %}">
+                  {{ name.illustrator }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -480,10 +479,10 @@
             <details>
               <summary class="concerned_summary">外部共演者一覧↓</summary>
               {% for name in coStars %}
-              <label for="{{ name.coStar }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.coStar" checked>
-                <span>{{ name.coStar }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'coStar' name.pk 2 %}" name="checkbox_coStar" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'coStar' name.pk 2 %}">
+                  {{ name.coStar }}
+                </label><br>
               {% endfor %}
             </details>
           </div>
@@ -491,15 +490,15 @@
             <details>
               <summary class="concerned_summary">原曲歌い手一覧↓</summary>
               {% for name in originalSingers %}
-              <label for="{{ name.originalSinger }}">
-                <input type="checkbox" id="{{ name.pk }}" name="name.originalSinger" checked>
-                <span>{{ name.originalSinger }}</span>
-              </label><br>
+                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'originalSinger' name.pk 2 %}" name="checkbox_originalSinger" value="{{ name.pk }}" checked>
+                <label  class="tag_box2" for="{% plusCalc2 'originalSinger' name.pk 2 %}">
+                  {{ name.originalSinger }}
+                </label><br>
               {% endfor %}
             </details>
             <h5></h5>
           </div>
-          */</style>
+
         </div>
         <h4>期間設定</h4>
         <div style="
@@ -509,11 +508,11 @@
           <div><!--単純絞り込み-->
             <h5>総合、週間、月間</h5>
             <label>
-              <input type="radio" id="daily" name="dateType" value="total" checked>
+              <input type="radio" id="daily" name="dateType" value="total">
               <span>総合</span>
             </label>
             <label>
-              <input type="radio" id="weekly" name="dateType" value="weekly">
+              <input type="radio" id="weekly" name="dateType" value="weekly" checked>
               <span>週間</span>
             </label>
             <label>

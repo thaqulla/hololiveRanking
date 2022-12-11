@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {% if lyricist == "!!調査中" %}
+  {% if name == "!!調査中" %}
     調査中
   {% else %}
-    作詞者:{{ lyricist }}氏が関わった作品一覧
+    {{ charge }}:{{ name }}氏が関わった作品一覧
   {% endif %}
 {% endblock title %}
 
@@ -13,17 +13,16 @@
 {% load humanize %}
 <br>
 <hr>
-{% if lyricist == "!!調査中" %}
+{% if name == "!!調査中" %}
   <h1>調査中のためデータがありません</h1>
 {% else %}
-  <h1>作曲者:{{ lyricist }}氏が関わった作品一覧</h1>
+  <h1>{{ charge }}:{{ name }}氏が関わった作品一覧</h1>
 {% endif %}
 <hr>
-{% if lyricist == "!!調査中" %}
+{% if name == "!!調査中" %}
   <span></span>
 {% else %}
-<div class="list_sheet_layout">
-
+<div class="list_sheet_layout" style="background-color: red;">
     <span class="list_cell_layout">&nbsp;サムネイル<br>&nbsp;(随時更新中...)</span>
     <span class="list_cell_layout">&nbsp;タイトル<br>&nbsp;(随時更新中...)</span>
     <span class="list_cell_layout">&nbsp;動画ID<br>&nbsp;(随時更新中...)</span>
@@ -46,7 +45,6 @@
     <div  class="list_cell_layout">
       {% for person in item.performer.all %}
       <span class="tag_box2">&nbsp;{{ person.name }}</span><br>
-      
       {% endfor %}
     </div>
   {% endfor %}

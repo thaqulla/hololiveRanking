@@ -4,7 +4,7 @@ from .views import Login, Logout, UserCreateView  #HomeView
 from . import views
 
 urlpatterns = [
-  path('hololiveRankingApp/', views.TopView.as_view(), name="top"),
+  path('', views.TopView.as_view(), name="top"),
   # path('hololiveRankingApp/', views.RankingView.as_view(), name="appHome"),
   path('hololiveRankingApp/search_result/', views.SearchResultView.as_view(), name='searchResult'),
   path('hololiveRankingApp/performer_info/', views.PerformerInfoView.as_view(), name='performerInfo'),

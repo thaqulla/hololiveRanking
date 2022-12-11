@@ -8,7 +8,7 @@
 
   {{form.as_p}}
   
-  <!--
+  <style>/*
     このコメントアウト部分だとうまくいかない
 
     {% comment %}<span>{{ pk }}</span>{% endcomment %}
@@ -22,7 +22,9 @@
   </div>
   
   <span>関係者URL:{{ form.snsURL }}</span><br>
-  <span>関係者SNS(Twitter):{{ form.snsUserName }}</span><br> -->
+  <span>関係者SNS(Twitter):{{ form.snsUserName }}</span><br>
+    */</style>
+    
 
   <button class="btn btn-primary form-control" type="submit">登録</button>
 

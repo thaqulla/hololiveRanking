@@ -38,4 +38,10 @@ SECRET/AWS_PASSWORD2.txt
 
 
 テストユーザー名：Test_user01
-テストパスワード；qwerty1111
+テストパスワード：ABCDEF1234
+<!-- テストパスワード：qwerty1111 -->
+
+検索かけたいディレクトリに移動
+cd path/to/my/dir/
+ディレクトリ配下のすべてのファイルで スペルミスの文字列 (Lylic) を検索
+grep -r Lylic ./

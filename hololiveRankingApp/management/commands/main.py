@@ -481,14 +481,24 @@ def getData7AndData30Old():
                 data.save()
             except ObjectDoesNotExist:pass
 
-def flyingStartVideo():#予約投稿等で高評価が事前に押されてしまった動画データの削除。
+def flyingStartVideo_plusDescription(API_KEY):#予約投稿等で高評価が事前に押されてしまった動画データの削除。
     dataAll = VideoInfo.objects.all()#公開日に合算させる。
-    for dat in dataAll:
-        flies = hololiveSongsResult.objects.filter(info__videoId=dat.videoId,
-                                                   aggregationDate__lt=dat.videoAge)
+    for datum in dataAll:
+        if datum.description[-4:]==" ...":
+                vid = datum.videoId
+                try:
+                    songResult = testDetail2(vid,API_KEY)
+                    datum.description = songResult["description"]
+                    datum.save()
+                except IndexError:
+                    print(datum.title,datum.videoId,"is IndexError")
+        
+        
+        flies = hololiveSongsResult.objects.filter(info__videoId=datum.videoId,
+                                                   aggregationDate__lt=datum.videoAge)
         if flies.count() != 0:
             for fly in flies:print(fly.pk, fly.info.title, fly.info.videoId,
-                                   fly.aggregationDate, dat.videoAge,
+                                   fly.aggregationDate, datum.videoAge,
                                    fly.viewCount, fly.likeCount,
                                    "←を\
                                     hololiveSongsResult.objects.get(pk=).delete()\
@@ -596,71 +606,7 @@ def makeCompleteData(maxPkRslt,API_KEY):
             ("ORIGINAL" in videoName.title)or\
             ("オリジナル" in videoName.title):
                 videoName.videoType.add(videoTypeJudgement.objects.get(judge="オリジナルソング"))
-        
-def makeCompleteData2(API_KEY):
-    # completeData = hololiveSongsResult.objects.get(pk=maxPkRslt)
-    dataAll = VideoInfo.objects.all() 
-    tentative = "!!調査中"
-    for videoName in tqdm(dataAll):            
-        if videoName.performer.count() == 0:
-            try:
-                youtubeData = testDetail2(videoName.videoId,API_KEY)
-                # print(youtubeData["title"])
-                if hololiveChannel2.objects.filter(channelId=youtubeData["channelId"]).count() != 0:
-                    for performer in hololiveChannel2.objects.all():
-                        if performer.name in youtubeData["title"]:
-                            videoName.performer.add(hololiveChannel2.objects.get(name=performer.name))
-                        if performer.channelId == youtubeData["channelId"]:#公式チャンネル
-                            videoName.performer.add(hololiveChannel2.objects.get(channelId=performer.channelId))
-                if AutoChannel.objects.filter(channelId=youtubeData["channelId"]).count() != 0:       
-                    for autoPerformer in AutoChannel.objects.all():
-                        if autoPerformer.channelId == youtubeData["channelId"]:#自動生成チャンネル
-                            for info_name in autoPerformer.info.all():
-                                videoName.performer.add(hololiveChannel2.objects.get(name=info_name))
-                if videoName.videoType.count()==0:
-                    if "Provided to YouTube by " in youtubeData["description"]:
-                        videoName.videoType.add(videoTypeJudgement.objects.get(judge="オリジナルソング"))
-            except IndexError:
-                print(videoName.pk,videoName.title,videoName.videoId)
-            
-            for performer in hololiveChannel2.objects.all():
-                if performer.name in videoName.title:
-                    print(performer.name , videoName.title)
-                    videoName.performer.add(hololiveChannel2.objects.get(name=performer.name))
-        
-        if videoName.lyricist.count() == 0:
-            videoName.lyricist.add(Lyricist.objects.get(lyricist__name=tentative))
-        if videoName.composer.count() == 0:
-            videoName.composer.add(Composer.objects.get(composer__name=tentative))
-        if videoName.arranger.count() == 0:
-            videoName.arranger.add(Arranger.objects.get(arranger__name=tentative))
-        if videoName.mix.count() == 0:
-            videoName.mix.add(Mixer.objects.get(mixer__name=tentative))
-        if videoName.inst.count() == 0:
-            videoName.inst.add(Musician.objects.get(musician__name=tentative))
-        if videoName.movie.count() == 0:
-            videoName.movie.add(VideoEditor.objects.get(videoEditor__name=tentative))
-        if videoName.illust.count() == 0:
-            videoName.illust.add(Illustrator.objects.get(illustrator__name=tentative))
-        if videoName.coStar.count() == 0:
-            videoName.coStar.add(CoStar.objects.get(coStar__name=tentative))
-        if videoName.originalSinger.count() == 0:
-            videoName.originalSinger.add(OriginalSinger.objects.get(originalSinger__name=tentative))
-        
-        if videoName.videoType.count() == 0:
-            if ("cover" in videoName.title)or\
-            ("Cover" in videoName.title)or\
-            ("COVER" in videoName.title)or\
-            ("カバー" in videoName.title)or\
-            ("歌って" in videoName.title):
-                videoName.videoType.add(videoTypeJudgement.objects.get(judge="歌ってみた"))
-            elif ("MV" in videoName.title)or\
-            ("original" in videoName.title)or\
-            ("Original" in videoName.title)or\
-            ("ORIGINAL" in videoName.title)or\
-            ("オリジナル" in videoName.title):
-                videoName.videoType.add(videoTypeJudgement.objects.get(judge="オリジナルソング"))
-        
+           
 def collectVideoInfo(API_KEY,dt0,keyword,autoModuleNumber,moduleNumber,maxresults,maxPkRslt):
     print("getAutoResult2")
     getAutoResult2(API_KEY, dt0, autoModuleNumber)
@@ -679,7 +625,7 @@ def collectVideoInfo(API_KEY,dt0,keyword,autoModuleNumber,moduleNumber,maxresult
     print("makeCompleteData")
     makeCompleteData(maxPkRslt,API_KEY)
     print("flyingStartVideo")
-    flyingStartVideo()
+    flyingStartVideo_plusDescription(API_KEY)
 
 # if ("(Instrumental)" in dat["snippet"]["title"]) or ("instrumental）" in dat["snippet"]["title"]):
 #     continue

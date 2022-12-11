@@ -159,9 +159,9 @@ class ConcernedAddView(CreateView):
   model = AnotherPerson
   template_name = 'hololiveRankingApp/add.html'
   form_class = ConcernedCreateForm
-  # success_url = reverse_lazy("list")
+  
   def get_success_url(self):
-        return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
       
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -183,21 +183,51 @@ class WorkListView(ListView):#DetailView
   template_name = 'hololiveRankingApp/work.html'
   model = VideoInfo
   
+  
+  
   # context_object_name = "works"
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     
-    context['lyricist'] = self.request.GET.get("lyricist")
-    context['composer'] = self.request.GET.get("composer")
-    context['arranger'] = self.request.GET.get("arranger")
-    context['mix'] = self.request.GET.get("mix")
-    context['inst'] = self.request.GET.get("inst")
-    context['movie'] = self.request.GET.get("movie")
-    context['illust'] = self.request.GET.get("illust")
-    context['coStar'] = self.request.GET.get("coStar")
-    context['originalSinger'] = self.request.GET.get("originalSinger")
+    lyricist = self.request.GET.get("lyricist")
+    composer = self.request.GET.get("composer")
+    arranger = self.request.GET.get("arranger")
+    mix = self.request.GET.get("mix")
+    inst = self.request.GET.get("inst")
+    movie = self.request.GET.get("movie")
+    illust = self.request.GET.get("illust")
+    coStar = self.request.GET.get("coStar")
+    originalSinger = self.request.GET.get("originalSinger")
     
+    if lyricist is not None:
+      context["name"] = lyricist
+      context["charge"] = "作詞家"
+    elif composer is not None:
+      context["name"] = composer
+      context["charge"] = "作曲家"
+    elif arranger is not None:
+      context["name"] = arranger
+      context["charge"] = "編曲家"
+    elif mix is not None:
+      context["name"] = mix
+      context["charge"] = "ミックス"
+    elif inst is not None:
+      context["name"] = inst
+      context["charge"] = "楽器担当"
+    elif movie is not None:
+      context["name"] = movie
+      context["charge"] = "編集者"
+    elif illust is not None:
+      context["name"] = illust
+      context["charge"] = "イラストレーター"
+    elif coStar is not None:
+      context["name"] = coStar
+      context["charge"] = "共演者"
+    elif originalSinger is not None:
+      context["name"] = originalSinger
+      context["charge"] = "歌い手"
+
     return context
   
   def get_queryset(self):
@@ -212,32 +242,24 @@ class WorkListView(ListView):#DetailView
     originalSinger = self.request.GET.get("originalSinger")
     
     if lyricist is not None:
-      queryset = self.model.objects.filter(lyricist__lyricist__name=lyricist)
-      return queryset
+      queryset = self.model.objects.filter(lyricist__lyricist__name=lyricist) 
     elif composer is not None:
       queryset = self.model.objects.filter(composer__composer__name=composer)
-      return queryset
     elif arranger is not None:
       queryset = self.model.objects.filter(arranger__arranger__name=arranger)
-      return queryset
     elif mix is not None:
       queryset = self.model.objects.filter(mix__mixer__name=mix)
-      return queryset
     elif inst is not None:
       queryset = self.model.objects.filter(inst__musician__name=inst)
-      return queryset
     elif movie is not None:
       queryset = self.model.objects.filter(movie__videoEditor__name=movie)
-      return queryset
     elif illust is not None:
       queryset = self.model.objects.filter(illust__illustrator__name=illust)
-      return queryset
     elif coStar is not None:
       queryset = self.model.objects.filter(coStar__coStar__name=coStar)
-      return queryset
     elif originalSinger is not None:
       queryset = self.model.objects.filter(originalSinger__originalSinger__name=originalSinger)
-      return queryset
+    return queryset
     
 class VideoUpdateView(UpdateView):
   model = VideoInfo
@@ -279,12 +301,6 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
 
     video_info = VideoInfo.objects.get(videoId=video_id)
     
-    # latestCheck = hololiveSongsResult.objects.filter(aggregationDate=dt).count()
-    # if latestCheck != 0:#本日分が計算されている場合
-    #   toDate = dt
-    # else:#本日分が計算されていない場合昨日分を基準に算出される
-    #   toDate = dt-datetime.timedelta(days=1)
-    
     toDate = dt
     latestCheck = hololiveSongsResult.objects.filter(aggregationDate=dt).count()
     if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
@@ -302,9 +318,17 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
                                                 .order_by('aggregationDate')
       date = [song_result.aggregationDate for song_result in song_results]
       view_counts = [song_result.viewCount for song_result in song_results]
-      # like_counts = [song_result.likeCount for song_result in song_results]
-      
-      return date, view_counts
+      like_counts = [song_result.likeCount for song_result in song_results]
+      view_counts7 = [song_result.viewCount7 for song_result in song_results]
+      like_counts7 = [song_result.likeCount7 for song_result in song_results]
+      view_counts30 = [song_result.viewCount30 for song_result in song_results]
+      like_counts30 = [song_result.likeCount30 for song_result in song_results]
+      if x == 0:
+        return date, view_counts
+      elif x == 7:
+        return date, view_counts7
+      elif x == 30:
+        return date, view_counts30
     
     context['results'] = hololiveSongsResult.objects.filter(info=self.get_object())\
                                                     .order_by("-aggregationDate")[0:50]
@@ -354,9 +378,9 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     # pyplot.figure(figsize=(10,5))
     pyplot.bar(x,y)
     pyplot.xticks(rotation=20)
-    pyplot.title(f"View Count Graph {videoTitle}")
-    pyplot.xlabel("Date")
-    pyplot.ylabel("ViewCount")
+    pyplot.title(f"View Count Graph {videoTitle}", fontsize=15)
+    pyplot.xlabel("日にち", fontsize=15)
+    pyplot.ylabel("ViewCount", fontsize=15)
     pyplot.tight_layout()
     graph = self.output_graph()
     return graph
@@ -437,49 +461,16 @@ class SearchResultView(ListView):
     if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
       thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
       baseDate = thaDayBefore
-    x,y=40,70
-    xDay = baseDate - datetime.timedelta(days=x)#日前
-    yDay = baseDate - datetime.timedelta(days=y)#日前
-    xData = Q_SongType.filter(aggregationDate=xDay).values().order_by("-info_id")
-    yData = Q_SongType.filter(aggregationDate=yDay).values().order_by("-info_id")
-    
-    xxxs = list(xData)
-    yyys = list(yData)
-    x_VandL = [[xxx["info_id"], xxx["viewCount"], xxx["likeCount"]] for xxx in xxxs]#データ多い
-    y_VandL = [[yyy["info_id"], yyy["viewCount"], yyy["likeCount"]] for yyy in yyys]#データ少ない
-    x_info_id = [xxx["info_id"] for xxx in xxxs]#info_id多い
-    y_info_id = [yyy["info_id"] for yyy in yyys]#info_id少ない
-    
-    diff_list = list(set(x_info_id) ^ set(y_info_id))#info_id差分抽出
-    addZero = [[info_id, 0, 0] for info_id in diff_list]#info_id差分0補完     
-    z_VandL =sorted(addZero + y_VandL, reverse=True)#7391 7384 7373 7372...
-    
-    diff_matrix = np.array(x_VandL) - np.array(z_VandL)#NumPyで計算高速化 7391 7384 7373 7372...
 
-    video_id_list = [xxx["info_id"] for xxx in xxxs]
-    # df_title = pd.DataFrame(list(map(lambda num: VideoInfo.objects.get(pk=num).title, video_id_list)),columns=["title"],index=video_id_list)
-    # df_videoId = pd.DataFrame(list(map(lambda num: VideoInfo.objects.get(pk=num).videoId, video_id_list)),columns=["videoId"],index=video_id_list)
-    # df_diff = pd.DataFrame(diff_matrix,columns=["info0", "viewCount", "likeCount"],index=video_id_list)
-    
-    # df = pd.concat([df_title,df_videoId,df_diff], axis=1)
-    # if "viewCountDesc" in self.request.GET.getlist("orderType"):
-    #     df = df.sort_values("viewCount", ascending=False)#True:昇順、False:降順
-    # elif "likeCountDesc" in self.request.GET.getlist("orderType"):
-    #     df = df.sort_values("likeCount", ascending=False)
-    # print(df)
-    # context["titleRange"] = list(df["title"])
-    # context["viewCountRanges"] = list(df["viewCount"])
-    # context["likeCountRanges"] = list(df["likeCount"])
-    
     resultMount=5
     baseDate = dt
+    
     latestCheck = self.model.objects.filter(aggregationDate=dt).count()
     if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
       thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
       baseDate = thaDayBefore
     
     randomInfos = hololiveSongsResult.objects.filter(aggregationDate=baseDate).values("info")
-    
     
     HttpVideo = "https://www.youtube.com/watch?v="
     HttpsJPG = "https://i.ytimg.com/vi/"
@@ -490,12 +481,9 @@ class SearchResultView(ListView):
                      "videoURL":HttpVideo+VideoInfo.objects.get(id=randomInfo).videoId,
                      "videoJPG":HttpsJPG+VideoInfo.objects.get(id=randomInfo).videoId+baseJPG}\
                     for randomInfo in random.sample(randomLists, resultMount)]
-    # context["randomVid"] = ["abc","def","ghi"]
+
     context["randomVideos"] = randomVideos
-    
-    # context["doubleCheck"] = self.get_queryset(self)#重複を除外したい
-    context["oneWeekAgo"] = baseDate - datetime.timedelta(days=7)
-    ##############################################    
+    context["oneWeekAgo"] = baseDate - datetime.timedelta(days=7)   
     
     return context
   
@@ -589,16 +577,44 @@ class SearchResultView(ListView):
                               .prefetch_related('info__originalSinger__originalSinger')
     
     targetLyricist = self.request.GET.getlist("checkbox_lyricist")
-    # targetLyricistList = list([int(datum) for datum in targetLyricist])
-    # print("aaa")
-    print(targetLyricist)
-    # print(targetLyricistList)
-    # print(Q_optimization)
-    # print("aaa")
-    Q_Concerned = Q_optimization.filter(
-      info__lyricist__lyricist__pk__in=targetLyricist
-      ).distinct()
+    targetComposer = self.request.GET.getlist("checkbox_composer")
+    targetArranger = self.request.GET.getlist("checkbox_arranger")
+    targetMixer = self.request.GET.getlist("checkbox_mixer")
+    targetMusician = self.request.GET.getlist("checkbox_musician")
+    targetVideoEditor = self.request.GET.getlist("checkbox_videoEditor")
+    targetIllustrator = self.request.GET.getlist("checkbox_illustrator")
+    targetCoStar = self.request.GET.getlist("checkbox_coStar")
+    targetOriginalSinger = self.request.GET.getlist("checkbox_originalSinger")
+
+    #時間がかかるのでこれで代用。
+    Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist).distinct()
+    
+    #時間がかかる２０分でもランキングページに行かなかった。
+    # Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist,
+    #                                     info__composer__pk__in=targetComposer,
+    #                                     info__arranger__pk__in=targetArranger,
+    #                                     info__mix__pk__in=targetMixer,
+    #                                     info__inst__pk__in=targetMusician,
+    #                                     info__movie__pk__in=targetVideoEditor,
+    #                                     info__illust__pk__in=targetIllustrator,
+    #                                     info__coStar__pk__in=targetCoStar,
+    #                                     info__originalSinger__pk__in=targetOriginalSinger
+    #                                     ).distinct()
+    
+    #時間がかかる２０分でもランキングページに行かなかった。
+    # Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist)\
+    #                             .filter(info__composer__pk__in=targetComposer)\
+    #                             .filter(info__arranger__pk__in=targetArranger)\
+    #                             .filter(info__mix__pk__in=targetMixer)\
+    #                             .filter(info__inst__pk__in=targetMusician)\
+    #                             .filter(info__movie__pk__in=targetVideoEditor)\
+    #                             .filter(info__illust__pk__in=targetIllustrator)\
+    #                             .filter(info__coStar__pk__in=targetCoStar)\
+    #                             .filter(info__originalSinger__pk__in=targetOriginalSinger)\
+    #                             .distinct()
     
     queryset = Q_Concerned
+    
+    # queryset = Q_optimization
     
     return queryset

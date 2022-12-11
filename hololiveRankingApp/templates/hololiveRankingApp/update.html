@@ -5,7 +5,7 @@
 {% block title %}編集{% endblock title %}
 {% block content %}
 <hr>
-<form method="post">{% csrf_token %}
+<form action="{% url 'update' object.id %}" method="post">{% csrf_token %}
     <div class="" style="min-width: 360px; user-select: none;">
       <span class="" style="background-color: green;">作詞家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
       <div class="update_choice">
@@ -13,20 +13,25 @@
         <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' forloop.counter 2 %}" name="lyricist">
         <label  class="tag_box2" for="{% plusCalc2 'lyricist' forloop.counter 2 %}">{{ name }} </label>
         {% endfor %}
-        <div style="margin: 15px;"><!--追加登録-->
+        <div style="margin: 15px; background-color: #202020; border-radius: 20px; padding: 10px;"><!--追加登録-->
           <details>
-            <summary class="concerned_summary" style="background-color: #202020;">追加登録</summary>
-            {% for person in people %}<!--item.performer.all-->
-              {% if person.name not in lyricists %}
-                <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
-                <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
-              {% endif %}
-            {% endfor %}
+            <summary class="concerned_summary" style="background-color: #ffffff; color: #333;">追加登録</summary>
+              <form method="post">{% csrf_token %}
+                {% for person in people %}
+                  {% if person.name not in lyricists %}
+                    <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
+                    <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
+                  {% endif %}
+                {% endfor %}
+                <div style="text-align: right;">
+                  <button type="submit" class="btn btn-info btn-block">候補に追加</button>
+                  <a href="{% url 'addNew' redirectPk=pk %}" class="btn btn-info btn-block">新規追加</a><!-- update_choice_add-->
+                </div>
+              </form>
           </details>
         </div>
-        <a href="{% url 'addNew' redirectPk=pk %}" class="tag_box2 update_choice_add">新規追加</a>
+        
       </div>
-      
     </div>
     <div class="" style="min-width: 360px; user-select: none;">
       <span class="" style="background-color: green;">作曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
@@ -119,7 +124,7 @@
 <!--https://hodalog.com/how-to-use-bootstrap-4-forms-with-django/-->
 
   <hr>
-    <div class="">
+    <div style="text-align: right;">
       <button type="submit" class="btn btn-info btn-block">更新</button>
     </div>
 
