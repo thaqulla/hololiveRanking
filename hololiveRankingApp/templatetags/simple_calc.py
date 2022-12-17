@@ -14,7 +14,7 @@ def plusCalc2(head, foot, x):
   if x == 1:
     return foot + head 
   if x == 2:
-    return head + str(foot) 
+    return head + str(foot)
 
 def plusCalc3(val1, val2, val3):
   return val1 + val2 + val3

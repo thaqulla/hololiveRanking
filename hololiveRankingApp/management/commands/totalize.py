@@ -85,11 +85,7 @@ class Command(BaseCommand):
         # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
         ##########################################################
         
-        # querysetAll = VideoInfo.objects.filter(composer__composer__pk=7).distinct().order_by("-pk")
-        # print([[datum.title,datum.videoId] for datum in querysetAll])
-        
-        #not_inputed = SakushikaModlel.objects.get(pk=[0:未記入の作詞家モデルとしてのpk(not AnotherPersonのpk)])
-        #VideoInfo.objects.sakusika.remove(not_inputed)
+
         
         concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
                                     .prefetch_related('composer__composer')\
@@ -114,14 +110,8 @@ class Command(BaseCommand):
                                   Q(coStar__coStar__pk=x)|\
                                   Q(originalSinger__originalSinger__pk=x))
         print(anotherL)#.count()==0
-            
-        # double01 = VideoInfo.objects.filter(mix__pk=61)
-        # double02 = VideoInfo.objects.filter(mix__pk=18)
-        # for mi in double01:
-        #     print(mi.title,mi.pk)
-        # print("2222222222222222222")
-        # for mi in double02:
-        #     print(mi.title,mi.pk)
+        ageData = VideoInfo.objects.filter(videoAge__year="2017").order_by("-videoAge")
+        print(ageData)
 
 
         

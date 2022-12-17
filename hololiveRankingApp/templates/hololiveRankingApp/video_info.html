@@ -5,7 +5,7 @@
 <br>
 <div  class="container" 
       style="
-            background-size:contain;
+            background-size: contain;
             object-fit: cover;
             background-color: #000000;
             background-blend-mode: lighten;"><!--background-image: url({{ object.getThumbnailHigh }});-->
@@ -23,12 +23,12 @@
         </a>
         <div class="layout_Counts">
           {% for result in object.hololivesongsresult_set.all|dictsortreversed:"aggregationDate"|slice:":1" %}
-          <div style="padding: 5px;
+          <div id="viewCount" style="padding: 5px;
                       background-color:red;
                       border-radius: 100vh;
                       text-align: left;
                       ">&nbsp;総合再生回数:{{result.viewCount | intcomma }}&nbsp;</div>
-          <div style="padding: 5px;
+          <div id="likeCount" style="padding: 5px;
                       background-color:blue;
                       border-radius: 100vh;
                       text-align: left;
@@ -49,10 +49,10 @@
       <div id="resultCount">
 
       </div>
-      <img style="width: 100%;
-                  min-width :450px;            
-                  border:dotted;"
-      src="data:image/png;base64,{{ mygraph | safe }}" id="viewGraph" alt="視聴回数推移" />
+      <img style="width: 100%; min-width :450px; border:dotted;"
+            src="data:image/png;base64,{{ viewgraph | safe }}" id="viewGraph" alt="視聴回数推移">
+      <img style="width: 100%; min-width :450px; border:dotted;"
+            src="data:image/png;base64,{{ likegraph | safe }}" id="likeGraph" alt="高評価数数推移">
     </div>
 
     <div class="col col-lg-4"><!--推移表-->
@@ -147,13 +147,17 @@
       
       <script type="text/javascript">
         function showimg0() {
-          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph | safe }}";
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph | safe }}";
+          document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph | safe }}";
+          //document.getElementById("likeCount").src = "data:image/png;base64,{{ likegraph | safe }}";
         }
         function showimg7() {
-          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph7 | safe }}";
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph7 | safe }}";
+          document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph7 | safe }}";
         }
         function showimg30() {
-          document.getElementById("viewGraph").src = "data:image/png;base64,{{ mygraph30 | safe }}";
+          document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph30 | safe }}";
+          document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph30 | safe }}";
         }
       </script>
     </div>

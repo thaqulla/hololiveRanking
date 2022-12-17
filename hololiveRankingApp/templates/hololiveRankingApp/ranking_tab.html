@@ -58,12 +58,6 @@
       </a>
     </div>
     <div class="collaborator_box">
-      <!-- <div>
-        <span>作詞家:</span><br>
-        {% for name in songList.info.lyricist.all %}
-        <a class="tag_box" href="{% url 'work' pk=name.pk %}" type="submit" id="{{ name.pk }}" name="lyricist" value="{{ name.pk }}">{{ name }}</a>
-        {% endfor %}
-      </div> -->
       <div>
         <span>作詞家:</span><br>
         {% for name in songList.info.lyricist.all %}

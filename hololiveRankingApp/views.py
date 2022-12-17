@@ -67,8 +67,8 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     
-    context["months"] = [f"{x+1}月" for x in range(0,12)]
-    context["years"] = [f"{x}年" for x in range(2017,int(dtstr[0:4])+1)]
+    context["months"] = [x+1 for x in range(0,12)]
+    context["years"] = [x for x in range(2017,int(dtstr[0:4])+1)]
   
     context["JPall"] = hololiveChannel2.objects.filter(Q(category__GenName="０期生")\
                                             |Q(category__GenName="１期生")\
@@ -307,7 +307,7 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
       thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
       toDate = thaDayBefore
       
-    def makeGraph(x):
+    def makeGraph(x,y):
       if x == 0:
         fromDate = video_info.videoAge
       else:
@@ -324,24 +324,36 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
       view_counts30 = [song_result.viewCount30 for song_result in song_results]
       like_counts30 = [song_result.likeCount30 for song_result in song_results]
       if x == 0:
-        return date, view_counts
+        if y == "view": 
+          return date, view_counts
+        if y == "like":
+          return date, like_counts
       elif x == 7:
-        return date, view_counts7
+        if y == "view": 
+          return date, view_counts7
+        if y == "like":
+          return date, like_counts7
       elif x == 30:
-        return date, view_counts30
+        if y == "view": 
+          return date, view_counts30
+        if y == "like":
+          return date, like_counts30
     
     context['results'] = hololiveSongsResult.objects.filter(info=self.get_object())\
                                                     .order_by("-aggregationDate")[0:50]
     
-    date, view_counts = makeGraph(0)
-    context['mygraph'] = self.create_graph(date, view_counts, video_info.title)
-    
-    date7, view_counts7 = makeGraph(7)
-    context['mygraph7'] = self.create_graph_bar(date7, view_counts7, video_info.title)
-    
-    date30, view_counts30 = makeGraph(30)
-    context['mygraph30'] = self.create_graph_bar(date30, view_counts30, video_info.title)
-    
+    date, view_counts = makeGraph(0,"view")
+    context['viewgraph'] = self.create_graph(date, view_counts, video_info.title)
+    date, like_counts = makeGraph(0,"like")
+    context['likegraph'] = self.create_graph(date, like_counts, video_info.title)
+    date7, view_counts7 = makeGraph(7,"view")
+    context['viewgraph7'] = self.create_graph_bar(date7, view_counts7, video_info.title)
+    date, like_counts7 = makeGraph(7,"like")
+    context['likegraph7'] = self.create_graph_bar(date, like_counts7, video_info.title)
+    date30, view_counts30 = makeGraph(30,"view")
+    context['viewgraph30'] = self.create_graph_bar(date30, view_counts30, video_info.title)
+    date, like_counts30 = makeGraph(30,"like")
+    context['likegraph30'] = self.create_graph_bar(date, like_counts30, video_info.title)
     return context
     
   def output_graph(self):#グラフ画像の文字コードや拡張子ファイル設定
@@ -586,35 +598,31 @@ class SearchResultView(ListView):
     targetCoStar = self.request.GET.getlist("checkbox_coStar")
     targetOriginalSinger = self.request.GET.getlist("checkbox_originalSinger")
 
-    #時間がかかるのでこれで代用。
-    Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist).distinct()
+    Q_Concerned = Q_optimization.exclude(info__lyricist__pk__in=targetLyricist)\
+                                .exclude(info__composer__pk__in=targetComposer)\
+                                .exclude(info__arranger__pk__in=targetArranger)\
+                                .exclude(info__mix__pk__in=targetMixer)\
+                                .exclude(info__inst__pk__in=targetMusician)\
+                                .exclude(info__movie__pk__in=targetVideoEditor)\
+                                .exclude(info__illust__pk__in=targetIllustrator)\
+                                .exclude(info__coStar__pk__in=targetCoStar)\
+                                .exclude(info__originalSinger__pk__in=targetOriginalSinger)
+    Q_year = Q_Concerned
     
-    #時間がかかる２０分でもランキングページに行かなかった。
-    # Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist,
-    #                                     info__composer__pk__in=targetComposer,
-    #                                     info__arranger__pk__in=targetArranger,
-    #                                     info__mix__pk__in=targetMixer,
-    #                                     info__inst__pk__in=targetMusician,
-    #                                     info__movie__pk__in=targetVideoEditor,
-    #                                     info__illust__pk__in=targetIllustrator,
-    #                                     info__coStar__pk__in=targetCoStar,
-    #                                     info__originalSinger__pk__in=targetOriginalSinger
-    #                                     ).distinct()
+    years = [str(x) for x in range(2017,int(dtstr[0:4])+1)]
+    for year in years:
+      if year in self.request.GET.getlist("checkbox_year"):
+        Q_year = Q_year.exclude(info__videoAge__year=year)
+        print(year,Q_year)
     
-    #時間がかかる２０分でもランキングページに行かなかった。
-    # Q_Concerned = Q_optimization.filter(info__lyricist__pk__in=targetLyricist)\
-    #                             .filter(info__composer__pk__in=targetComposer)\
-    #                             .filter(info__arranger__pk__in=targetArranger)\
-    #                             .filter(info__mix__pk__in=targetMixer)\
-    #                             .filter(info__inst__pk__in=targetMusician)\
-    #                             .filter(info__movie__pk__in=targetVideoEditor)\
-    #                             .filter(info__illust__pk__in=targetIllustrator)\
-    #                             .filter(info__coStar__pk__in=targetCoStar)\
-    #                             .filter(info__originalSinger__pk__in=targetOriginalSinger)\
-    #                             .distinct()
+    Q_month = Q_year
+      
+    months = [str(x+1) for x in range(0,12)]
+    for month in months:
+      if month in self.request.GET.getlist("checkbox_month"):
+        Q_month = Q_month.exclude(info__videoAge__month=month)
     
-    queryset = Q_Concerned
+    queryset = Q_month
     
-    # queryset = Q_optimization
     
     return queryset
