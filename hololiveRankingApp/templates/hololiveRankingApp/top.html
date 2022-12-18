@@ -426,7 +426,7 @@
               <summary class="concerned_summary">編曲家一覧↓</summary>
               {% for name in arrangers %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'arranger' name.pk 2 %}" name="checkbox_arranger" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'arranger' name.pk 2 %}">
+                <label  class="tag_box2" for="{% plusCalc2 'arranger' name.pk 2 %}">name="checkbox_{{ hoge }}"
                   {{ name.arranger }}
                 </label><br>
               {% endfor %}
@@ -509,7 +509,6 @@
           <div><!--単純絞り込み-->
             <h5>総合、週間、月間</h5>
             <label>
-              
               <input type="radio" id="daily" name="dateType" value="total">
               <span>総合</span>
             </label>

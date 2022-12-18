@@ -274,15 +274,15 @@ class VideoUpdateView(UpdateView):
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["pk"]
     context["description"] = self.model.objects.get(pk=self.kwargs["pk"]).description
-    context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    context["composers"] = [datum.composer.name for datum in Composer.objects.all()]
-    context["arrangers"] = [datum.arranger.name for datum in Arranger.objects.all()]
-    context["mixers"] = [datum.mixer.name for datum in Mixer.objects.all()]
-    context["musicians"] = [datum.musician.name for datum in Musician.objects.all()]
-    context["videoEditors"] = [datum.videoEditor.name for datum in VideoEditor.objects.all()]
-    context["illustrators"] = [datum.illustrator.name for datum in Illustrator.objects.all()]
-    context["coStars"] = [datum.coStar.name for datum in CoStar.objects.all()]
-    context["originalSingers"] = [datum.originalSinger.name for datum in OriginalSinger.objects.all()]
+    # context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
+    # context["composers"] = [datum.composer.name for datum in Composer.objects.all()]
+    # context["arrangers"] = [datum.arranger.name for datum in Arranger.objects.all()]
+    # context["mixers"] = [datum.mixer.name for datum in Mixer.objects.all()]
+    # context["musicians"] = [datum.musician.name for datum in Musician.objects.all()]
+    # context["videoEditors"] = [datum.videoEditor.name for datum in VideoEditor.objects.all()]
+    # context["illustrators"] = [datum.illustrator.name for datum in Illustrator.objects.all()]
+    # context["coStars"] = [datum.coStar.name for datum in CoStar.objects.all()]
+    # context["originalSingers"] = [datum.originalSinger.name for datum in OriginalSinger.objects.all()]
     context["people"] = AnotherPerson.objects.all().order_by("name")
     
     return context

@@ -156,12 +156,12 @@ MEDIA_ROOT = BASE_DIR / 'assets/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# LOGIN_URL = 'login'
-LOGIN_URL = 'hololiveRankingApp/login/'
+LOGIN_URL = 'login'
+# LOGIN_URL = 'hololiveRankingApp/login/'
 
-# LOGOUT_URL = 'logout'
-LOGOUT_URL = 'hololiveRankingApp/logout'
-LOGIN_REDIRECT_URL = 'top'#appHome
+LOGOUT_URL = 'logout'
+# LOGOUT_URL = 'hololiveRankingApp/logout'
+LOGIN_REDIRECT_URL = 'top'
 
 NUMBER_GROUPING = 3
 

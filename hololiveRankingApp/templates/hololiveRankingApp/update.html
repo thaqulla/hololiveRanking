@@ -6,119 +6,23 @@
 {% block content %}
 <hr>
 <form action="{% url 'update' object.id %}" method="post">{% csrf_token %}
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">作詞家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.lyricist %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' forloop.counter 2 %}" name="lyricist">
-        <label  class="tag_box2" for="{% plusCalc2 'lyricist' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <div style="margin: 15px; background-color: #202020; border-radius: 20px; padding: 10px;"><!--追加登録-->
-          <details>
-            <summary class="concerned_summary" style="background-color: #ffffff; color: #333;">追加登録</summary>
-              <form method="post">{% csrf_token %}
-                {% for person in people %}
-                  {% if person.name not in lyricists %}
-                    <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'add_lyricist' person.pk 2 %}" name="{{ person }}">
-                    <label  class="tag_box2" for="{% plusCalc2 'add_lyricist' person.pk 2 %}">{{ person }} </label>
-                  {% endif %}
-                {% endfor %}
-                <div style="text-align: right;">
-                  <button type="submit" class="btn btn-info btn-block">候補に追加</button>
-                  <a href="{% url 'addNew' redirectPk=pk %}" class="btn btn-info btn-block">新規追加</a><!-- update_choice_add-->
-                </div>
-              </form>
-          </details>
-        </div>
-        
-      </div>
+{% for field in form %}
+  <div class="" style="min-width: 360px; user-select: none;">
+    <span class="" style="background-color: green;">{{ field.label }}</span>
+    <div class="update_choice">
+      <!--field-->
+      {{ field }}
+      <!--field-->
+      <a href="{% url 'addNew' redirectPk=pk %}" class="tag_box2 update_choice_add">新規追加</a>
     </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">作曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.composer %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' forloop.counter 2 %}" name="composer">
-        <label  class="tag_box2" for="{% plusCalc2 'composer' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">編曲家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.arranger %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'arranger' forloop.counter 2 %}" name="arranger">
-        <label  class="tag_box2" for="{% plusCalc2 'arranger' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">ミックス</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.mix %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'mix' forloop.counter 2 %}" name="mix">
-        <label  class="tag_box2" for="{% plusCalc2 'mix' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">音楽家</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.inst %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'inst' forloop.counter 2 %}" name="inst">
-        <label  class="tag_box2" for="{% plusCalc2 'inst' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">動画編集者</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.movie %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'movie' forloop.counter 2 %}" name="movie">
-        <label  class="tag_box2" for="{% plusCalc2 'movie' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">イラストレーター</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.illust %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'illust' forloop.counter 2 %}" name="illust">
-        <label  class="tag_box2" for="{% plusCalc2 'illust' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">外部共演者</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.coStar %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'coStar' forloop.counter 2 %}" name="coStar">
-        <label  class="tag_box2" for="{% plusCalc2 'coStar' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div class="" style="min-width: 360px; user-select: none;">
-      <span class="" style="background-color: green;">本家歌い手</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice">
-        {% for name in form.originalSinger %}
-        <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'originalSinger' forloop.counter 2 %}" name="originalSinger">
-        <label  class="tag_box2" for="{% plusCalc2 'originalSinger' forloop.counter 2 %}">{{ name }} </label>
-        {% endfor %}
-        <a href="#" class="tag_box2 update_choice_add">新規追加</a>
-      </div>
-    </div>
-    <div>
-      <span class="" style="background-color: green;">詳細情報</span><!--col-sm-1 col-form-label for="{{ form.lyricist.id_for_label }}"-->
-      <div class="update_choice description">
-        {{ description|linebreaksbr }}
-      </div>
-    </div>
+  </div>
+{% endfor %}
+<div>
+  <span class="" style="background-color: green;">詳細情報</span>
+  <div class="update_choice description">
+    {{ description|linebreaksbr }}
+  </div>
+</div>
 
 <!--https://hodalog.com/how-to-use-bootstrap-4-forms-with-django/-->
 
