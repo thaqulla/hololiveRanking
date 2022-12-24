@@ -10,7 +10,7 @@ from django.db.models import Max, Min
 from django.db.models import Q
 
 from .forms import LoginForm
-from .forms import VideoInfoForm, ConcernedCreateForm
+from .forms import VideoInfoForm, ConcernedCreateForm, LyricistAddForm
 from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
   videoTypeJudgement, Lyricist,Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
@@ -25,13 +25,14 @@ import japanize_matplotlib
 import numpy as np
 import pandas as pd
 import random
+import requests as re
 
-#N+1問題が解決されていないため全体的にコードの見直しが必須
-#pep8に基づいたコードの書き方に変更予定
+# TODO: N+1問題が解決されていないため全体的にコードの見直しが必須
+# TODO: pep8に基づいたコードの書き方に変更予定
 
 dt = datetime.date.today()  # ローカルな現在の日付と時刻を取得
 dtstr = dt.strftime("%Y-%m-%d")
-  
+
 def get_header_context_data(context):
   # context = super().get_context_data(**kwargs)
   context["JPall"] = hololiveChannel2.objects.filter(Q(category__GenName="０期生")\
@@ -124,16 +125,15 @@ class Logout(LogoutView):
   template_name = 'hololiveRankingApp/logout.html'
   
 class UserCreateView(CreateView):
-  template_name = 'hololiveRankingApp/user_create.html'
+  template_name = 'hololiveRankingApp/user/create.html'
   form_class = UserCreationForm
   success_url = reverse_lazy('top')
 
 ##########################################
 
 class VideoInfoCreateView(CreateView):
-  
   model = VideoInfo
-  template_name = 'hololiveRankingApp/create.html'
+  template_name = 'hololiveRankingApp/video/create.html'
   
   fields = ["performer","title","videoId"] #"fields = '__all__'
   success_url = reverse_lazy("list")
@@ -143,22 +143,39 @@ class VideoInfoCreateView(CreateView):
     context = get_header_context_data(context)
     return context
 
-# class ConcernedCreateView(ListView):
-#   model = AnotherPerson
-#   template_name = 'hololiveRankingApp/concerned_create.html'
-#   form_class = ConcernedCreateForm
+class LyricistAddView(CreateView):
+  model = Lyricist
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  form_class = LyricistAddForm
+  success_url = reverse_lazy("list")
+  # def get_success_url(self):
+  #   return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
   
-#   def get_context_data(self, **kwargs):
-#     context = super().get_context_data(**kwargs)
-#     context = get_header_context_data(context)
-#     return context
-  # fields = '__all__' #"__all__"
-
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    context["lyricists"] = [str(datum.lyricist.name) for datum in Lyricist.objects.all()]
+    #<label for="id_lyricist_2" class="tag_box2"> !記載なし </label>
+    return context
   
-class ConcernedAddView(CreateView):
+class ConcernedAddView(UpdateView):
   model = AnotherPerson
-  template_name = 'hololiveRankingApp/add.html'
+  template_name = 'hololiveRankingApp/concerned/create.html'
   form_class = ConcernedCreateForm
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    # context["concerned"] = self.kwargs["concerned"]
+    return context
+  
+  
+class ConcernedCreateView(CreateView):
+  model = AnotherPerson
+  template_name = 'hololiveRankingApp/add.html'#addNew
+  fields = '__all__'
   
   def get_success_url(self):
     return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
@@ -166,9 +183,8 @@ class ConcernedAddView(CreateView):
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
-    context["pk"] = self.kwargs["redirectPk"]
+    # context["pk"] = self.kwargs["redirectPk"]
     return context
-  
 
 class VideoInfoListView(ListView):
   model = VideoInfo
@@ -267,8 +283,7 @@ class VideoUpdateView(UpdateView):
   template_name = 'hololiveRankingApp/update.html'
   def get_success_url(self):
     return reverse("video_info", kwargs={"pk": self.kwargs["pk"]})
-    # def get_absolute_url(self):
-    #   return reverse('video_info', kwargs={'pk' : self.kwargs["pk"]})
+
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)

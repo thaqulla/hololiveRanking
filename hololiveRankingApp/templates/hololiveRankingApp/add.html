@@ -4,7 +4,7 @@
 {% load numeral_system %}
 {% load humanize %}
 {% load simple_calc %}
-<form action="" method="POST"> {% csrf_token %}
+<form method="POST"> {% csrf_token %}
 
   {{ form.as_p }}
   
@@ -24,7 +24,6 @@
   <span>関係者URL:{{ form.snsURL }}</span><br>
   <span>関係者SNS(Twitter):{{ form.snsUserName }}</span><br>
     */</style>
-    
 
   <button class="btn btn-primary form-control" type="submit">登録</button>
 

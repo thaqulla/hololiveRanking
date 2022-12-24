@@ -10,10 +10,26 @@
   <div class="" style="min-width: 360px; user-select: none;">
     <span class="" style="background-color: green;">{{ field.label }}</span>
     <div class="update_choice">
-      <!--field-->
       {{ field }}
-      <!--field-->
-      <a href="{% url 'addNew' redirectPk=pk %}" class="tag_box2 update_choice_add">新規追加</a>
+      {% if field.label == "作詞家" %}
+      <a href="{% url 'lyricist' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "作曲家" %}
+      <a href="{% url 'composer' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "編曲家" %}
+      <a href="{% url 'arranger' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "ミックス" %}
+      <a href="{% url 'mixer' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "楽器担当" %}
+      <a href="{% url 'musician' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "動画編集者" %}
+      <a href="{% url 'videoEditor' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "イラストレーター" %}
+      <a href="{% url 'illustrator' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "共演者" %}
+      <a href="{% url 'coStar' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% elif field.label == "原曲歌い手" %}
+      <a href="{% url 'originalSinger' redirectPk=pk %}" class="tag_box2 update_choice_add">{{ field.label }}追加</a>
+      {% endif %}
     </div>
   </div>
 {% endfor %}

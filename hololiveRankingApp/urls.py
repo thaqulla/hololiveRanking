@@ -16,9 +16,19 @@ urlpatterns = [
   path('list/', views.VideoInfoListView.as_view(), name='list'),
   path('<int:pk>/work/', views.WorkListView.as_view(), name='work'),
   path('<int:pk>/update/', views.VideoUpdateView.as_view(), name='update'),
-  # path('add/', views.ConcernedCreateView.as_view(), name='addNew'),
-  path('<int:redirectPk>/add/', views.ConcernedAddView.as_view(), name='addNew'),
-  
+  # path('<int:redirectPk>/addOld/<int:concerned>', views.ConcernedAddView.as_view(), name='addOld'),#<slug:concerned>/
+  # path('<int:redirectPk>/addOld/<int:concerned>/', views.ConcernedAddView.as_view(), name='addOld'),#<slug:concerned>/
+  path('<int:redirectPk>/addOld/Lyricist/', views.LyricistAddView.as_view(), name='lyricist'),
+  path('<int:redirectPk>/addOld/Composer/', views.LyricistAddView.as_view(), name='composer'),
+  path('<int:redirectPk>/addOld/Arranger/', views.LyricistAddView.as_view(), name='arranger'),
+  path('<int:redirectPk>/addOld/Mixer/', views.LyricistAddView.as_view(), name='mixer'),
+  path('<int:redirectPk>/addOld/Musician/', views.LyricistAddView.as_view(), name='musician'),
+  path('<int:redirectPk>/addOld/VideoEditor/', views.LyricistAddView.as_view(), name='videoEditor'),
+  path('<int:redirectPk>/addOld/Illustrator/', views.LyricistAddView.as_view(), name='illustrator'),
+  path('<int:redirectPk>/addOld/CoStar/', views.LyricistAddView.as_view(), name='coStar'),
+  path('<int:redirectPk>/addOld/OriginalSinger/', views.LyricistAddView.as_view(), name='originalSinger'),
+  # path('<int:redirectPk>/addNew/', views.ConcernedCreateView.as_view(), name='addNew'),
+  path('addNew/', views.ConcernedCreateView.as_view(), name='addNew'),
   
   path('login/', Login.as_view(), name='login'),
   path('logout/', Logout.as_view(), name='logout'),
