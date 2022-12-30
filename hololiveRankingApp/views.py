@@ -8,9 +8,10 @@ from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Max, Min
 from django.db.models import Q
+from django import forms
 
 from .forms import LoginForm
-from .forms import VideoInfoForm, ConcernedCreateForm, LyricistAddForm
+from .forms import VideoInfoForm, ConcernedCreateForm, LyricistAddForm,ComposerAddForm
 from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
   videoTypeJudgement, Lyricist,Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
@@ -147,18 +148,37 @@ class LyricistAddView(CreateView):
   model = Lyricist
   template_name = 'hololiveRankingApp/concerned/create.html'
   form_class = LyricistAddForm
-  success_url = reverse_lazy("list")
-  # def get_success_url(self):
-  #   return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  # success_url = reverse_lazy("list")
+  def get_success_url(self):
+    return reverse('Lyricist', kwargs={'pk': self.kwargs['redirectPk']})#成功
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["redirectPk"]
-    context["lyricists"] = [str(datum.lyricist.name) for datum in Lyricist.objects.all()]
+    context["concerned"] = "Lyricist"
+    # context["lyricists"] = [str(datum.lyricist.name) for datum in Lyricist.objects.all()]
     #<label for="id_lyricist_2" class="tag_box2"> !記載なし </label>
     return context
   
+class ComposerAddView(CreateView):
+  model = Composer
+  form_class = ComposerAddForm
+  concerned = "Composer"
+  
+  template_name = 'hololiveRankingApp/concerned/create.html'
+
+  def get_success_url(self):
+    return reverse("update", kwargs={'pk': self.kwargs['redirectPk']})#成功
+    # return reverse(self.concerned, kwargs={'redirectPk': self.kwargs['redirectPk']})
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    context["concerned"] = self.concerned
+    return context
+
 class ConcernedAddView(UpdateView):
   model = AnotherPerson
   template_name = 'hololiveRankingApp/concerned/create.html'
@@ -171,19 +191,18 @@ class ConcernedAddView(UpdateView):
     # context["concerned"] = self.kwargs["concerned"]
     return context
   
-  
 class ConcernedCreateView(CreateView):
   model = AnotherPerson
   template_name = 'hololiveRankingApp/add.html'#addNew
   fields = '__all__'
-  
+  # success_url = reverse_lazy("list")
   def get_success_url(self):
     return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
       
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
-    # context["pk"] = self.kwargs["redirectPk"]
+    context["pk"] = self.kwargs["redirectPk"]
     return context
 
 class VideoInfoListView(ListView):

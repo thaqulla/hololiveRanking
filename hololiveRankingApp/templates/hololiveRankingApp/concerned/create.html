@@ -1,35 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}関係者追加{% endblock title %}
+
 {% block content %}
-{% load numeral_system %}
-{% load humanize %}
-{% load simple_calc %}
 <form method="POST"> {% csrf_token %}
+  <div>
+  <h3>{{concerned}}</h3>
+  {% for field in form %}
+    {{ field }}
+  {% endfor %}
+  </div>
 
-  <!-- {{ form.non_field_errors }} -->
-    {% for field in form %}
-      <div class="field">
-        {% with %}
-        {% if field not in lyricists %}
-        {{ field }}
-        {% endif %}
-        {% endwith %}
-        <style>/*
-        {% for person in people %}
-          {% if person.name not in lyricists %}
-            {{ person }}
-          {% endif %}
-        {% endfor %}
-          */</style>
-        
-      </div>
-    {% endfor %}
-    {% for name in lyricists %}
-      {{name}}
-    {% endfor %}
   <button class="btn btn-primary form-control" type="submit">登録</button>
-  <!--redirectPk=pk-->
-  <a href="{% url 'addNew'%}" class="tag_box2">新規追加</a>
+  <hr>
+  <a href="{% url 'addNew' redirectPk=pk %}" class="btn btn-danger form-control">新規追加</a>
 </form>
-
 {% endblock content %}

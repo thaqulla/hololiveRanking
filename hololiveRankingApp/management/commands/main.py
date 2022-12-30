@@ -350,6 +350,9 @@ def complementerAve(maxPkRslt,x):
                 for i in dataAll:
                     print(i.pk, i.info.title,i.aggregationDate,i.viewCount,i.likeCount)
                     #おかしなデータを手動で削除
+            except UnboundLocalError:
+                errorVideo = VideoInfo.objects.get(videoId=vid)
+                print(errorVideo.title,vid)
             Vaskew = (y2.viewCount - y1.viewCount)/x
             Laskew = (y2.likeCount - y1.likeCount)/x
             Vave = int(Vaskew*(dat[1]-dat[2])+y1.viewCount)

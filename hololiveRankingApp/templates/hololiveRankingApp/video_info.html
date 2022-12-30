@@ -11,7 +11,7 @@
             background-blend-mode: lighten;"><!--background-image: url({{ object.getThumbnailHigh }});-->
   <div class="row">
     <div>
-      <h1  class="title_position title_link">{{ object.title }}</h1><!--タイトル-->
+      <h1  class="title_position title_link">{{ object.title| truncatechars:25 }}</h1><!--タイトル-->
       
       
     </div>

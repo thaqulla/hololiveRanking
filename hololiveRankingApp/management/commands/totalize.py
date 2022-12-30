@@ -84,34 +84,34 @@ class Command(BaseCommand):
         ##################今は絶対回すな###########################
         # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
         ##########################################################
+        test = [datum.composer.name for datum in Composer.objects.all()]
+        print(test)
         
-
-        
-        concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
-                                    .prefetch_related('composer__composer')\
-                                    .prefetch_related('arranger__arranger')\
-                                    .prefetch_related('mix__mixer')\
-                                    .prefetch_related('inst__musician')\
-                                    .prefetch_related('movie__videoEditor')\
-                                    .prefetch_related('illust__illustrator')\
-                                    .prefetch_related('coStar__coStar')\
-                                    .prefetch_related('originalSinger__originalSinger')
-        anotherAll = AnotherPerson.objects.all()
-        anotherPk = [datum.pk for datum in anotherAll]
-        print(anotherPk)
-        x = 61
-        anotherL = concerned.filter(Q(lyricist__lyricist__pk=x)|\
-                                  Q(composer__composer__pk=x)|\
-                                  Q(arranger__arranger__pk=x)|\
-                                  Q(mix__mixer__pk=x)|\
-                                  Q(inst__musician__pk=x)|\
-                                  Q(movie__videoEditor__pk=x)|\
-                                  Q(illust__illustrator__pk=x)|\
-                                  Q(coStar__coStar__pk=x)|\
-                                  Q(originalSinger__originalSinger__pk=x))
-        print(anotherL)#.count()==0
-        ageData = VideoInfo.objects.filter(videoAge__year="2017").order_by("-videoAge")
-        print(ageData)
+        # concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
+        #                             .prefetch_related('composer__composer')\
+        #                             .prefetch_related('arranger__arranger')\
+        #                             .prefetch_related('mix__mixer')\
+        #                             .prefetch_related('inst__musician')\
+        #                             .prefetch_related('movie__videoEditor')\
+        #                             .prefetch_related('illust__illustrator')\
+        #                             .prefetch_related('coStar__coStar')\
+        #                             .prefetch_related('originalSinger__originalSinger')
+        # anotherAll = AnotherPerson.objects.all()
+        # anotherPk = [datum.pk for datum in anotherAll]
+        # print(anotherPk)
+        # x = 61
+        # anotherL = concerned.filter(Q(lyricist__lyricist__pk=x)|\
+        #                           Q(composer__composer__pk=x)|\
+        #                           Q(arranger__arranger__pk=x)|\
+        #                           Q(mix__mixer__pk=x)|\
+        #                           Q(inst__musician__pk=x)|\
+        #                           Q(movie__videoEditor__pk=x)|\
+        #                           Q(illust__illustrator__pk=x)|\
+        #                           Q(coStar__coStar__pk=x)|\
+        #                           Q(originalSinger__originalSinger__pk=x))
+        # print(anotherL)#.count()==0
+        # ageData = VideoInfo.objects.filter(videoAge__year="2017").order_by("-videoAge")
+        # print(ageData)
 
 
         
