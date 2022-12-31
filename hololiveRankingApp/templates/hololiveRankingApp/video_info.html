@@ -21,22 +21,6 @@
         <a href="{{ object.getVideoUrl }}" target="_blank" rel="noopener noreferrer" alt="performerImage">
           <img style="width: 100%;" src="{{ object.getThumbnailHigh }}" alt="thumbnailImage">
         </a>
-        <div class="layout_Counts">
-          {% for result in object.hololivesongsresult_set.all|dictsortreversed:"aggregationDate"|slice:":1" %}
-          <div id="viewCount" style="padding: 5px;
-                      background-color:red;
-                      border-radius: 100vh;
-                      text-align: left;
-                      ">&nbsp;総合再生回数:{{result.viewCount | intcomma }}&nbsp;</div>
-          <div id="likeCount" style="padding: 5px;
-                      background-color:blue;
-                      border-radius: 100vh;
-                      text-align: left;
-                      ">&nbsp;総合高評価数:{{result.likeCount | intcomma }}&nbsp;</div>
-          <!-- <div class="col-lg-6">週間再生回数:{{result.viewCount7}} 週間高評価数:{{result.likeCount7}}</div>
-          <div class="col-lg-6">月間再生回数:{{result.viewCount30}} 月間高評価数:{{result.likeCount30}}</div> -->
-          {% endfor %}
-        </div>
       </div>
       <div class="layout_performer">
         {% for pfmr in object.performer.all %}
@@ -146,16 +130,30 @@
       </div>
       
       <script type="text/javascript">
+
+      //let viewCount = "&nbsp;総合再生回数:{{result.viewCount | intcomma }}&nbsp;"
+      //let likeCount = "&nbsp;総合高評価数:{{result.likeCount | intcomma }}&nbsp;"
+      //let viewCount7 = "&nbsp;週間再生回数:{{result.viewCount7 | intcomma }}&nbsp;"
+      //let likeCount7 = "&nbsp;週間高評価数:{{result.likeCount7 | intcomma }}&nbsp;"
+      //let viewCount30 = "&nbsp;月間再生回数:{{result.viewCount30 | intcomma }}&nbsp;"
+      //let likeCount30 = "&nbsp;月間高評価数:{{result.likeCount30 | intcomma }}&nbsp;"
+
         function showimg0() {
+          //document.getElementById("viewCount").innerHTML = "&nbsp;総合再生回数:{{result.viewCount | intcomma }}&nbsp;";
+          //document.getElementById("likeCount").innerHTML = "&nbsp;総合高評価数:{{result.likeCount | intcomma }}&nbsp;";
           document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph | safe }}";
           document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph | safe }}";
           //document.getElementById("likeCount").src = "data:image/png;base64,{{ likegraph | safe }}";
         }
         function showimg7() {
+          //document.getElementById("viewCount").innerHTML = viewCount7;
+          //document.getElementById("likeCount").innerHTML = likeCount7;
           document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph7 | safe }}";
           document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph7 | safe }}";
         }
         function showimg30() {
+          //document.getElementById("viewCount").innerHTML = viewCount30;
+          //document.getElementById("likeCount").innerHTML = likeCount30;
           document.getElementById("viewGraph").src = "data:image/png;base64,{{ viewgraph30 | safe }}";
           document.getElementById("likeGraph").src = "data:image/png;base64,{{ likegraph30 | safe }}";
         }

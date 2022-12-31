@@ -6,6 +6,7 @@
 {% block content %}
 <hr>
 <form action="{% url 'update' object.id %}" method="post">{% csrf_token %}
+  <h2>{{title}}</h2>
 {% for field in form %}
   <div class="" style="min-width: 360px; user-select: none;">
     <span class="" style="background-color: green;">{{ field.label }}</span>

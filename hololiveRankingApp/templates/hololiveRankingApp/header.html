@@ -13,18 +13,7 @@
         <!-- <li class="nav-item">
           <a class="nav-link" href="#">Link</a> bg-secondary
         </li> -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            公式ch.リンク
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCJFZiqLMntJufDCHc6bQixg">JP公式チャンネル</a></li>
-            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCotXwY6s8pWmuWd_snKYjhg">EN公式チャンネル</a></li>
-            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCfrWoRGlawPQDQxxeIDRP0Q">ID公式チャンネル</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="https://hololive.hololivepro.com/">ホロライブ公式サイト</a></li>
-          </ul>
-        </li>
+        
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;"  href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             新旧所属タレント
@@ -33,58 +22,81 @@
             <div style="text-align: center;">
               <span>Youtubeへ飛びます</span>
             </div>
-            <div style="display: grid; grid-template-columns: 33% 33% 33% ;">
-              <div><!--JPall-->
-                {% for talent in JPall %}
-                {% if talent.channelId not in exChannelId %}
+            <div style="display: grid; grid-template-columns: 25% 25% 25% 25%;">
+              <div><!--JPall_1-->
+              {% for talent in JPall_1 %}
+              {% if talent not in exTalents %}
+                <li>
+                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                    <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                    {{ talent.name }}
+                  </a>
+                </li>
+              {% endif %}
+              {% endfor %}
+              </div>
+              <div><!--JPall_2-->
+                {% for talent in JPall_2 %}
+                {% if talent not in exTalents %}
                   <li>
-                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
+                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                       <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
                       {{ talent.name }}
                     </a>
                   </li>
                 {% endif %}
-              {% endfor %}
-              </div>
+                {% endfor %}
+                </div>
               <div><!--ENIDall-->
               <!--ENall-->
-                {% for talent in ENall %}
-                  {% if talent.channelId not in exChannelId %}
-                    <li>
-                      <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
-                        <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                        {{ talent.name }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
+              {% for talent in ENall %}
+              {% if talent not in exTalents %}
+                <li>
+                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                    <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                    {{ talent.name }}
+                  </a>
+                </li>
+              {% endif %}
+              {% endfor %}
               <hr>
               <!--IDall-->
-                {% for talent in IDall %}
-                  {% if talent.channelId  not in exChannelId %}
-                  <li>
-                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}">
-                      <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                      {{ talent.name }}
-                    </a>
-                  </li>
-                  {% endif %}
-                {% endfor %}
+              {% for talent in IDall %}
+              {% if talent  not in exTalents %}
+              <li>
+                <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                  <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                  {{ talent.name }}
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
               </div>
               <div><!-- <span>リンク切れの可能性あり</span> -->
-                {% for talent in exChannelId %}
-                  <li>
-                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent 0 %}">
-                      <img class="avator-image" src="{% plusCalc2 'https://i.ytimg.com/vi/' talent }}" alt="Author">
-                      {{ talent }}
-                    </a>
-                  </li>
-                {% endfor %}
+              {% for talent in exTalents %}
+                <li>
+                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                    <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
+                    {{ talent.name }}
+                  </a>
+                </li>
+              {% endfor %}
               </div>
-            
             </div>
           </ul>
 
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            公式ch.リンク
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCJFZiqLMntJufDCHc6bQixg" target="_blank" rel="noopener noreferrer">JP公式チャンネル</a></li>
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCotXwY6s8pWmuWd_snKYjhg" target="_blank" rel="noopener noreferrer">EN公式チャンネル</a></li>
+            <li><a class="dropdown-item" href="https://www.youtube.com/channel/UCfrWoRGlawPQDQxxeIDRP0Q" target="_blank" rel="noopener noreferrer">ID公式チャンネル</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="https://hololive.hololivepro.com/" target="_blank" rel="noopener noreferrer">ホロライブ公式サイト</a></li>
+          </ul>
         </li>
         {% if request.user.is_anonymous %}
         <li class="nav-item">

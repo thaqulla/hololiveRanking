@@ -7,7 +7,12 @@
 <form method="POST"> {% csrf_token %}
 
   {{ form.as_p }}
-  
+  <div>
+    <span class="" style="background-color: green;">詳細情報</span>
+    <div class="update_choice description">
+      {{ description|linebreaksbr }}
+    </div>
+  </div>
   <button class="btn btn-primary form-control" type="submit">登録</button>
 </form>
 

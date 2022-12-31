@@ -3,15 +3,29 @@
 
 {% block content %}
 <form method="POST"> {% csrf_token %}
+  <h2>{{title}}</h2>
   <div>
   <h3>{{concerned}}</h3>
   {% for field in form %}
     {{ field }}
   {% endfor %}
   </div>
-
-  <button class="btn btn-primary form-control" type="submit">登録</button>
+  <div>
+    <span class="" style="background-color: green;">詳細情報</span>
+    <div class="update_choice description">
+      {{ description|linebreaksbr }}
+    </div>
+  </div>
+  <button class="btn btn-primary form-control" type="submit">
+    上記にある→選択して登録
+  </button>
   <hr>
-  <a href="{% url 'addNew' redirectPk=pk %}" class="btn btn-danger form-control">新規追加</a>
+  <a href="{% url 'addNew' redirectPk=pk %}" class="btn btn-danger form-control">
+    上記の候補リストにない→新規追加
+  </a>
+  <hr>
+  <a href="{% url 'update' pk=pk %}" class="btn btn-success form-control">
+    登録するのをやめる→前のページに戻る
+  </a>
 </form>
 {% endblock content %}

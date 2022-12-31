@@ -11,7 +11,9 @@ from django.db.models import Q
 from django import forms
 
 from .forms import LoginForm
-from .forms import VideoInfoForm, ConcernedCreateForm, LyricistAddForm,ComposerAddForm
+from .forms import VideoInfoForm, \
+  LyricistAddForm, ComposerAddForm, ArrangerAddForm, MixerAddForm, MusicianAddForm,\
+  VideoEditorAddForm, IllustratorAddForm, CoStarAddForm, OriginalSingerAddForm
 from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
   videoTypeJudgement, Lyricist,Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
@@ -29,6 +31,7 @@ import random
 import requests as re
 
 # TODO: N+1問題が解決されていないため全体的にコードの見直しが必須
+# TODO: リファクタリング
 # TODO: pep8に基づいたコードの書き方に変更予定
 
 dt = datetime.date.today()  # ローカルな現在の日付と時刻を取得
@@ -36,11 +39,12 @@ dtstr = dt.strftime("%Y-%m-%d")
 
 def get_header_context_data(context):
   # context = super().get_context_data(**kwargs)
-  context["JPall"] = hololiveChannel2.objects.filter(Q(category__GenName="０期生")\
+  context["JPall_1"] = hololiveChannel2.objects.filter(Q(category__GenName="０期生")\
                                           |Q(category__GenName="１期生")\
                                           |Q(category__GenName="２期生")\
-                                          |Q(category__GenName="ホロライブゲーマーズ")\
-                                          |Q(category__GenName="３期生")\
+                                          |Q(category__GenName="ホロライブゲーマーズ")).distinct()
+  
+  context["JPall_2"] = hololiveChannel2.objects.filter(Q(category__GenName="３期生")\
                                           |Q(category__GenName="４期生")\
                                           |Q(category__GenName="５期生")\
                                           |Q(category__GenName="秘密結社holoX")).distinct()
@@ -54,6 +58,7 @@ def get_header_context_data(context):
                                           |Q(category__GenName="３期生(ID)")).distinct()
   
   exTalents = hololiveChannel2.objects.filter(category__GenName="卒業生()").distinct()
+  context["exTalents"] = exTalents
   context["exChannelId"] = [ex.channelId for ex in exTalents]
 
   return context
@@ -119,11 +124,11 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     return context
   
 class Login(LoginView):
-  template_name = 'hololiveRankingApp/login.html'
+  template_name = 'hololiveRankingApp/admin/login.html'
   form_class = LoginForm
     
 class Logout(LogoutView):
-  template_name = 'hololiveRankingApp/logout.html'
+  template_name = 'hololiveRankingApp/admin/logout.html'
   
 class UserCreateView(CreateView):
   template_name = 'hololiveRankingApp/user/create.html'
@@ -144,56 +149,192 @@ class VideoInfoCreateView(CreateView):
     context = get_header_context_data(context)
     return context
 
+class AdminVideoInfoCreateView(CreateView):
+  model = VideoInfo
+  template_name = 'hololiveRankingApp/video/create.html'
+  
+  fields = '__all__'
+  success_url = reverse_lazy("list")
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
+
 class LyricistAddView(CreateView):
   model = Lyricist
-  template_name = 'hololiveRankingApp/concerned/create.html'
   form_class = LyricistAddForm
-  # success_url = reverse_lazy("list")
+  concerned = "Lyricist"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
   def get_success_url(self):
-    return reverse('Lyricist', kwargs={'pk': self.kwargs['redirectPk']})#成功
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["redirectPk"]
-    context["concerned"] = "Lyricist"
-    # context["lyricists"] = [str(datum.lyricist.name) for datum in Lyricist.objects.all()]
-    #<label for="id_lyricist_2" class="tag_box2"> !記載なし </label>
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
     return context
   
 class ComposerAddView(CreateView):
   model = Composer
   form_class = ComposerAddForm
   concerned = "Composer"
-  
   template_name = 'hololiveRankingApp/concerned/create.html'
-
+  
   def get_success_url(self):
-    return reverse("update", kwargs={'pk': self.kwargs['redirectPk']})#成功
-    # return reverse(self.concerned, kwargs={'redirectPk': self.kwargs['redirectPk']})
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class ArrangerAddView(CreateView):
+  model = Arranger
+  form_class = ArrangerAddForm
+  concerned = "Arranger"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
     context["concerned"] = self.concerned
     return context
 
-class ConcernedAddView(UpdateView):
-  model = AnotherPerson
+class MixerAddView(CreateView):
+  model = Mixer
+  form_class = MixerAddForm
+  concerned = "Mixer"
   template_name = 'hololiveRankingApp/concerned/create.html'
-  form_class = ConcernedCreateForm
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["redirectPk"]
-    # context["concerned"] = self.kwargs["concerned"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class MusicianAddView(CreateView):
+  model = Musician
+  form_class = MusicianAddForm
+  concerned = "Musician"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class VideoEditorAddView(CreateView):
+  model = VideoEditor
+  form_class = VideoEditorAddForm
+  concerned = "VideoEditor"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class IllustratorAddView(CreateView):
+  model = Illustrator
+  form_class = IllustratorAddForm
+  concerned = "Illustrator"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class CoStarAddView(CreateView):
+  model = CoStar
+  form_class = CoStarAddForm
+  concerned = "CoStar"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
+    return context
+  
+class OriginalSingerAddView(CreateView):
+  model = OriginalSinger
+  form_class = OriginalSingerAddForm
+  concerned = "OriginalSinger"
+  template_name = 'hololiveRankingApp/concerned/create.html'
+  
+  def get_success_url(self):
+    return reverse('update', kwargs={'pk': self.kwargs['redirectPk']})#成功
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["concerned"] = self.concerned
     return context
   
 class ConcernedCreateView(CreateView):
   model = AnotherPerson
-  template_name = 'hololiveRankingApp/add.html'#addNew
+  template_name = 'hololiveRankingApp/video/add.html'
   fields = '__all__'
   # success_url = reverse_lazy("list")
   def get_success_url(self):
@@ -203,11 +344,14 @@ class ConcernedCreateView(CreateView):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["redirectPk"]
+    vInfo = VideoInfo.objects.get(pk=self.kwargs["redirectPk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
     return context
 
 class VideoInfoListView(ListView):
   model = VideoInfo
-  template_name = 'hololiveRankingApp/list.html'
+  template_name = 'hololiveRankingApp/admin/list.html'
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -215,11 +359,9 @@ class VideoInfoListView(ListView):
     return context
 
 class WorkListView(ListView):#DetailView
-  template_name = 'hololiveRankingApp/work.html'
+  template_name = 'hololiveRankingApp/video/work.html'
   model = VideoInfo
-  
-  
-  
+
   # context_object_name = "works"
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -307,16 +449,9 @@ class VideoUpdateView(UpdateView):
     context = super().get_context_data(**kwargs)
     context = get_header_context_data(context)
     context["pk"] = self.kwargs["pk"]
-    context["description"] = self.model.objects.get(pk=self.kwargs["pk"]).description
-    # context["lyricists"] = [datum.lyricist.name for datum in Lyricist.objects.all()]
-    # context["composers"] = [datum.composer.name for datum in Composer.objects.all()]
-    # context["arrangers"] = [datum.arranger.name for datum in Arranger.objects.all()]
-    # context["mixers"] = [datum.mixer.name for datum in Mixer.objects.all()]
-    # context["musicians"] = [datum.musician.name for datum in Musician.objects.all()]
-    # context["videoEditors"] = [datum.videoEditor.name for datum in VideoEditor.objects.all()]
-    # context["illustrators"] = [datum.illustrator.name for datum in Illustrator.objects.all()]
-    # context["coStars"] = [datum.coStar.name for datum in CoStar.objects.all()]
-    # context["originalSingers"] = [datum.originalSinger.name for datum in OriginalSinger.objects.all()]
+    vInfo = self.model.objects.get(pk=self.kwargs["pk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
     context["people"] = AnotherPerson.objects.all().order_by("name")
     
     return context
@@ -410,7 +545,7 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     pyplot.plot(x,y)
     # pyplot.text(x,y)
     pyplot.xticks(rotation=20)
-    pyplot.title(f"View Count Graph {videoTitle}", fontsize=15)
+    pyplot.title(f"{videoTitle}", fontsize=15)
     pyplot.xlabel("日にち(直線部分は平均値)", fontsize=15)
     pyplot.ylabel("ViewCount", fontsize=15)
     
@@ -424,9 +559,9 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     # pyplot.figure(figsize=(10,5))
     pyplot.bar(x,y)
     pyplot.xticks(rotation=20)
-    pyplot.title(f"View Count Graph {videoTitle}", fontsize=15)
+    pyplot.title(f"{videoTitle}", fontsize=15)
     pyplot.xlabel("日にち", fontsize=15)
-    pyplot.ylabel("ViewCount", fontsize=15)
+    pyplot.ylabel("Count", fontsize=15)
     pyplot.tight_layout()
     graph = self.output_graph()
     return graph

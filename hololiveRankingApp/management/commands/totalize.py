@@ -87,6 +87,9 @@ class Command(BaseCommand):
         test = [datum.composer.name for datum in Composer.objects.all()]
         print(test)
         
+        test2 = Composer.objects.values_list('composer', flat=True)
+        print(list(test2))
+
         # concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
         #                             .prefetch_related('composer__composer')\
         #                             .prefetch_related('arranger__arranger')\

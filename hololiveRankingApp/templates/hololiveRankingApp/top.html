@@ -23,42 +23,29 @@
   <div>
     <h1 class="section-headline">ホロ歌集計部[アルファ版]</h1>
   </div>
-  <div class="container" style="background-color: green;">
-    <div class="row">
-      <div class="col col-xl-6" style="background-color: red; width: 480px; text-align: center;">
-
-        <img src="https://dummyimage.com/600x400/000/fff" style="margin: 0;
-                                                                padding: 0;
-                                                                
-                                                                max-width: 480px;
-                                                                height: auto;
-                                                                " alt="About Image">
+      <div style="position: relative;
+                  width: 1080px;
+                  height: 720px;">
+        <video controls autoplay loop muted width="1080" style="vertical-align: bottom; position: absolute;">
+          <source src="https://hololive.hololivepro.com/wp-content/uploads/2022/04/3rd-fes..mp4" >
+        </video>
+        <div class="" style="background-color: blue;
+                              
+                              position: absolute;
+                              ">
+          <h2 class="about-headline">本当の歌ランキング、作りませんか？</h2>
+          <p class="about-description">
+            2017年9月7日、ときのそらデビューを皮切りに多くの動画を投稿してくださり、<br/>
+            また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br/>
+            特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br/>
+            オリジナルソングは彼女たちの努力が詰まったものが提供されている。
+            しかし、世界をつなぐ動画投稿サイトに混じり、歌を切り抜き、自分のチャンネルで加工をしたもの公開している動画も見受けられる。<br/>
+            確かに様々なチャンネルを通じて彼女たちの歌声、技量、存在そのものは大衆に届くがしかし、<br/>
+            彼女たちのチャンネルではないが故、100%は彼女たちの動画の価値（再生回数、高評価数）には還元されていないのが現状である。<br/>
+            そんな現状を鑑み今回のサイトを立ち上げることにした次第である。
+          </p>
+        </div>
       </div>
-      <div class="col col-xl-6" style="background-color: blue; width: 480px;">
-        <h2 class="about-headline">本当の歌ランキング、</h2>
-        <h2>作りませんか？</h2>
-        <p class="about-description">
-          2017年9月7日、ときのそらデビューを皮切りに多くの動画を投稿してくださり、<br/>
-          また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br/>
-          特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br/>
-          オリジナルソングは彼女たちの努力が詰まったものが提供されている。
-          しかし、世界をつなぐ動画投稿サイトに混じり、歌を切り抜き、自分のチャンネルで加工をしたもの公開している動画も見受けられる。<br/>
-          確かに様々なチャンネルを通じて彼女たちの歌声、技量、存在そのものは大衆に届くがしかし、<br/>
-          彼女たちのチャンネルではないが故、100%は彼女たちの動画の価値（再生回数、高評価数）には還元されていないのが現状である。<br/>
-          そんな現状を鑑み今回のサイトを立ち上げることにした次第である。
-        </p>
-      </div>
-    </div>
-  </div>
-  <section class="section">
-    
-    <figure class="about">
-      
-      <figcaption class="about-caption">
-        
-      </figcaption>
-    </figure>
-  </section>
 
   <section class="section section-secoundary" style="border-radius: 10px;">
     <h1 class="section-headline">使い方</h1>
@@ -116,11 +103,11 @@
               <span>再生回数(少ない順)</span>
             </label> -->
           </ul>
-        <h4>表示範囲</h4>
+        <!-- <h4>表示範囲</h4>
         <input type="range">
         <iframe id="ytplayer" type="text/html" width="640" height="360"
                 src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
-                frameborder="0"></iframe>
+                frameborder="0"></iframe> -->
         <h4>メンバー一覧</h4>
         <div>
           <label>
@@ -508,7 +495,7 @@
                   ">
           <div><!--単純絞り込み    月火水木金土日     -->
             <h5>総合、週間、月間</h5>
-            <label>
+            <!-- <label>
               <input type="radio" id="Monday" name="DOW" value="Monday">
               <span>月曜</span>
             </label>
@@ -538,7 +525,7 @@
               <input type="radio" id="Sunday" name="DOW" value="Sunday">
               <span>日曜</span>
             </label>
-            <br>
+            <br> -->
             
             <label>
               <input type="radio" id="daily" name="dateType" value="total">
