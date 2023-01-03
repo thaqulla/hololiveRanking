@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
   path('', views.TopView.as_view(), name="top"),
   # path('', views.RankingView.as_view(), name="appHome"), 
-  path('performer_info/', views.PerformerInfoView.as_view(), name='performerInfo'),
+  # path('performer_info/', views.PerformerInfoView.as_view(), name='performerInfo'),
   # path('<int:pk>/video_info/total/<int:ranking>/', views.VideoInfoView.as_view(),name='video_info'),
   
   path('video/create', views.VideoInfoCreateView.as_view(), name='create'),
@@ -15,6 +15,8 @@ urlpatterns = [
   path('video/<int:pk>/', views.VideoInfoView.as_view(),name='video_info'),
   path('video/<int:pk>/work/', views.WorkListView.as_view(), name='work'),
   path('video/<int:pk>/update/', views.VideoUpdateView.as_view(), name='update'),
+  path('video/<int:pk>/update/Performer/', views.AdminVideoUpdateView.as_view(), name='adminUpdate'),
+  path('video/<int:pk>/update/title/', views.AdminTitleView.as_view(), name='title'),
   #<slug:concerned>/
   path('video/<int:redirectPk>/Lyricist/', views.LyricistAddView.as_view(), name='Lyricist'),
   path('video/<int:redirectPk>/Composer/', views.ComposerAddView.as_view(), name='Composer'),
@@ -27,8 +29,8 @@ urlpatterns = [
   path('video/<int:redirectPk>/OriginalSinger/', views.OriginalSingerAddView.as_view(), name='OriginalSinger'),
   path('video/<int:redirectPk>/addNew/', views.ConcernedCreateView.as_view(), name='addNew'),
   
-  # path('video/admin/update/', views.VideoUpdateView.as_view(), name='update'),
-  # path('video/admin/addNew/', views.ConcernedCreateView.as_view(), name='addNew'),
+  
+  path('video/admin/addNew/', views.ConcernedCreateView.as_view(), name='adminAddNew'),
   
   path('login/', Login.as_view(), name='login'),
   path('logout/', Logout.as_view(), name='logout'),

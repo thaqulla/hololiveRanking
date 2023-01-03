@@ -11,7 +11,7 @@ from django.db.models import Q
 from django import forms
 
 from .forms import LoginForm
-from .forms import VideoInfoForm, \
+from .forms import VideoInfoForm, AdminVideoInfoForm, AdminTitleForm, \
   LyricistAddForm, ComposerAddForm, ArrangerAddForm, MixerAddForm, MusicianAddForm,\
   VideoEditorAddForm, IllustratorAddForm, CoStarAddForm, OriginalSingerAddForm
 from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
@@ -455,6 +455,42 @@ class VideoUpdateView(UpdateView):
     context["people"] = AnotherPerson.objects.all().order_by("name")
     
     return context
+  
+class AdminVideoUpdateView(UpdateView):
+  model = VideoInfo
+  form_class = AdminVideoInfoForm
+  template_name = 'hololiveRankingApp/admin/update.html'
+
+  def get_success_url(self):
+    return reverse("list")
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["pk"]
+    vInfo = self.model.objects.get(pk=self.kwargs["pk"])
+    context["title"] = vInfo.title
+    context["description"] = vInfo.description
+    context["people"] = AnotherPerson.objects.all().order_by("name")
+    
+    return context
+  
+class AdminTitleView(UpdateView):
+  model = VideoInfo
+  form_class = AdminTitleForm
+  template_name = 'hololiveRankingApp/admin/title.html'
+
+  def get_success_url(self):
+    return reverse("list")
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    context["pk"] = self.kwargs["pk"]
+    vInfo = self.model.objects.get(pk=self.kwargs["pk"])
+    context["title"] = vInfo.title
+
+    return context
 
 class VideoInfoView(DetailView):#個々の動画情報を表示する
   template_name = 'hololiveRankingApp/video_info.html'
@@ -567,21 +603,21 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     return graph
 
 ###########################################
-class RankingView(ListView):#
-  template_name = 'hololiveRankingApp/hololivechannel_list.html'
-  model = hololiveChannel2
+# class RankingView(ListView):#
+#   template_name = 'hololiveRankingApp/hololivechannel_list.html'
+#   model = hololiveChannel2
 
-class PerformerInfoView(DetailView):#
-  template_name = 'hololiveRankingApp/performer_info.html'
-  model = hololiveSongsResult
-  context_object_name = "performerSongLists"
+# class PerformerInfoView(DetailView):#
+#   template_name = 'hololiveRankingApp/performer_info.html'
+#   model = hololiveSongsResult
+#   context_object_name = "performerSongLists"
   
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context = get_header_context_data(context)
-    if "total" in self.request.GET.getlist("dateType"):
-      context["dateType"] = "total"
-    return context
+#   def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     context = get_header_context_data(context)
+#     if "total" in self.request.GET.getlist("dateType"):
+#       context["dateType"] = "total"
+#     return context
   # def get_queryset(self):
   #   return 
     # queryset = 

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms 
-from .models import VideoInfo, Lyricist, Composer,Arranger,Mixer,Musician,VideoEditor,\
+from .models import hololiveChannel2, VideoInfo, Lyricist, Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
   
 from .widgets import CustomCheckboxSelectMultiple, CustomRadioSelect
@@ -65,29 +65,29 @@ class VideoInfoForm(forms.ModelForm):
     fields = ["lyricist","composer","arranger","mix","inst","movie","illust","coStar","originalSinger"]
   #全てのフォームの部品にplaceholderを定義して、入力フォームにフォーム名が表示されるように指定する
 
-class ConcernedCreateForm(forms.ModelForm):
-  concerned = forms.ModelMultipleChoiceField(
-    queryset=AnotherPerson.objects.all().order_by('name'),
-    label='外部の方々',
+class AdminVideoInfoForm(forms.ModelForm):
+  performer = forms.ModelMultipleChoiceField(
+    queryset=hololiveChannel2.objects.all().order_by('id'),
+    label='ホロメン',
     widget=CustomCheckboxSelectMultiple,
-  )
+    )
+  coStar = forms.ModelMultipleChoiceField(
+    queryset=CoStar.objects.all().order_by('coStar__name'),
+    label='共演者',
+    widget=CustomCheckboxSelectMultiple,
+    )
   class Meta:
-    model = AnotherPerson
-    fields = '__all__'
+    model = VideoInfo
+    fields = ["performer","coStar"]
     
-# def test(composer,excludeModel):
-#   test = forms.ModelChoiceField(
-#     queryset=AnotherPerson.objects.exclude(
-#       name__in=[datum.composer.name for datum in excludeModel.objects.all()]).order_by('name'),
-#     widget=CustomRadioSelect,
-#     empty_label='------')
-#   return test
-  
-# class ComposerAddForm(forms.ModelForm):
-#   composer = test(composer,Composer)
-#   class Meta:
-#     model = Composer
-#     fields = '__all__'
+class AdminTitleForm(forms.ModelForm):
+  class Meta:
+    model = VideoInfo
+    fields = ["title"]
+    label='タイトル'
+    widget = {
+      "title": forms.Textarea(attrs={'cols': 10, 'rows': 100}),}
+    
 
 class LyricistAddForm(forms.ModelForm):
   lyricist = forms.ModelChoiceField(

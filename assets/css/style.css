@@ -393,9 +393,9 @@ hololiver_checkbox 2d517c
   grid-template-columns: 50% 50%;
 }
 
-/* .songResultInfo_box div {
+.songResultInfo_box div {
   background-color: blue;
-} */
+}
 
 .songResultInfo_box div span{
   padding: 10px;

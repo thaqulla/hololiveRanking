@@ -4,43 +4,61 @@
 {% load numeral_system %}
 {% load humanize %}
 <br>
-<div class="list_sheet_layout">
+<!-- <div style="overflow-x: auto;"> -->
+  <div class="list_sheet_layout">
 
-    <span class="list_cell_layout">&nbsp;サムネイル</span>
-    <span class="list_cell_layout">&nbsp;タイトル</span>
-    <span class="list_cell_layout">&nbsp;動画ID</span>
-    <span class="list_cell_layout">&nbsp;投稿日</span>
-    <span class="list_cell_layout">&nbsp;ホロライブ出演者</span>
-</div>
-<div class="list_sheet_layout">
+      <span class="list_cell_layout">&nbsp;サムネイル</span>
+      <span class="list_cell_layout">&nbsp;タイトル</span>
+      <span class="list_cell_layout">&nbsp;動画情報</span>
+      <span class="list_cell_layout">&nbsp;投稿日</span>
+      <span class="list_cell_layout">&nbsp;出演者情報</span>
+  </div>
+  <div class="list_sheet_layout">
 
-  {% for item in object_list reversed  %}
-    {% if item.pk >= 7550 %}
-      <div class="list_cell_layout" style="text-align: center;">
-        <a href="{{ item.getVideoUrl }}" target="_blank" rel="noopener noreferrer">
-          <img src="{{ item.getThumbnailDefault }}" alt="thumbnailImage">
-        </a>
+    {% for item in object_list reversed  %}
+      {% if item.pk >= 7777 %}
+        <div class="list_cell_layout" style="text-align: center;">
+          <a href="{{ item.getVideoUrl }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ item.getThumbnailDefault }}" alt="thumbnailImage">
+          </a>
+          
+        </div>
+        <span class="list_cell_layout">
+          &nbsp;{{ item.title }}<br>
+          <a href="{% url 'title' pk=item.pk %}">
+            <span class="tag_box2">タイトル変更</span>
+          </a></span>
+        <span class="list_cell_layout">
+          &nbsp;{{ item.videoId }}<br>
+          {{ item.pk }}<br>
+          <a href="{% url 'update' pk=item.pk %}">
+            <span class="tag_box2">関係者追加</span>
+          </a></span>
+        <span class="list_cell_layout">&nbsp;{{ item.videoAge }}</span>
         
-      </div>
-      <span class="list_cell_layout">&nbsp;{{ item.title }}</span>
-      <span class="list_cell_layout">&nbsp;{{ item.videoId }}<br>{{ item.pk }}</span>
-      <span class="list_cell_layout">&nbsp;{{ item.videoAge }}</span>
-      
-      <div  class="list_cell_layout">
+        <div  class="list_cell_layout">
         {% for person in item.performer.all %}
-        &nbsp;{{ person.name }}<br>
+          &nbsp;{{ person.name }}<br>
         {% endfor %}
-      </div>
-    {% endif %}
-  {% endfor %}
-  
-</div>
-<div class="list_sheet_layout">
-    <span class="list_cell_layout">&nbsp;機密保持...</span>
-    <span class="list_cell_layout">&nbsp;機密保持...</span>
-    <span class="list_cell_layout">&nbsp;機密保持...</span>
-    <span class="list_cell_layout">&nbsp;機密保持...</span>
-    <span class="list_cell_layout">&nbsp;機密保持...</span>
-</div>
-
+        {% for person in item.coStar.all %}
+        {% if person.coStar.name != "!!調査中" and person.coStar.name != "!記載なし" %}
+          &nbsp;{{ person.coStar.name }}<br>
+        {% endif %}
+        {% endfor %}
+          <a href="{% url 'adminUpdate' pk=item.pk %}">
+            <span class="tag_box2">出演者追加</span>
+          </a></span>
+        </div>
+      {% endif %}
+    {% endfor %}
+    
+  </div>
+  <div class="list_sheet_layout">
+      <span class="list_cell_layout">&nbsp;機密保持...</span>
+      <span class="list_cell_layout">&nbsp;機密保持...</span>
+      <span class="list_cell_layout">&nbsp;機密保持...</span>
+      <span class="list_cell_layout">&nbsp;機密保持...</span>
+      <span class="list_cell_layout">&nbsp;機密保持...</span>
+  </div>
+<!-- </div> -->
 {% endblock content %}

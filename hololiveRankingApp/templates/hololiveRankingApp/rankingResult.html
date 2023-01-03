@@ -53,12 +53,12 @@
             <div class="rankingTableList">
 
               {% for songList in songLists|slice:"0:50" %}
-                {% include "./rankingSheet.html" with letNum=0 %}
+                {% include "./result/sheet.html" with letNum=0 %}
               {% endfor %}
             </div>
             <div  style="background-color: #0f0f0f;">
               {% for songList in songLists|slice:"0:50" %}
-                {%  include "./ranking_tab.html" with letNum=0 %}
+                {%  include "./result/lineup.html" with letNum=0 %}
               {% endfor %}
             </div>
           </div>
@@ -69,12 +69,12 @@
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"50:100" %}
-                {% include "./rankingSheet.html" with letNum=50 %}
+                {% include "./result/sheet.html" with letNum=50 %}
               {% endfor %}
             </div>
             <div  style="background-color: #0f0f0f;">
               {% for songList in songLists|slice:"50:100" %}
-                {%  include "./ranking_tab.html" with letNum=50 %}
+                {%  include "./result/lineup.html" with letNum=50 %}
               {% endfor %}
             </div>
           </div>
@@ -85,12 +85,12 @@
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"100:150" %}
-                {% include "./rankingSheet.html" with letNum=100 %}
+                {% include "./result/sheet.html" with letNum=100 %}
               {% endfor %}
             </div>
             <div  style="background-color: #0f0f0f;">
               {% for songList in songLists|slice:"100:150" %}
-                {%  include "./ranking_tab.html" with letNum=100 %}
+                {%  include "./result/lineup.html" with letNum=100 %}
               {% endfor %}
             </div>
           </div>
@@ -101,12 +101,12 @@
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"150:200" %}
-                {% include "./rankingSheet.html" with letNum=150 %}
+                {% include "./result/sheet.html" with letNum=150 %}
               {% endfor %}
             </div>
             <div  style="background-color: #0f0f0f;">
               {% for songList in songLists|slice:"150:200" %}
-                {%  include "./ranking_tab.html" with letNum=150 %}
+                {%  include "./result/lineup.html" with letNum=150 %}
               {% endfor %}
             </div>
           </div>
@@ -117,12 +117,12 @@
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"200:250" %}
-                {% include "./rankingSheet.html" with letNum=200 %}
+                {% include "./result/sheet.html" with letNum=200 %}
               {% endfor %}
             </div>
             <div  style="background-color: #0f0f0f;">
               {% for songList in songLists|slice:"200:250" %}
-                {%  include "./ranking_tab.html" with letNum=200 %}
+                {%  include "./result/lineup.html" with letNum=200 %}
               {% endfor %}
             </div>
           </div>

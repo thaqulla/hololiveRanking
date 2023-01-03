@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ホロ歌集計部[アルファ版]</title>
+  <title>ホロ歌集計部(仮)</title>
   <meta name="description" content="sample text sample text sample text sample text sample text sample text sample text">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
     {% include "hololiveRankingApp/header.html" %}
   </header>
   <div>
-    <h1 class="section-headline">ホロ歌集計部[アルファ版]</h1>
+    <h1 class="section-headline">ホロ歌集計部(仮)</h1>
   </div>
       <div style="position: relative;
                   width: 1080px;
@@ -79,30 +79,56 @@
     <h1 class="section-headline">絞り込み検索</h1>
       <form method="get" action="{% url 'searchResult' %}">{% csrf_token %}
         <h4>楽曲種類(選択しなかった場合、すべて出力されます)</h4>
-        <ul>
-          <label>オリジナルソング</label><input type="checkbox" id="original" name="targetSongType" value="original">
-          <label>歌ってみた</label><input type="checkbox" id="covered" name="targetSongType" value="covered" checked>
-          <!-- <label>記念祭</label><input type="checkbox" id="festival" name="targetSongType" value="festival"> -->
-        </ul>
-        <h4>並び順</h4>
-          <ul>
-            <label>
-              <input type="radio" id="likeCountDesc" name="orderType" value="likeCountDesc">
-              <span>高評価数(多い順)</span>
-            </label>
-            <!-- <label>
-              <input type="radio" id="likeCountAsc" name="orderType" value="likeCountAsc">
-              <span>高評価数(少ない順)</span>
-            </label> -->
-            <label>
-              <input type="radio" id="viewCountDesc" name="orderType" value="viewCountDesc" checked>
-              <span>再生回数(多い順)</span>
-            </label>
-            <!-- <label>
-              <input type="radio" id="viewCountAsc" name="orderType" value="viewCountAsc">
-              <span>再生回数(少ない順)</span>
-            </label> -->
-          </ul>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+          <input type="checkbox" class="btn-check" id="original" autocomplete="off" name="targetSongType" value="original">
+          <label class="btn btn-outline-primary" for="original">オリジナルソング</label>
+        
+          <input type="checkbox" class="btn-check" id="covered" autocomplete="off" name="targetSongType" value="covered" checked>
+          <label class="btn btn-outline-primary" for="covered">歌ってみた</label>
+        </div>
+        <!-- <h4>楽曲種類(選択しなかった場合、すべて出力されます)</h4> -->
+        <!-- <ul> -->
+          <!-- <label>オリジナルソング</label>
+            <input type="checkbox" id="original" name="targetSongType" value="original">
+          <label>歌ってみた</label>
+            <input type="checkbox" id="covered" name="targetSongType" value="covered" checked> -->
+          <!-- <label>記念祭</label>
+            <input type="checkbox" id="festival" name="targetSongType" value="festival"> -->
+        <!-- </ul> -->
+
+        <h4>並び順Checkbox and radio button groups</h4>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" id="likeCountDesc" autocomplete="off" name="orderType" value="likeCountDesc">
+          <label class="btn btn-outline-primary" for="likeCountDesc">高評価数(多い順)</label>
+        
+          <input type="radio" class="btn-check" id="likeCountAsc" autocomplete="off" name="orderType" value="likeCountAsc">
+          <label class="btn btn-outline-secondary" for="likeCountAsc">高評価数(少ない順)</label>
+
+          <input type="radio" class="btn-check" id="viewCountDesc" autocomplete="off" name="orderType" value="viewCountDesc" checked>
+          <label class="btn btn-outline-danger" for="viewCountDesc">再生回数(多い順)</label>
+
+          <input type="radio" class="btn-check" id="viewCountAsc" autocomplete="off" name="orderType" value="viewCountAsc">
+          <label class="btn btn-outline-secondary" for="viewCountAsc">再生回数(少ない順)</label>
+        </div>
+        <!-- <h4>並び順</h4>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <label class="btn btn-outline-primary form-control">
+            <input class="btn-check" type="radio" id="likeCountDesc" name="orderType" value="likeCountDesc">
+            <span>高評価数(多い順)</span>
+          </label> -->
+          <!-- <label>
+            <input type="radio" id="likeCountAsc" name="orderType" value="likeCountAsc">
+            <span>高評価数(少ない順)</span>
+          </label> -->
+          <!-- <label class="btn btn-outline-danger form-control">
+            <input class="btn-check" type="radio" id="viewCountDesc" name="orderType" value="viewCountDesc" checked>
+            <span>再生回数(多い順)</span>
+          </label> -->
+          <!-- <label>
+            <input type="radio" id="viewCountAsc" name="orderType" value="viewCountAsc">
+            <span>再生回数(少ない順)</span>
+          </label> -->
+        </div>
         <!-- <h4>表示範囲</h4>
         <input type="range">
         <iframe id="ytplayer" type="text/html" width="640" height="360"
@@ -110,21 +136,21 @@
                 frameborder="0"></iframe> -->
         <h4>メンバー一覧</h4>
         <div>
-          <label>
-            <input id="HOLOall" type="checkbox" name="HOLOall">
+          <label class="btn btn-info form-control">
+            <input class="tag_box_choice" id="HOLOall" type="checkbox" name="HOLOall">
             <span>全て選択</span>
           </label>
           <br>
           <hr><!--------------------------------------------------------------->
-          <label>
-            <input id="JPall" type="checkbox" name="JPall">
+          <label class="btn btn-primary form-control">
+            <input class="tag_box_choice" id="JPall" type="checkbox" name="JPall">
             <span>JP選択</span>
           </label>
           <br>
           <div class="layout_performer_checkbox">
             <div class="checkbox_div"><!--0-->
-              <label>
-                <input id="gen0JP" type="checkbox" name="gen0JP">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="gen0JP" type="checkbox" name="gen0JP">
                 <span>０期生</span>
               </label>
               <br>
@@ -140,8 +166,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--1-->
-            <label>
-              <input id="gen1JP" type="checkbox" name="gen1JP">
+            <label class="btn btn-light form-control">
+              <input class="tag_box_choice" id="gen1JP" type="checkbox" name="gen1JP">
               <span>１期生</span>
             </label>
             <br>
@@ -157,8 +183,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--2-->
-              <label>
-                <input id="gen2JP" type="checkbox" name="gen2JP">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="gen2JP" type="checkbox" name="gen2JP">
                 <span>２期生</span>
               </label>
               <br>
@@ -174,8 +200,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--g-->
-            <label>
-              <input id="gameJP" type="checkbox" name="gameJP">
+            <label class="btn btn-light form-control">
+              <input class="tag_box_choice" id="gameJP" type="checkbox" name="gameJP">
               <span>ホロライブゲーマーズ</span>
             </label>
             <br>
@@ -191,8 +217,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--3-->
-              <label>
-                <input id="gen3JP" type="checkbox" name="gen3JP">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="gen3JP" type="checkbox" name="gen3JP">
                 <span>３期生</span>
               </label>
               <br>
@@ -208,8 +234,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--4-->
-              <label>
-                <input id="gen4JP" type="checkbox" name="gen4JP">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="gen4JP" type="checkbox" name="gen4JP">
                 <span>４期生</span>
               </label>    
               <br>       
@@ -225,8 +251,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--5-->
-              <label>
-                <input id="gen5JP" type="checkbox" name="gen5JP">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="gen5JP" type="checkbox" name="gen5JP">
                 <span>５期生</span>
               </label>
               <br>
@@ -242,8 +268,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--holoX-->
-              <label>
-                <input id="holoX" type="checkbox" name="holoX">
+              <label class="btn btn-light form-control">
+                <input class="tag_box_choice" id="holoX" type="checkbox" name="holoX">
                 <span>秘密結社holoX</span>
               </label>
               <br>
@@ -260,15 +286,15 @@
             </div>
           </div>
           <hr><!--------------------------------------------------------------->
-          <label>
-            <input id="ENall" type="checkbox" name="ENall">
+          <label class="btn btn-primary form-control">
+            <input class="tag_box_choice" id="ENall" type="checkbox" name="ENall">
             <span>EN選択</span>
           </label>
           <br>
           <div class="layout_performer_checkbox">
             <div class="checkbox_div"><!--myths-->
-              <label>
-                <input id="myth" type="checkbox" name="myth">
+              <label class="btn btn-dark form-control">
+                <input class="tag_box_choice" id="myth" type="checkbox" name="myth">
                 <span>Myth</span>
               </label>
               <br>
@@ -284,8 +310,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--projectHOPEs-->
-              <label>
-                <input id="projectHOPE" type="checkbox" name="projectHOPE">
+              <label class="btn btn-dark form-control">
+                <input class="tag_box_choice" id="projectHOPE" type="checkbox" name="projectHOPE">
                 <span>Project:HOPE</span>
               </label>
               <br>
@@ -301,8 +327,8 @@
             {% endfor %}
             </div>
             <div class="checkbox_div"><!--councils-->
-              <label>
-                <input id="council" type="checkbox" name="council">
+              <label class="btn btn-dark form-control">
+                <input class="tag_box_choice" id="council" type="checkbox" name="council">
                 <span>Council</span>
               </label>
               <br>
@@ -321,15 +347,15 @@
 
 
           <hr><!--------------------------------------------------------------->
-          <label>
-            <input id="IDall" type="checkbox" name="IDall">
+          <label class="btn btn-primary form-control">
+            <input class="tag_box_choice" id="IDall" type="checkbox" name="IDall">
             <span>ID選択</span>
           </label>
           <br>
           <div class="layout_performer_checkbox">
             <div class="checkbox_div"><!--gen1IDs-->
-              <label>
-                <input id="gen1ID" type="checkbox" name="gen1ID">
+              <label class="btn btn-warning form-control">
+                <input class="tag_box_choice" id="gen1ID" type="checkbox" name="gen1ID">
                 <span>gen1ID</span>
               </label>
               <br>
@@ -345,8 +371,8 @@
               {% endfor %}
             </div>
             <div class="checkbox_div"><!--gen2IDs-->
-              <label>
-                <input id="gen2ID" type="checkbox" name="gen2ID">
+              <label class="btn btn-warning form-control">
+                <input class="tag_box_choice" id="gen2ID" type="checkbox" name="gen2ID">
                 <span>gen2ID</span>
               </label>
               <br>
@@ -362,8 +388,8 @@
               {% endfor %}
             </div>
             <div class="checkbox_div"><!--gen3IDs-->
-              <label>
-                <input id="gen3ID" type="checkbox" name="gen3ID">
+              <label class="btn btn-warning form-control">
+                <input class="tag_box_choice" id="gen3ID" type="checkbox" name="gen3ID">
                 <span>gen3ID</span>
               </label>
               <br>
@@ -391,7 +417,7 @@
               <summary class="concerned_summary">作詞家一覧↓</summary>
               {% for name in lyricists %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'lyricist' name.pk 2 %}" name="checkbox_lyricist" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'lyricist' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'lyricist' name.pk 2 %}">
                   {{ name.lyricist }}
                 </label><br>
               {% endfor %}
@@ -402,7 +428,7 @@
               <summary class="concerned_summary">作曲家一覧↓</summary>
               {% for name in composers %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'composer' name.pk 2 %}" name="checkbox_composer" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'composer' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'composer' name.pk 2 %}">
                   {{ name.composer }}
                 </label><br>
               {% endfor %}
@@ -413,7 +439,7 @@
               <summary class="concerned_summary">編曲家一覧↓</summary>
               {% for name in arrangers %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'arranger' name.pk 2 %}" name="checkbox_arranger" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'arranger' name.pk 2 %}">name="checkbox_{{ hoge }}"
+                <label class="tag_box2" for="{% plusCalc2 'arranger' name.pk 2 %}">name="checkbox_{{ hoge }}"
                   {{ name.arranger }}
                 </label><br>
               {% endfor %}
@@ -424,7 +450,7 @@
               <summary class="concerned_summary">ミックス一覧↓</summary>
               {% for name in mixers %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'mixer' name.pk 2 %}" name="checkbox_mixer" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'mixer' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'mixer' name.pk 2 %}">
                   {{ name.mixer }}
                 </label><br>
               {% endfor %}
@@ -435,7 +461,7 @@
               <summary class="concerned_summary">音楽家一覧↓</summary>
               {% for name in musicians %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'musician' name.pk 2 %}" name="checkbox_musician" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'musician' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'musician' name.pk 2 %}">
                   {{ name.musician }}
                 </label><br>
               {% endfor %}
@@ -446,7 +472,7 @@
               <summary class="concerned_summary">動画編集者一覧↓</summary>
               {% for name in videoEditors %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'videoEditor' name.pk 2 %}" name="checkbox_videoEditor" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'videoEditor' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'videoEditor' name.pk 2 %}">
                   {{ name.videoEditor }}
                 </label><br>
               {% endfor %}
@@ -457,7 +483,7 @@
               <summary class="concerned_summary">イラストレーター一覧↓</summary>
               {% for name in illustrators %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'illustrator' name.pk 2 %}" name="checkbox_illustrator" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'illustrator' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'illustrator' name.pk 2 %}">
                   {{ name.illustrator }}
                 </label><br>
               {% endfor %}
@@ -468,7 +494,7 @@
               <summary class="concerned_summary">外部共演者一覧↓</summary>
               {% for name in coStars %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'coStar' name.pk 2 %}" name="checkbox_coStar" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'coStar' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'coStar' name.pk 2 %}">
                   {{ name.coStar }}
                 </label><br>
               {% endfor %}
@@ -479,7 +505,7 @@
               <summary class="concerned_summary">原曲歌い手一覧↓</summary>
               {% for name in originalSingers %}
                 <input class="tag_box_choice" type="checkbox" id="{% plusCalc2 'originalSinger' name.pk 2 %}" name="checkbox_originalSinger" value="{{ name.pk }}">
-                <label  class="tag_box2" for="{% plusCalc2 'originalSinger' name.pk 2 %}">
+                <label class="tag_box2" for="{% plusCalc2 'originalSinger' name.pk 2 %}">
                   {{ name.originalSinger }}
                 </label><br>
               {% endfor %}

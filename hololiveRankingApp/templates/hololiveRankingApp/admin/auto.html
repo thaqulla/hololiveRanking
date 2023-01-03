@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load simple_calc %}
+{% block title %}自動生成編集{% endblock title %}
+{% block content %}
+<hr>
+<form action="{% url 'auto' object.id %}" method="post">{% csrf_token %}
+  <h2>{{title}}</h2>
+  {{form}}
+  <hr>
+  <div style="text-align: right;">
+    <button type="submit" class="btn btn-info btn-block">更新</button>
+  </div>
+</form>
+
+{% endblock content %}
