@@ -11,9 +11,9 @@
             {{ field.errors }}
             <hr>
         {% endfor %}
-        <button type="submit">ログイン</button>{% csrf_token %}
+        <button class="btn btn-info form-control" type="submit">ログイン</button>{% csrf_token %}
     </form>
 
-    <a href="{% url 'top' %}">ログインせず利用する</a>
+    <a class="btn btn-info form-control" href="{% url 'top' %}">ログインせず利用する</a>
 
 {% endblock content %}

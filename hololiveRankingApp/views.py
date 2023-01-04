@@ -602,25 +602,6 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     graph = self.output_graph()
     return graph
 
-###########################################
-# class RankingView(ListView):#
-#   template_name = 'hololiveRankingApp/hololivechannel_list.html'
-#   model = hololiveChannel2
-
-# class PerformerInfoView(DetailView):#
-#   template_name = 'hololiveRankingApp/performer_info.html'
-#   model = hololiveSongsResult
-#   context_object_name = "performerSongLists"
-  
-#   def get_context_data(self, **kwargs):
-#     context = super().get_context_data(**kwargs)
-#     context = get_header_context_data(context)
-#     if "total" in self.request.GET.getlist("dateType"):
-#       context["dateType"] = "total"
-#     return context
-  # def get_queryset(self):
-  #   return 
-    # queryset = 
 
 class SearchResultView(ListView):
 

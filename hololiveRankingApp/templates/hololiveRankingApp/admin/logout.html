@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="ja">
+{% extends "base.html" %}
+{% load static %}
 
+{% block title %}ログアウト{% endblock title %}
+{% block content %}
 
-<head>
-<meta charset="UTF-8">
-<title>ユーザーフォーム</title>
-</head>
+<h1>ログアウトしました。</h1>
 
+    <a class="btn btn-info form-control" href="{% url 'top' %}">トップに戻る</a>
 
-<body>
-    <h1>ログアウトしました。</h1>
-    <p><a href="{% url 'top' %}">ホームへ戻る</a></p>
-</body>
-
-
-</html>
+{% endblock content %}

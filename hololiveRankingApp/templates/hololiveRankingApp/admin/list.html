@@ -10,7 +10,7 @@
       <span class="list_cell_layout">&nbsp;サムネイル</span>
       <span class="list_cell_layout">&nbsp;タイトル</span>
       <span class="list_cell_layout">&nbsp;動画情報</span>
-      <span class="list_cell_layout">&nbsp;投稿日</span>
+      <span class="list_cell_layout">&nbsp;投稿日、種類</span>
       <span class="list_cell_layout">&nbsp;出演者情報</span>
   </div>
   <div class="list_sheet_layout">
@@ -34,7 +34,12 @@
           <a href="{% url 'update' pk=item.pk %}">
             <span class="tag_box2">関係者追加</span>
           </a></span>
-        <span class="list_cell_layout">&nbsp;{{ item.videoAge }}</span>
+        <span class="list_cell_layout">
+          &nbsp;{{ item.videoAge }}<br>
+          {% for type in item.videoType.all %}
+          &nbsp;{{ type }}<br>
+          {% endfor %}
+        </span>
         
         <div  class="list_cell_layout">
         {% for person in item.performer.all %}

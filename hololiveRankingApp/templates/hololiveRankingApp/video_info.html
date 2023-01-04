@@ -10,11 +10,15 @@
             background-color: #000000;
             background-blend-mode: lighten;"><!--background-image: url({{ object.getThumbnailHigh }});-->
   <div class="row">
-    <div>
-      <h1  class="title_position title_link">{{ object.title| truncatechars:25 }}</h1><!--タイトル-->
-      
-      
+    <!-- <div> -->
+    <h1 class="title_position title_link">{{ object.title| truncatechars:25 }}</h1><!--タイトル-->
+    <div class="title_link">
+      {% for type in object.videoType.all %}
+      <span>{{ type }}</span><!--動画のタイプ-->
+      {% endfor %}
     </div>
+      
+    <!-- </div> -->
     <div class="col col-lg-8 ">
       <div>
         <span>投稿日:{{ object.videoAge }}</span>
@@ -24,18 +28,101 @@
       </div>
       <div class="layout_performer">
         {% for pfmr in object.performer.all %}
-        <img style="margin: 5px;
-                    width: 50px;
+        <img style="margin: 1px;
+                    width: 40px;
                     border-radius: 50%;"
              src="{{ pfmr.thumbnailDefault }}" href="#">
         {% endfor %}
       </div>
-      <div id="resultCount">
 
+      <div class="collaborator_box">
+        <div>
+          <span>作詞家:</span><br>
+          {% for name in object.lyricist.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="lyricist" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>作曲家:</span><br>
+          {% for name in object.composer.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="composer" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>編曲家:</span><br>
+          {% for name in object.arranger.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="arranger" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>ミックス:</span><br>
+          {% for name in object.mix.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="mix" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>音楽:</span><br>
+          {% for name in object.inst.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="inst" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>動画:</span><br>
+          {% for name in object.movie.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="movie" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>イラスト:</span><br>
+          {% for name in object.illust.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="illust" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>外部共演者:</span><br>
+          {% for name in object.coStar.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="coStar" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
+        <div>
+          <span>本家歌い手:</span><br>
+          {% for name in object.originalSinger.all %}
+            <form class="tag_box_how_to_put" action="{% url 'work' pk=name.pk %}" method="get">{% csrf_token %}
+              <input class="tag_box" style="background-color: #35363a; color: #ffffff;" type="submit"  id="{{ name.pk }}" name="originalSinger" value="{{ name }}">
+            </form>
+          {% endfor %}
+        </div>
       </div>
-      <img style="width: 100%; min-width :450px; border:dotted;"
+      {% if request.user.is_anonymous %}
+      <div class="" style="background-color: #63f4ff; text-align: right;"><!--データの編集-->
+        <a class="tag_box2" href="#">編集</a>
+        <span>&nbsp;(ログイン後可能)&nbsp;</span>
+      </div>
+      {% else %}
+      <div class="" style="background-color: #63f4ff; text-align: right;"><!--データの編集-->
+          <a class="tag_box2" href="{% url 'update' pk=object.pk %}">編集</a>
+      </div>
+      {% endif %}
+
+      <img style="width: 100%; min-width :330px; border:dotted;"
             src="data:image/png;base64,{{ viewgraph | safe }}" id="viewGraph" alt="視聴回数推移">
-      <img style="width: 100%; min-width :450px; border:dotted;"
+      <img style="width: 100%; min-width :330px; border:dotted;"
             src="data:image/png;base64,{{ likegraph | safe }}" id="likeGraph" alt="高評価数数推移">
     </div>
 

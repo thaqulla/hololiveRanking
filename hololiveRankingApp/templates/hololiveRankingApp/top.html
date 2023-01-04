@@ -79,25 +79,19 @@
     <h1 class="section-headline">絞り込み検索</h1>
       <form method="get" action="{% url 'searchResult' %}">{% csrf_token %}
         <h4>楽曲種類(選択しなかった場合、すべて出力されます)</h4>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        <div class="btn-group" style="background-color: #35363a;" role="group" aria-label="Basic checkbox toggle button group">
           <input type="checkbox" class="btn-check" id="original" autocomplete="off" name="targetSongType" value="original">
           <label class="btn btn-outline-primary" for="original">オリジナルソング</label>
         
           <input type="checkbox" class="btn-check" id="covered" autocomplete="off" name="targetSongType" value="covered" checked>
           <label class="btn btn-outline-primary" for="covered">歌ってみた</label>
         </div>
-        <!-- <h4>楽曲種類(選択しなかった場合、すべて出力されます)</h4> -->
-        <!-- <ul> -->
-          <!-- <label>オリジナルソング</label>
-            <input type="checkbox" id="original" name="targetSongType" value="original">
-          <label>歌ってみた</label>
-            <input type="checkbox" id="covered" name="targetSongType" value="covered" checked> -->
           <!-- <label>記念祭</label>
             <input type="checkbox" id="festival" name="targetSongType" value="festival"> -->
         <!-- </ul> -->
 
-        <h4>並び順Checkbox and radio button groups</h4>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <h4>並び順</h4>
+        <div class="btn-group" style="background-color: #35363a;" role="group" aria-label="Basic radio toggle button group">
           <input type="radio" class="btn-check" id="likeCountDesc" autocomplete="off" name="orderType" value="likeCountDesc">
           <label class="btn btn-outline-primary" for="likeCountDesc">高評価数(多い順)</label>
         
@@ -109,25 +103,6 @@
 
           <input type="radio" class="btn-check" id="viewCountAsc" autocomplete="off" name="orderType" value="viewCountAsc">
           <label class="btn btn-outline-secondary" for="viewCountAsc">再生回数(少ない順)</label>
-        </div>
-        <!-- <h4>並び順</h4>
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-          <label class="btn btn-outline-primary form-control">
-            <input class="btn-check" type="radio" id="likeCountDesc" name="orderType" value="likeCountDesc">
-            <span>高評価数(多い順)</span>
-          </label> -->
-          <!-- <label>
-            <input type="radio" id="likeCountAsc" name="orderType" value="likeCountAsc">
-            <span>高評価数(少ない順)</span>
-          </label> -->
-          <!-- <label class="btn btn-outline-danger form-control">
-            <input class="btn-check" type="radio" id="viewCountDesc" name="orderType" value="viewCountDesc" checked>
-            <span>再生回数(多い順)</span>
-          </label> -->
-          <!-- <label>
-            <input type="radio" id="viewCountAsc" name="orderType" value="viewCountAsc">
-            <span>再生回数(少ない順)</span>
-          </label> -->
         </div>
         <!-- <h4>表示範囲</h4>
         <input type="range">
@@ -154,16 +129,17 @@
                 <span>０期生</span>
               </label>
               <br>
-              {% for channel in gen0JPs %}
-              <label class="avator" for="{{ channel.channelId }}">
-                <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
-                <input class="gen0JP JPall HOLOall" type="checkbox" 
-                id="{{ channel.channelId }}" name="targetChannelId" 
-                        value="{{ channel.channelId }}">
-                <span>{{ channel.name }}&nbsp;&nbsp;</span> 
-              </label>
-              <br>
-            {% endfor %}
+              <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen0JPs %}
+                <input type="checkbox" class="btn-check gen0JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--1-->
             <label class="btn btn-light form-control">
@@ -171,7 +147,7 @@
               <span>１期生</span>
             </label>
             <br>
-              {% for channel in gen1JPs %}
+              <!-- {% for channel in gen1JPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen1JP JPall HOLOall" type="checkbox" 
@@ -180,7 +156,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+              {% endfor %} -->
+              <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen1JPs %}
+                <input type="checkbox" class="btn-check gen1JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--2-->
               <label class="btn btn-light form-control">
@@ -188,7 +175,7 @@
                 <span>２期生</span>
               </label>
               <br>
-              {% for channel in gen2JPs %}
+              <!-- {% for channel in gen2JPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen2JP JPall HOLOall" type="checkbox" 
@@ -197,7 +184,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen2JPs %}
+                <input type="checkbox" class="btn-check gen2JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--g-->
             <label class="btn btn-light form-control">
@@ -205,7 +203,7 @@
               <span>ホロライブゲーマーズ</span>
             </label>
             <br>
-              {% for channel in gameJPs %}
+              <!-- {% for channel in gameJPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gameJP JPall HOLOall" type="checkbox" 
@@ -214,7 +212,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gameJPs %}
+                <input type="checkbox" class="btn-check gameJP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--3-->
               <label class="btn btn-light form-control">
@@ -222,7 +231,7 @@
                 <span>３期生</span>
               </label>
               <br>
-              {% for channel in gen3JPs %}
+              <!-- {% for channel in gen3JPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen3JP JPall HOLOall" type="checkbox" 
@@ -231,7 +240,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen3JPs %}
+                <input type="checkbox" class="btn-check gen3JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--4-->
               <label class="btn btn-light form-control">
@@ -239,7 +259,7 @@
                 <span>４期生</span>
               </label>    
               <br>       
-              {% for channel in gen4JPs %}
+              <!-- {% for channel in gen4JPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen4JP JPall HOLOall" type="checkbox" 
@@ -248,7 +268,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen4JPs %}
+                <input type="checkbox" class="btn-check gen4JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--5-->
               <label class="btn btn-light form-control">
@@ -256,7 +287,7 @@
                 <span>５期生</span>
               </label>
               <br>
-              {% for channel in gen5JPs %}
+              <!-- {% for channel in gen5JPs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="gen5JP JPall HOLOall" type="checkbox" 
@@ -265,7 +296,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in gen5JPs %}
+                <input type="checkbox" class="btn-check gen5JP JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
             <div class="checkbox_div"><!--holoX-->
               <label class="btn btn-light form-control">
@@ -273,7 +315,7 @@
                 <span>秘密結社holoX</span>
               </label>
               <br>
-              {% for channel in holoXs %}
+              <!-- {% for channel in holoXs %}
               <label class="avator" for="{{ channel.channelId }}">
                 <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
                 <input class="holoX JPall HOLOall" type="checkbox" 
@@ -282,7 +324,18 @@
                 <span>{{ channel.name }}&nbsp;&nbsp;</span>
               </label>
               <br>
-            {% endfor %}
+            {% endfor %} -->
+            <p></p>
+              <div class="btn-group-vertical" role="group" aria-label="Basic checkbox toggle button group">
+                {% for channel in holoXs %}
+                <input type="checkbox" class="btn-check holoX JPall HOLOall" id="{{ channel.channelId }}" 
+                      autocomplete="off" name="targetChannelId" value="{{ channel.channelId }}">
+                <label class="btn btn-outline-info" style="text-align: left;" for="{{ channel.channelId }}">
+                  <img class="avator-image" src="{{channel.thumbnailDefault}}" alt="Author">
+                  {{ channel.name }}
+                </label>
+                {% endfor %}
+              </div>
             </div>
           </div>
           <hr><!--------------------------------------------------------------->

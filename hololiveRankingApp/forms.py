@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms 
-from .models import hololiveChannel2, VideoInfo, Lyricist, Composer,Arranger,Mixer,Musician,VideoEditor,\
+from .models import hololiveChannel2, VideoInfo, videoTypeJudgement,\
+  Lyricist, Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
   
 from .widgets import CustomCheckboxSelectMultiple, CustomRadioSelect
@@ -15,6 +16,11 @@ class LoginForm(AuthenticationForm):
           field.widget.attrs['placeholder'] = field.label
           
 class VideoInfoForm(forms.ModelForm):
+  videoType = forms.ModelMultipleChoiceField(
+    queryset=videoTypeJudgement.objects.all().order_by('id'),
+    label='動画種類',
+    widget=CustomCheckboxSelectMultiple,
+    )
   lyricist = forms.ModelMultipleChoiceField(
     queryset=Lyricist.objects.all().order_by('lyricist__name'),
     label='作詞家',
@@ -62,7 +68,7 @@ class VideoInfoForm(forms.ModelForm):
     )
   class Meta:
     model = VideoInfo
-    fields = ["lyricist","composer","arranger","mix","inst","movie","illust","coStar","originalSinger"]
+    fields = ["lyricist","composer","arranger","mix","inst","movie","illust","coStar","originalSinger","videoType"]
   #全てのフォームの部品にplaceholderを定義して、入力フォームにフォーム名が表示されるように指定する
 
 class AdminVideoInfoForm(forms.ModelForm):
