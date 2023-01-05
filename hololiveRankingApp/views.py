@@ -493,7 +493,7 @@ class AdminTitleView(UpdateView):
     return context
 
 class VideoInfoView(DetailView):#個々の動画情報を表示する
-  template_name = 'hololiveRankingApp/video_info.html'
+  template_name = 'hololiveRankingApp/video/info.html'
   model = VideoInfo
   
   def get_context_data(self, **kwargs):

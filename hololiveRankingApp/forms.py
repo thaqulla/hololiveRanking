@@ -69,7 +69,6 @@ class VideoInfoForm(forms.ModelForm):
   class Meta:
     model = VideoInfo
     fields = ["lyricist","composer","arranger","mix","inst","movie","illust","coStar","originalSinger","videoType"]
-  #全てのフォームの部品にplaceholderを定義して、入力フォームにフォーム名が表示されるように指定する
 
 class AdminVideoInfoForm(forms.ModelForm):
   performer = forms.ModelMultipleChoiceField(
@@ -92,7 +91,9 @@ class AdminTitleForm(forms.ModelForm):
     fields = ["title"]
     label='タイトル'
     widget = {
-      "title": forms.Textarea(attrs={'cols': 10, 'rows': 100}),}
+      "title": forms.Textarea(attrs={'cols': 10, 'rows': 100, "style":"display:block;"}),
+      
+      }
     
 
 class LyricistAddForm(forms.ModelForm):
