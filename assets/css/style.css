@@ -419,8 +419,9 @@ hololiver_checkbox 2d517c
 .collaborator_box div {
   margin: 3px 3px;
   padding: 3px;
-  background-color: #1c9ff0;
+  /* background-color: #1c9ff0; */
   border-radius: 10px;
+  border: dotted #2d517c;
 }
 
 .tag_box_how_to_put {
