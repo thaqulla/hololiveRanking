@@ -120,6 +120,35 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     context["illustrators"] = Illustrator.objects.all().order_by("illustrator__name")[0:]
     context["coStars"] = CoStar.objects.all().order_by("coStar__name")[0:]
     context["originalSingers"] = OriginalSinger.objects.all().order_by("originalSinger__name")[0:]
+    
+    dtLatest = hololiveSongsResult.objects.all()\
+      .aggregate(Max("aggregationDate"))["aggregationDate__max"]
+
+    weeklyKanji = ["月曜日","火曜日","水曜日","木曜日","金曜日","土曜日","日曜日"]
+    weekEnglish = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+
+    def minusCalcDt(base,x):
+      minusDt = base - datetime.timedelta(days=x)
+      DOW_ja = weeklyKanji[minusDt.weekday()]
+      DOW_en = weekEnglish[minusDt.weekday()]
+      return minusDt, DOW_ja, DOW_en
+
+    baseDt = dt
+    weekList = []        
+    for i in range(0,7):
+      minusDt, DOW_ja, DOW_en = minusCalcDt(dtLatest, i)
+      minusDtStr = minusDt.strftime("%Y-%m-%d")
+      if minusDt == baseDt:
+        weekList.append(["今日", minusDt, DOW_ja, DOW_en, f"{minusDtStr}{DOW_en}", minusDtStr])
+      elif minusDt == baseDt - datetime.timedelta(days=1):
+        weekList.append(["昨日", minusDt, DOW_ja, DOW_en, f"{minusDtStr}{DOW_en}", minusDtStr])
+      elif minusDt == baseDt - datetime.timedelta(days=2):
+        weekList.append(["一昨日", minusDt, DOW_ja, DOW_en, f"{minusDtStr}{DOW_en}", minusDtStr])
+      else:
+        weekList.append(["最新", minusDt, DOW_ja, DOW_en, f"{minusDtStr}{DOW_en}", minusDtStr])
+        
+    context["weekList"] = weekList
+    
     # context['results'] = hololiveSongsResult.objects.filter(info=self.get_object()).order_by("aggregationDate")[0:50]
     return context
   
@@ -509,8 +538,8 @@ class VideoInfoView(DetailView):#個々の動画情報を表示する
     toDate = dt
     latestCheck = hololiveSongsResult.objects.filter(aggregationDate=dt).count()
     if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
-      thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
-      toDate = thaDayBefore
+      theDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
+      toDate = theDayBefore
       
     def makeGraph(x,y):
       if x == 0:
@@ -653,20 +682,14 @@ class SearchResultView(ListView):
       if "covered" in self.request.GET.getlist("targetSongType"):
         Q_Covered = Q_Performer.filter(info__videoType=covered)
         Q_SongType = Q_SongType|Q_Covered
-    
-    baseDate = dt
-    latestCheck = self.model.objects.filter(aggregationDate=dt).count()
-    if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
-      thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
-      baseDate = thaDayBefore
 
     resultMount=5
     baseDate = dt
     
     latestCheck = self.model.objects.filter(aggregationDate=dt).count()
     if latestCheck == 0: #本日分が計算されていない場合最新分を基準に算出される
-      thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
-      baseDate = thaDayBefore
+      theDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
+      baseDate = theDayBefore
     
     randomInfos = hololiveSongsResult.objects.filter(aggregationDate=baseDate).values("info")
     
@@ -688,21 +711,17 @@ class SearchResultView(ListView):
   def get_queryset(self):
     targetIdLists = self.request.GET.getlist("targetChannelId")
     Q_Performer = self.model.objects.filter(info__performer__channelId__in=targetIdLists).distinct()
-    latestCheck = Q_Performer.filter(aggregationDate=dt).count()
     
     original = videoTypeJudgement.objects.get(judge="オリジナルソング")
     covered = videoTypeJudgement.objects.get(judge="歌ってみた")
     festival = videoTypeJudgement.objects.get(judge="記念祭")
+
+    Days = self.request.GET.getlist("DOW")
     
-    today = dt
-    
-    latestCheck = Q_Performer.filter(aggregationDate=dt).count()
-    if latestCheck != 0:
-      Q_Date = Q_Performer.filter(aggregationDate=today)
+    if dtstr in Days:
+      Q_Date = Q_Performer.filter(aggregationDate=dt)
     else:
-      # yesterday = dt-datetime.timedelta(days=1)
-      thaDayBefore = hololiveSongsResult.objects.all().aggregate(Max('aggregationDate'))["aggregationDate__max"]
-      Q_Date = Q_Performer.filter(aggregationDate=thaDayBefore)         
+      Q_Date = Q_Performer.filter(aggregationDate=Days[0])    
                                                 
     Q_SongType = Q_Date                                   
     if "original" in self.request.GET.getlist("targetSongType"):
@@ -799,7 +818,6 @@ class SearchResultView(ListView):
     for year in years:
       if year in self.request.GET.getlist("checkbox_year"):
         Q_year = Q_year.exclude(info__videoAge__year=year)
-        print(year,Q_year)
     
     Q_month = Q_year
       
@@ -809,6 +827,5 @@ class SearchResultView(ListView):
         Q_month = Q_month.exclude(info__videoAge__month=month)
     
     queryset = Q_month
-    
     
     return queryset

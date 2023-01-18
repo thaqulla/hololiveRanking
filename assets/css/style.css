@@ -28,6 +28,33 @@
   color: #f1f1f1;
 }
 
+.header_talent_title {
+  background-color: red;
+}
+
+.dropdown-menu_latout {
+  background-color: #202124;
+  color: #f1f1f1;
+}
+
+.dropdown-item_layout {
+  margin: 2px;
+  background-color: #62f4ff;
+  border-radius: 10px;
+}
+
+.nav-pills>.nav-item>.nav-link.active {
+  background-color: #62f4ff;
+  color: #063f5c;
+  font-weight: bold;
+}
+
+.nav-link {
+  /* background-color: #62f4ff; */
+  color: #fff;
+}
+
+
 .description {
   height: 360px;
   /* min-width: 360px; */
@@ -101,43 +128,47 @@ section
 /*
 about
 */
-.about {
-  margin: 0;
-  display: flex;
-  justify-content:center;
 
-
-}
-
-.about-caption {
-  padding-left: 15px;
-}
 .about-headline {
   margin: 0 0 20px;
   font-size: 30px;
 }
-/* .about-description {} */
+
+.top_animation {
+  position: relative;
+  background-color: green;            
+  width: 1080px;
+  /* height: 720px; */
+  /* padding: 10px; */
+}
+
+.top_video {
+  vertical-align: bottom;
+  border-radius: 10px;
+}
+
+.top_how_did {
+  background: linear-gradient(to right,#62f4ff,#fff);
+  transform: translate(-50%,-50%);
+  color: #063f5c;
+  font-weight: bold;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  top: 50%;
+  opacity: 0.85;
+  left:50%;
+  border-radius: 10px;
+}
+
+.top_how_did div {
+  text-align: center;
+}
 
 /*
 hololiver_checkbox 2d517c
 */
-.avator {
-  margin: 5px;
-  padding: 3px;
-  display: inline-block;
-  vertical-align: middle;/*top*/
-  font-weight: bold;
-  padding-left: 15px;
-  background-color: #62f4ff;
-  color: #333333;
-  text-decoration: none;
-  /* font-size: 3.4vw; */
-  white-space: nowrap;
-  overflow-wrap: break-word;
-  border: 1px solid #909090;
-  border-radius: 100vh;
-
-}
 
 .avator-image {
   width: 40px;

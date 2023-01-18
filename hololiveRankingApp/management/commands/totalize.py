@@ -15,6 +15,7 @@ from django.db.models import Q
 import random
 import cnum#兆億万一分厘毛忽
 
+
 with open('./SECRET/API_KEYs.txt', 'r', encoding='UTF-8') as f:
     API_KEY_Lists = f.read().splitlines()
 API_KEY = API_KEY_Lists[0]
@@ -48,7 +49,8 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):#handleは変えては駄目。
                                     #前後に何があっても一番初めに実行される
-        ##########################################################
+        
+        
         existCheck = hololiveSongsResult.objects.filter(aggregationDate=dt)
         if existCheck.count() != 0:
             maxPkRslt2 = existCheck.exclude(Q(viewCount30=0)|\
@@ -84,14 +86,51 @@ class Command(BaseCommand):
         ##################今は絶対回すな###########################
         # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
         ##########################################################
-        test = [datum.composer.name for datum in Composer.objects.all()]
-        print(test)
+        #TODO:ボトルネックの調査
+        ##########################################################
+        import cProfile
+        import pstats
+        c_profile = cProfile.Profile()
+        c_profile.enable()
+        ##########################################################
+        # test = [datum.composer.name for datum in Composer.objects.all()]
+        # print(test)
         
-        test2 = Composer.objects.values_list('composer', flat=True)
-        print(list(test2))
-        
-        
+        # test2 = Composer.objects.values_list('composer__name', flat=True)
+        # print(list(test2))
+        # main.complementerAve(maxPkRslt,1)
+        # main.getData7AndData30(maxPkRslt)
+        # print("getData7AndData30Old")
+        # main.getData7AndData30Old()
+        # print("makeCompleteData")
+        # main.makeCompleteData(maxPkRslt,API_KEY)
+        # print("flyingStartVideo")
+        # main.flyingStartVideo_plusDescription(API_KEY)
+        dataSelected = VideoInfo.objects.filter().order_by("-pk")
+        for dat in tqdm(dataSelected):
 
+            vid = dat.videoId
+            aggDay = dt
+            vAge = VideoInfo.objects.get(videoId=vid).videoAge
+            dayDifference = int((aggDay - vAge)/datetime.timedelta(days=1)) + 1
+
+            if dat.videoCondition2==True:
+                calcDates = list(hololiveSongsResult.objects.select_related('info')\
+                    .filter(info__videoId=vid).values_list('aggregationDate', flat=True)\
+                    .order_by("-aggregationDate"))
+                trueDates = list(map(
+                    lambda n: dt - datetime.timedelta(days=n), range(0, dayDifference)))
+
+                if set(calcDates) != set(trueDates):
+                    diff_list = list(set(calcDates) ^ set(trueDates))#集計していない日を抽出
+                    print(dat.title, vid, diff_list)
+                    # hololiveSongsResult.objects.create(
+                    #     aggregationDate=dtX,
+                    #     viewCount=0,
+                    #     likeCount=0,
+                    #     info=VideoInfo.objects.get(videoId=vid))
+                    
+                    
         # concerned = VideoInfo.objects.prefetch_related('lyricist__lyricist')\
         #                             .prefetch_related('composer__composer')\
         #                             .prefetch_related('arranger__arranger')\
@@ -117,6 +156,13 @@ class Command(BaseCommand):
         # print(anotherL)#.count()==0
         # ageData = VideoInfo.objects.filter(videoAge__year="2017").order_by("-videoAge")
         # print(ageData)
+        
+        #TODO:ボトルネックの調査
+        ##########################################################
+        c_profile.disable()
+        c_stats = pstats.Stats(c_profile)
+        c_stats.sort_stats('tottime').print_stats(3)
+        ##########################################################
 
 
         

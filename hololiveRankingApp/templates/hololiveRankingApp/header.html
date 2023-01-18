@@ -18,30 +18,36 @@
           <a class="nav-link dropdown-toggle" style="color: #f1f1f1; font-weight:bold;"  href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             新旧所属タレント
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <ul class="dropdown-menu dropdown-menu_latout" aria-labelledby="navbarDropdown">
             <div style="text-align: center;">
-              <span>Youtubeへ飛びます</span>
+              <span class="header_talent_title" >Youtubeへ飛びます</span>
             </div>
             <div style="display: grid; grid-template-columns: 25% 25% 25% 25%;">
               <div><!--JPall_1-->
+                <div style="text-align: center;">
+                  <span class="header_talent_title">ホロライブ 0期生～</span>
+                </div>
               {% for talent in JPall_1 %}
               {% if talent not in exTalents %}
                 <li>
-                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                  <a class="dropdown-item dropdown-item_layout" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                     <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                    {{ talent.name }}
+                    <span style="font-size: small;">{{ talent.name }}</span>
                   </a>
                 </li>
               {% endif %}
               {% endfor %}
               </div>
               <div><!--JPall_2-->
+                <div style="text-align: center;">
+                  <span class="header_talent_title">ホロライブ 3期生～</span>
+                </div>
                 {% for talent in JPall_2 %}
                 {% if talent not in exTalents %}
                   <li>
-                    <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                    <a class="dropdown-item dropdown-item_layout" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                       <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                      {{ talent.name }}
+                      <span style="font-size: small;">{{ talent.name }}</span>
                     </a>
                   </li>
                 {% endif %}
@@ -49,38 +55,46 @@
                 </div>
               <div><!--ENIDall-->
               <!--ENall-->
-              {% for talent in ENall %}
-              {% if talent not in exTalents %}
+                <div style="text-align: center;">
+                  <span class="header_talent_title">hololive English</span>
+                </div>
+                {% for talent in ENall %}
+                {% if talent not in exTalents %}
                 <li>
-                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                  <a class="dropdown-item dropdown-item_layout" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                     <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                    {{ talent.name }}
+                    <span style="font-size: small;">{{ talent.name }}</span>
                   </a>
                 </li>
-              {% endif %}
-              {% endfor %}
-              <hr>
+                {% endif %}
+                {% endfor %}
               <!--IDall-->
-              {% for talent in IDall %}
-              {% if talent  not in exTalents %}
+                <div style="text-align: center;">
+                  <span class="header_talent_title">hololive Indonesia</span>
+                </div>
+                {% for talent in IDall %}
+                {% if talent  not in exTalents %}
               <li>
-                <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                <a class="dropdown-item dropdown-item_layout" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                   <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                  {{ talent.name }}
+                  <span style="font-size: small;">{{ talent.name }}</span>
                 </a>
               </li>
-              {% endif %}
-              {% endfor %}
+                {% endif %}
+                {% endfor %}
               </div>
-              <div><!-- <span>リンク切れの可能性あり</span> -->
-              {% for talent in exTalents %}
+              <div><!-- 卒業 -->
+                <div style="text-align: center;">
+                  <span class="header_talent_title">卒業生()</span>
+                </div>
+                {% for talent in exTalents %}
                 <li>
-                  <a class="dropdown-item" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
+                  <a class="dropdown-item dropdown-item_layout" href="{% plusCalc2 'https://www.youtube.com/channel/' talent.channelId 0 %}" target="_blank" rel="noopener noreferrer">
                     <img class="avator-image" src="{{ talent.thumbnailDefault }}" alt="Author">
-                    {{ talent.name }}
+                    <span style="font-size: small;">{{ talent.name }}</span>
                   </a>
                 </li>
-              {% endfor %}
+                {% endfor %}
               </div>
             </div>
           </ul>

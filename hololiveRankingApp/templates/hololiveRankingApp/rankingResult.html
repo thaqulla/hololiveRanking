@@ -8,6 +8,8 @@
     <div class="row"><!--ページタイトル-->
       <h1 id="subTitleh1">歌唱曲一覧</h1>
     </div>
+    <!-- {{ songLists|length }}件ヒットしました！<br> -->
+    {{ songLists.count|add:"0" }}件ヒットしました！
   <!-- </div> -->
   <hr>
   <div class="layout">
@@ -15,34 +17,75 @@
   <!-------------------------------------------------------------------------------------------------->
     <main class=""><!--メインバー-->
       <div class=""><!--推移表-->
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-          
+        <ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
+        {% if songLists.count >= 0 %}
           <li class="nav-item" role="presentation"><!--1位～50位-->
             <button class="nav-link active" id="FirstTab" data-bs-toggle="tab"
                     data-bs-target="#FirstSheet" type="button" role="tab"
-                    aria-controls="FirstSheet" aria-selected="true">1位～50位</button>
+                    aria-controls="FirstSheet" aria-selected="true">
+            {% if songLists.count < 50 %}
+              1位～{{ songLists.count }}位
+            {% else %}
+              1位～50位
+            {% endif %}
+            </button>
           </li>
+        
+        {% endif %}
+        {% if songLists.count >= 50 %}
           <li class="nav-item" role="presentation"><!--51位～100位-->
             <button class="nav-link" id="SecondTab" data-bs-toggle="tab"
                     data-bs-target="#SecondSheet" type="button" role="tab"
-                    aria-controls="SecondSheet" aria-selected="false">51位～100位</button>
+                    aria-controls="SecondSheet" aria-selected="false">
+            {% if songLists.count < 100 %}
+              51位～{{ songLists.count }}位
+            {% else %}
+              51位～100位
+            {% endif %}
+            </button>
           </li>
+        {% endif %}
+
+        {% if songLists.count >= 100 %}
           <li class="nav-item" role="presentation" ><!--101位～150位-->
             <button class="nav-link" id="ThirdTab" data-bs-toggle="tab"
                     data-bs-target="#ThirdSheet" type="button" role="tab"
-                    aria-controls="ThirdSheet" aria-selected="false">101位～150位</button>
+                    aria-controls="ThirdSheet" aria-selected="false">
+            {% if songLists.count < 150 %}
+              101位～{{ songLists.count }}位
+            {% else %}
+              101位～150位
+            {% endif %}
+            </button>
           </li>
-          <li class="nav-item" role="presentation" ><!--151位～200位-->
+        {% endif %}
+
+        {% if songLists.count >= 150 %}
+          <li class="nav-item" role="presentation" ><!--151位～200位-->   
             <button class="nav-link" id="FourthTab" data-bs-toggle="tab"
                     data-bs-target="#FourthSheet" type="button" role="tab"
-                    aria-controls="FourthSheet" aria-selected="false">151位～200位</button>
+                    aria-controls="FourthSheet" aria-selected="false">
+            {% if songLists.count < 200 %}
+              151位～{{ songLists.count }}位
+            {% else %}
+              151位～200位
+            {% endif %}
+            </button>
           </li>
-          <li class="nav-item" role="presentation" ><!--201位～250位-->
+        {% endif %}
+        {% if songLists.count >= 200 %}
+          <li class="nav-item" role="presentation" ><!--201位～250位-->        
             <button class="nav-link" id="FifthTab" data-bs-toggle="tab"
                     data-bs-target="#FifthSheet" type="button" role="tab"
-                    aria-controls="FifthSheet" aria-selected="false">201位～250位</button>
+                    aria-controls="FifthSheet" aria-selected="false">
+            {% if songLists.count < 250 %}
+              201位～{{ songLists.count }}位
+            {% else %}
+              201位～250位
+            {% endif %}
+            </button>
           </li>
-          
+        {% endif %}
         </ul>
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="FirstSheet"
@@ -51,7 +94,6 @@
             <h2 style="text-align: center;" id="FirstTitle">トップ50ランキング表</h2>
             <hr>
             <div class="rankingTableList">
-
               {% for songList in songLists|slice:"0:50" %}
                 {% include "./result/sheet.html" with letNum=0 %}
               {% endfor %}
@@ -65,7 +107,11 @@
           <div class="tab-pane fade" id="SecondSheet"
                 role="tabpanel" aria-labelledby="SecondTab">
             <hr>
+            {% if songLists.count < 100 %}
+            <h2 style="text-align: center;" id="SecondTitle">51~{{ songLists.count }}ランキング表</h2>
+            {% else %}
             <h2 style="text-align: center;" id="SecondTitle">51~100ランキング表</h2>
+            {% endif %}
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"50:100" %}
@@ -81,7 +127,11 @@
           <div class="tab-pane fade" id="ThirdSheet"
                 role="tabpanel" aria-labelledby="ThirdTab">
             <hr>
+            {% if songLists.count < 150 %}
+            <h2 style="text-align: center;" id="ThirdTitle">101~{{ songLists.count }}ランキング表</h2>
+            {% else %}
             <h2 style="text-align: center;" id="ThirdTitle">101~150ランキング表</h2>
+            {% endif %}
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"100:150" %}
@@ -97,7 +147,11 @@
           <div class="tab-pane fade" id="FourthSheet"
                 role="tabpanel" aria-labelledby="FourthTab">
             <hr>
+            {% if songLists.count < 200 %}
+            <h2 style="text-align: center;" id="FourthTitle">151~{{ songLists.count }}ランキング表</h2>
+            {% else %}
             <h2 style="text-align: center;" id="FourthTitle">151~200ランキング表</h2>
+            {% endif %}
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"150:200" %}
@@ -113,7 +167,11 @@
           <div class="tab-pane fade" id="FifthSheet"
               role="tabpanel" aria-labelledby="FifthTab">
             <hr>
+            {% if songLists.count < 250 %}
+            <h2 style="text-align: center;" id="FifthTitle">201~{{ songLists.count }}ランキング表</h2>
+            {% else %}
             <h2 style="text-align: center;" id="FifthTitle">201~250ランキング表</h2>
+            {% endif %}
             <hr>
             <div class="rankingTableList">
               {% for songList in songLists|slice:"200:250" %}

@@ -136,7 +136,7 @@ def newRanking(API_KEY, keyword, maxresults, performers, performer2, publishedAf
 
 def getRankingTXT(API_KEY):#日別結果の取得
     videoData = VideoInfo.objects.all()
-    for dat in videoData:   
+    for dat in tqdm(videoData):   
         vInfo = VideoInfo.objects.filter(videoId=dat.videoId)
         for i in vInfo:
             if hololiveSongsResult.objects.filter(info=i,aggregationDate=dtstr).exists():
@@ -286,10 +286,7 @@ def complementer0v2():#データとして存在しない日時のものを０補
         if dat.videoCondition2==True:
             
             testDate = hololiveSongsResult.objects.filter(info__videoId=vid).order_by("-aggregationDate")
-            # testList = []
-            # for dat in testDate:
-            #     dtY = dat.aggregationDate
-            #     testList.append(dtY)
+
             testList = [dat.aggregationDate for dat in testDate]
             for d in range(0,dayDifference):
                 dtX = datetime.date.today() - datetime.timedelta(days=d)

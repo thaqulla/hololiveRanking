@@ -23,29 +23,37 @@
   <div>
     <h1 class="section-headline">ホロ歌集計部(仮)</h1>
   </div>
-      <div style="position: relative;
-                  width: 1080px;
-                  height: 720px;">
-        <video controls autoplay loop muted width="1080" style="vertical-align: bottom; position: absolute;">
-          <source src="https://hololive.hololivepro.com/wp-content/uploads/2022/04/3rd-fes..mp4" >
-        </video>
-        <div class="" style="background-color: blue;
-                              
-                              position: absolute;
-                              ">
-          <h2 class="about-headline">本当の歌ランキング、作りませんか？</h2>
-          <p class="about-description">
-            2017年9月7日、ときのそらデビューを皮切りに多くの動画を投稿してくださり、<br/>
-            また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br/>
-            特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br/>
-            オリジナルソングは彼女たちの努力が詰まったものが提供されている。
-            しかし、世界をつなぐ動画投稿サイトに混じり、歌を切り抜き、自分のチャンネルで加工をしたもの公開している動画も見受けられる。<br/>
-            確かに様々なチャンネルを通じて彼女たちの歌声、技量、存在そのものは大衆に届くがしかし、<br/>
-            彼女たちのチャンネルではないが故、100%は彼女たちの動画の価値（再生回数、高評価数）には還元されていないのが現状である。<br/>
-            そんな現状を鑑み今回のサイトを立ち上げることにした次第である。
-          </p>
-        </div>
+  <div class="top_animation">
+    <video class="top_video" controls autoplay loop muted width=100%>
+      <source src="https://hololive.hololivepro.com/wp-content/uploads/2022/04/3rd-fes..mp4" >
+    </video>
+    <div class="top_how_did">
+      <div>
+        <h2 class="about-headline">本当の歌ランキング、作りませんか？</h2>
+        <p class="">
+          2017年9月7日、ときのそらデビューを皮切りに多くの動画を投稿してくださり、<br>
+          <p></p>
+          また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br>
+          <p></p>
+          特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br>
+          <p></p>
+          オリジナルソングは彼女たちの努力が詰まったものが提供されている。<br>
+          <p></p>
+          しかし、世界をつなぐ動画投稿サイトに混じり、歌を切り抜き、<br>
+          <p></p>
+          自分のチャンネルで加工をしたもの公開している動画も見受けられる。<br>
+          <p></p>
+          確かに様々なチャンネルを通じて彼女たちの歌声、技量、存在そのものは大衆に届くがしかし、<br>
+          <p></p>
+          彼女たちのチャンネルではないが故、100%は彼女たちの動画の価値<br>
+          <p></p> 
+          （再生回数、高評価数）には還元されていないのが現状である。<br>
+          <p></p>
+          そんな現状を鑑み今回のサイトを立ち上げることにした次第である。
+        </p>
       </div>
+    </div>
+  </div>
 
   <section class="section section-secoundary" style="border-radius: 10px;">
     <h1 class="section-headline">使い方</h1>
@@ -501,63 +509,60 @@
           </div>
 
         </div>
+        <h4>曜日</h4>
+        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+          {% with today="今日" saishin="最新" %}
+          {% for week in weekList %}
+          {% if week.0 == today %}
+          <input type="radio" class="btn-check " id="{{ week.4 }}" 
+                autocomplete="off" name="DOW" value="{{ week.5 }}" checked>
+          <label class="btn btn-outline-info" style="text-align: center;" for="{{ week.4 }}">
+            {{ week.2 }}<br>({{ week.0 }})
+          </label>
+          {% else %}
+          <input type="radio" class="btn-check " id="{{ week.4 }}" 
+                autocomplete="off" name="DOW" value="{{ week.5 }}">
+          <label class="btn btn-outline-info" style="text-align: center;" for="{{ week.4 }}">
+          {% if week.0 == saishin %}
+            {{ week.2 }}<br>({{ week.1 }})
+          {% else %}
+            {{ week.2 }}<br>({{ week.0 }})
+          {% endif %}
+          </label>
+          {% endif %}
+          {% endfor %}
+          {% endwith %}
+        </div>
         <h4>期間設定</h4>
         <div style="
                   display: grid;
                   grid-template-columns: 33% 33% 33%;
                   ">
-          <div><!--単純絞り込み    月火水木金土日     -->
-            <h5>総合、週間、月間</h5>
-            <!-- <label>
-              <input type="radio" id="Monday" name="DOW" value="Monday">
-              <span>月曜</span>
-            </label>
-            <label>
-              <input type="radio" id="Tuesday" name="DOW" value="Tuesday">
-              <span>火曜</span>
-            </label>
-            <label>
-              <input type="radio" id="Wednesday" name="DOW" value="Wednesday">
-              <span>水曜</span>
-            </label>
-            <label>
-              <input type="radio" id="Thursday" name="DOW" value="Thursday">
-              <span>木曜</span>
-            </label>
-            <label>
-              <input type="radio" id="Friday" name="DOW" value="Friday">
-              <span>金曜</span>
-            </label>
-            <br>
-
-            <label>
-              <input type="radio" id="Saturday" name="DOW" value="Saturday">
-              <span>土曜</span>
-            </label>
-            <label>
-              <input type="radio" id="Sunday" name="DOW" value="Sunday">
-              <span>日曜</span>
-            </label>
-            <br> -->
-            
-            <label>
-              <input type="radio" id="daily" name="dateType" value="total">
-              <span>総合</span>
-            </label>
-            <label>
-              <input type="radio" id="weekly" name="dateType" value="weekly" checked>
-              <span>週間</span>
-            </label>
-            <label>
-              <input type="radio" id="monthly" name="dateType" value="monthly">
-              <span>月間</span>
-            </label>
-            <!-- <label>
-              <input type="radio" id="personally" name="dateType" value="personally">
-              <span>期間設定</span>
-            </label> -->
+          <div><!--単純絞り込み-->
+            <h5>総合、週間、月間</h5>       
+            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+              <input type="radio" class="btn-check " id="total" 
+                    autocomplete="off" name="dateType" value="total">
+              <label class="btn btn-outline-info" style="text-align: center;" for="total">
+                <span>総合</span>
+              </label>
+              <input type="radio" class="btn-check " id="weekly" 
+                    autocomplete="off" name="dateType" value="weekly" checked>
+              <label class="btn btn-outline-info" style="text-align: center;" for="weekly">
+                <span>週間</span>
+              </label>
+              <input type="radio" class="btn-check " id="monthly" 
+                    autocomplete="off" name="dateType" value="monthly">
+              <label class="btn btn-outline-info" style="text-align: center;" for="monthly">
+                <span>月間</span>
+              </label>
+              <!-- <input type="radio" class="btn-check " id="" 
+                    autocomplete="off" name="dateType" value="">
+              <label class="btn btn-outline-info" style="text-align: center;" for="">
+                <span>期間指定</span>
+              </label> -->
+            </div>
           </div>
-
           <div><!--年別範囲絞り込み-->
             <details>
               <summary class="concerned_summary">年別</summary>
@@ -596,7 +601,7 @@
         </div>
 
       <div>
-        <span>ランキング作成</span>
+        <h4>ランキング作成</h4>
         <input class="form-control" style="background-color: #62f4ff;" type="submit" value="送信">
       </div>
         
