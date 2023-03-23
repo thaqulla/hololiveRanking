@@ -17,8 +17,6 @@ git merge origin/main
 Superuser:thaqulla
 Password:p.112に書いた
 
-cd .. && source venv/bin/activate && cd rankingProject/ && python3 manage.py runserver
-
 VScodeで黄色い波線のエラーが出た場合:https://startlab.jp/learning-python/vscode-settings/
 
 python manage.py totalizeで自分のオリジナルpythonファイルを実行する

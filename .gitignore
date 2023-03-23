@@ -17,3 +17,4 @@ hololive.json
 .vscode
 CSV
 hololiveRankingApp/management/commands/oldDef.py
+rankingProject/setting.py

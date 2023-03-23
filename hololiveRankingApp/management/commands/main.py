@@ -61,7 +61,7 @@ def autoDetail(channelId, API_KEY):
     ).execute()
     return response["items"]
 
-def testDetail2(videoId, API_KEY):#tag取得用
+def videoDetail(videoId, API_KEY):#tag取得用
     API_SERVICE_NAME = "youtube"
     API_VERSION = "v3"
 
@@ -91,6 +91,22 @@ def details(maxResults, keyword, channelId, API_KEY, videoDuration, publishedAft
     ).execute()
 
     return response["items"]
+
+def details2(API_KEY, channelId, maxResults, publishedAfter):
+    API_SERVICE_NAME = "youtube"
+    API_VERSION = "v3"
+
+    youtube = build(API_SERVICE_NAME, API_VERSION, developerKey=API_KEY)
+
+    response = youtube.search().list(
+        part = "snippet",
+        channelId = channelId,
+        order="date",
+        type="video",
+        maxResults=maxResults,
+        publishedAfter=f"{publishedAfter}T00:00:00Z",
+        ).execute()
+    return response
 
 def newRanking(API_KEY, keyword, maxresults, performers, performer2, publishedAfter):#新着動画の登録＆当日の情報記入
     orderAgeList =[]
@@ -124,15 +140,68 @@ def newRanking(API_KEY, keyword, maxresults, performers, performer2, publishedAf
             try:
                 if liveVideo["viewCount"] != "0":#生放送予約動画を除外
                     if VideoInfo.objects.filter(videoId=listData[i]["id"]["videoId"]).exists():pass
-                    else:VideoInfo.objects.create(title=listData[i]["snippet"]["title"],
-                                                videoId=listData[i]["id"]["videoId"],
-                                                videoAge=listData[i]["snippet"]["publishedAt"][:10],
-                                                description=listData[i]["snippet"]["description"])
+                    else:VideoInfo.objects.create(
+                        title=listData[i]["snippet"]["title"],
+                        videoId=listData[i]["id"]["videoId"],
+                        videoAge=listData[i]["snippet"]["publishedAt"][:10],
+                        description=listData[i]["snippet"]["description"])
                         # videoList.append([listData[i]["snippet"]["title"],listData[i]["id"]["videoId"],listData[i]["snippet"]["publishedAt"][:10],listData[i]["snippet"]["description"]])
                         
             except KeyError:
                 print(listData[i]["id"]["videoId"])#メンバーシップの可能性
     # print(videoList)
+    
+    
+# def createData(channelModels, modNum, maxResults):
+#     for channel in tqdm(channelModels.objects.all()):
+#         modPk = operator.mod(channel.pk, modNum)#チャンネルのPK値でMOD計算
+#         modSerial = operator.mod(dt0, modNum)#日付のシリアル値をMOD計算
+#         if modPk == modSerial & channel.lastUpdateDate != dt:
+#             listData = details2(API_KEY, channel.channelId, maxResults, dtstr7)
+
+#             def createNew(x):
+#                 dList = listData['items']
+#                 videoId = dList[x]["id"]["videoId"]
+#                 title = dList[x]["snippet"]["title"]
+#                 default = dList[x]["snippet"]["thumbnails"]["default"]["url"]#wxh=120x90
+#                 medium = dList[x]["snippet"]["thumbnails"]["medium"]["url"]#wxh=320x180
+#                 high = dList[x]["snippet"]["thumbnails"]["high"]["url"]#wxh=480x360
+#                 publishedAt = dList[x]["snippet"]["publishedAt"][:10]
+                
+#                 omitCheck = dList[x]["snippet"]["description"][-4:]
+                
+#                 if omitCheck == " ...":
+#                     description = main.videoDetail(videoId, API_KEY)["description"]
+#                 else:
+#                     description = dList[x]["snippet"]["description"]
+                    
+#                 existence = VideoInfo.objects.filter(videoId=videoId).count()
+#                 exclusions = ["(Instrumental","（Instrumental","(instrumental","（instrumental"]
+#                 songType = True #True:歌 False:Instrumental
+                
+#                 for exc in exclusions:
+#                     songType = songType and (exc not in title)
+                    
+#                 if songType is True and existence==0:#ここで新規を登録
+#                     VideoInfo.objects.create(title=title,
+#                                             videoId=videoId,
+#                                             videoAge=publishedAt,
+#                                             lastUpdateDate=dtstr,
+#                                             description=description)
+#                 # vInfo = [videoId, title, publishedAt, description, default, medium, high]
+                
+#                 # return vInfo
+                        
+#             cList = int(listData['pageInfo']['totalResults'])
+#             vList = list(map(createNew, range(0, cList)))
+#             #[videoId, title, publishedAt, description, default, medium, high]
+#             img = thumbnails(channel.channelId, API_KEY)
+#             channel.thumbnailDefault = img["default"]["url"]
+#             channel.thumbnailMedium = img["medium"]["url"]
+#             channel.thumbnailHigh = img["high"]["url"]
+#             channel.lastUpdateDate = dt
+#             channel.save()
+#     return vList
 
 def getRankingTXT(API_KEY):#日別結果の取得
     videoData = VideoInfo.objects.all()
@@ -150,13 +219,20 @@ def getRankingTXT(API_KEY):#日別結果の取得
                         with open(f"./TXT/temporarily-likeCountResult.txt", "wb") as f:
                             pickle.dump(likeCountResult, f)
                         with open(f"./TXT/temporarily-likeCountResult.txt", "rb") as p:
-                            l = pickle.load(p)    
-                            hololiveSongsResult.objects.create(
-                                aggregationDate=dtstr,
-                                viewCount=l["statistics"]["viewCount"],
-                                likeCount=l["statistics"]["likeCount"],
-                                info=VideoInfo.objects.get(videoId=dat.videoId),
-                                )
+                            l = pickle.load(p)
+                            try:    
+                                hololiveSongsResult.objects.create(
+                                    aggregationDate=dtstr,
+                                    viewCount=l["statistics"]["viewCount"],
+                                    likeCount=l["statistics"]["likeCount"],
+                                    info=VideoInfo.objects.get(videoId=dat.videoId),
+                                    )
+                            except KeyError:#高評価ボタンのカウントが非表示になっている動画
+                                hololiveSongsResult.objects.create(
+                                    aggregationDate=dtstr,
+                                    viewCount=0,
+                                    likeCount=l["statistics"]["likeCount"],
+                                    info=VideoInfo.objects.get(videoId=dat.videoId))
                         i.videoCondition2=True
                         i.lastUpdateDate=dtstr
                         i.save()
@@ -173,6 +249,41 @@ def getRankingTXT(API_KEY):#日別結果の取得
                         i.videoCondition2=True
                         i.lastUpdateDate=dtstr
                         i.save()
+
+def getRankingTXT2(API_KEY):
+    vids = VideoInfo.objects.exclude(lastUpdateDate=dt).order_by("-pk")#flat=True
+    for dat in tqdm(vids):
+        if dat.videoCondition2==False and dat.lastUpdateDate==dt:
+            pass
+        # elif hololiveSongsResult.objects.select_related('info')\
+        #         .filter(info__videoId=dat.videoId, aggregationDate=dt)\
+        #         .count()==0:
+        #     dat.lastUpdateDate=dt
+        #     dat.save()
+        else:
+            try:
+                vAndL = countAndLikes(API_KEY, dat.videoId)
+                viewCount = vAndL["viewCount"]
+                try:
+                    likeCount = vAndL["likeCount"]
+                except KeyError:#高評価ボタンのカウントが非表示になっている動画
+                    likeCount = 0
+                    
+                hololiveSongsResult.objects.create(
+                    aggregationDate=dtstr,
+                    viewCount=viewCount,
+                    likeCount=likeCount,
+                    info=VideoInfo.objects.get(videoId=dat.videoId))
+                dat.videoCondition2=True
+                
+            except IndexError:#そもそも非公開か削除されている動画
+                dat.videoCondition2=False
+            except ObjectDoesNotExist:#メン限
+                dat.videoCondition2=False
+            except KeyError:
+                dat.videoCondition2=False    
+            dat.lastUpdateDate=dtstr
+            dat.save()
 
 def getAutoResult2(API_KEY, dt0, autoModuleNumber):
     autos = AutoChannel.objects.all()
@@ -259,7 +370,7 @@ def getDjangoResult2(keyword, maxresults, API_KEY, dt0, moduleNumber):
         modPk = operator.mod(dat.pk, moduleNumber)#チャンネルのPK値でMOD計算
         modSerial = operator.mod(dt0, moduleNumber)#日付のシリアル値をMOD計算
         if modPk == modSerial:
-            if str(dat.lastUpdateDate) == publishedAfter:pass
+            if str(dat.lastUpdateDate) == dt:pass
             else:
                 # print("aa")
                 performer2 = hololiveChannel2.objects.get(name=dat.name)
@@ -270,33 +381,36 @@ def getDjangoResult2(keyword, maxresults, API_KEY, dt0, moduleNumber):
                     dat.thumbnailDefault = img["default"]["url"]
                     dat.thumbnailMedium = img["medium"]["url"]
                     dat.thumbnailHigh = img["high"]["url"]
-                    dat.lastUpdateDate =publishedAfter
+                    dat.lastUpdateDate = dt
                     dat.save()
                 except IndexError:pass
-
-def complementer0v2():#データとして存在しない日時のものを０補完してくれる関数
-    dataSelected = VideoInfo.objects.filter().order_by("-pk")#新しい順に調査
+                    
+def complementer0v3():#データとして存在しない日時のものを０補完してくれる関数
+    dataSelected = VideoInfo.objects\
+                    .filter(lastUpdateDate=dt,videoCondition2=True)\
+                    .order_by("pk")
     for dat in tqdm(dataSelected):
-
         vid = dat.videoId
         aggDay = dt
         vAge = VideoInfo.objects.get(videoId=vid).videoAge
         dayDifference = int((aggDay - vAge)/datetime.timedelta(days=1)) + 1
+        calcDates = list(hololiveSongsResult.objects.select_related('info')\
+                            .filter(info__videoId=vid)\
+                            .values_list('aggregationDate', flat=True)\
+                            .order_by("-aggregationDate"))
+        trueDates = list(map(
+            lambda n: dt - datetime.timedelta(days=n), range(0, dayDifference)))
 
-        if dat.videoCondition2==True:
-            
-            testDate = hololiveSongsResult.objects.filter(info__videoId=vid).order_by("-aggregationDate")
+        if set(calcDates) != set(trueDates):
+            diff_list = list(set(trueDates) - set(calcDates))#集計していない日を抽出
 
-            testList = [dat.aggregationDate for dat in testDate]
-            for d in range(0,dayDifference):
-                dtX = datetime.date.today() - datetime.timedelta(days=d)
-                if dtX not in testList:
-                    hololiveSongsResult.objects.create(
-                        aggregationDate=dtX,
-                        viewCount=0,
-                        likeCount=0,
-                        info=VideoInfo.objects.get(videoId=vid))
-                    
+            for diff in diff_list:
+                hololiveSongsResult.objects\
+                    .create(aggregationDate=diff,
+                            viewCount=0,
+                            likeCount=0,
+                            info=VideoInfo.objects.get(videoId=vid))   
+                        
 def complementerAve(maxPkRslt,x):
     if x==0:videoIds = VideoInfo.objects.all().order_by("pk")#古い順に調査
     if x==1:videoIds = VideoInfo.objects.all().order_by("-pk")#新しい順に調査
@@ -339,9 +453,19 @@ def complementerAve(maxPkRslt,x):
             try:
                 y1 = hololiveSongsResult.objects.get(info__videoId=vid,aggregationDate=x1)
                 y2 = hololiveSongsResult.objects.get(info__videoId=vid,aggregationDate=x2)
+                Vaskew = (y2.viewCount - y1.viewCount)/x
+                Laskew = (y2.likeCount - y1.likeCount)/x
+                Vave = int(Vaskew*(dat[1]-dat[2])+y1.viewCount)
+                Lave = int(Laskew*(dat[1]-dat[2])+y1.likeCount)
+                # print(y1.pk, y1.info.title,y1.info.videoId,x0)
+                songData = hololiveSongsResult.objects.get(info__videoId=vid,aggregationDate=x0)
+                print(songData.pk, y1.info.title,y1.info.videoId,x0)
+                if songData.viewCount == 0:
+                    songData.viewCount = Vave
+                    songData.likeCount = Lave
+                    songData.save()
+                    
             except ObjectDoesNotExist:
-                # errorData = hololiveSongsResult.objects.get(info__videoId=vid)
-                # print(vid)
                 dataAll = hololiveSongsResult.objects\
                     .filter(info__videoId=vid).order_by("aggregationDate")
                 for i in dataAll:
@@ -350,17 +474,7 @@ def complementerAve(maxPkRslt,x):
             except UnboundLocalError:
                 errorVideo = VideoInfo.objects.get(videoId=vid)
                 print(errorVideo.title,vid)
-            Vaskew = (y2.viewCount - y1.viewCount)/x
-            Laskew = (y2.likeCount - y1.likeCount)/x
-            Vave = int(Vaskew*(dat[1]-dat[2])+y1.viewCount)
-            Lave = int(Laskew*(dat[1]-dat[2])+y1.likeCount)
-            # print(y1.pk, y1.info.title,y1.info.videoId,x0)
-            songData = hololiveSongsResult.objects.get(info__videoId=vid,aggregationDate=x0)
-            print(songData.pk, y1.info.title,y1.info.videoId,x0)
-            if songData.viewCount == 0:
-                songData.viewCount = Vave
-                songData.likeCount = Lave
-                songData.save()
+            
                 
 def songTypeJudge(API_KEY,maxPkInfo):
     dataAll = VideoInfo.objects.filter(pk__gt=maxPkInfo)
@@ -370,7 +484,7 @@ def songTypeJudge(API_KEY,maxPkInfo):
         if datType.count() == 0:#分類未定をあぶりだし
             # print(dat.videoId,dat.title)
             try:
-                songResult = testDetail2(vid,API_KEY)
+                songResult = videoDetail(vid,API_KEY)
                 originalTitle = songResult["title"]
                 if ("cover" in originalTitle)or\
                     ("Cover" in originalTitle)or\
@@ -462,7 +576,6 @@ def getData7AndData30(maxPkRslt):
             
 def getData7AndData30Old():
     view30is0data = hololiveSongsResult.objects.filter(viewCount30=0).order_by("-aggregationDate")
-    # view30is0data = hololiveSongsResult.objects.filter(viewCount30=0, info__videoId="PqY1-Zsy5vo").order_by("-aggregationDate")
     if view30is0data.count() <= 1:pass#動画公開日の日差データは除外
     else:
         for view30is0dat in tqdm(view30is0data):
@@ -480,6 +593,7 @@ def getData7AndData30Old():
                 data.likeCount30 = likeCount30
                 data.save()
             except ObjectDoesNotExist:pass
+            except KeyError:pass
 
 def flyingStartVideo_plusDescription(API_KEY):#予約投稿等で高評価が事前に押されてしまった動画データの削除。
     dataAll = VideoInfo.objects.all()#公開日に合算させる。
@@ -487,7 +601,7 @@ def flyingStartVideo_plusDescription(API_KEY):#予約投稿等で高評価が事
         if datum.description[-4:]==" ...":
                 vid = datum.videoId
                 try:
-                    songResult = testDetail2(vid,API_KEY)
+                    songResult = videoDetail(vid,API_KEY)
                     datum.description = songResult["description"]
                     datum.save()
                 except IndexError:
@@ -497,17 +611,18 @@ def flyingStartVideo_plusDescription(API_KEY):#予約投稿等で高評価が事
         flies = hololiveSongsResult.objects.filter(info__videoId=datum.videoId,
                                                    aggregationDate__lt=datum.videoAge)
         if flies.count() != 0:
-            for fly in flies:print(fly.pk, fly.info.title, fly.info.videoId,
-                                   fly.aggregationDate, datum.videoAge,
-                                   fly.viewCount, fly.likeCount,
-                                   "←を\
-                                    hololiveSongsResult.objects.get(pk=).delete()\
-                                    コマンドで削除してください")
+            for fly in flies:
+                print(fly.pk, fly.info.title, fly.info.videoId,
+                        fly.aggregationDate, datum.videoAge,
+                        fly.viewCount, fly.likeCount,
+                        "←を\
+                        hololiveSongsResult.objects.get(pk=).delete()\
+                        コマンドで削除してください")
 
 def manualAdd(API_KEY):#手動でvideoIdを追加するために回す
     for vid in videoId_Lists:
         if VideoInfo.objects.filter(videoId=vid).count() == 0:
-            songResult = testDetail2(vid,API_KEY)
+            songResult = videoDetail(vid,API_KEY)
             VideoInfo.objects.create(
                 title = songResult["title"],
                 videoId = vid,
@@ -539,8 +654,9 @@ def manualAdd(API_KEY):#手動でvideoIdを追加するために回す
         manualMaxDat = hololiveSongsResult.objects.get(info__pk=maxInfo, aggregationDate=dt)
         print(f"{manualMaxDat.info.title} is uploaded")
     except ObjectDoesNotExist:
-        getRankingTXT(API_KEY)#再生回数、高評価数
-        complementer0v2()
+        # print(f"{vid} under test") 
+        getRankingTXT2(API_KEY)#再生回数、高評価数
+        complementer0v3()
         complementerAve(maxPkRslt,1)
         
 def makeCompleteData(maxPkRslt,API_KEY):
@@ -550,7 +666,7 @@ def makeCompleteData(maxPkRslt,API_KEY):
     for videoName in tqdm(incompleteDataAll):            
         if videoName.performer.count() == 0:
             try:
-                youtubeData = testDetail2(videoName.videoId,API_KEY)
+                youtubeData = videoDetail(videoName.videoId,API_KEY)
                 # print(youtubeData["title"])
                 if hololiveChannel2.objects.filter(channelId=youtubeData["channelId"]).count() != 0:
                     for performer in hololiveChannel2.objects.all():
@@ -612,10 +728,10 @@ def collectVideoInfo(API_KEY,dt0,keyword,autoModuleNumber,moduleNumber,maxresult
     getAutoResult2(API_KEY, dt0, autoModuleNumber)
     print("getDjangoResult2")
     getDjangoResult2(keyword, maxresults, API_KEY, dt0, moduleNumber)
-    print("getRankingTXT")
-    getRankingTXT(API_KEY)#再生回数、高評価数
-    print("complementer0v2")
-    complementer0v2()#存在しない日付に0補完
+    print("getRankingTXT2")
+    getRankingTXT2(API_KEY)#再生回数、高評価数
+    print("complementer0v3")
+    complementer0v3()#存在しない日付に0補完
     print("complementerAve")
     complementerAve(maxPkRslt,1)#0:古い順1:新しい順2:ABC順3:ZYX順 新しいものしか埋められていない
     print("getData7AndData30")
