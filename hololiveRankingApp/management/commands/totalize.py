@@ -106,8 +106,6 @@ class Command(BaseCommand):
                                     self.maxresults, maxPkRslt)
             main.manualAdd(API_KEY)
             
-        ##################今は絶対回すな###########################
-        # main.songTypeJudge(API_KEY_Lists[0],maxPkInfo)
         ##########################################################
         #TODO:ボトルネックの調査
         ##########################################################
@@ -117,54 +115,45 @@ class Command(BaseCommand):
         c_profile.enable()
         ##########################################################
         
-        ##########################################################
-        
-        # complementerAve(maxPkRslt,1)#0:古い順1:新しい順2:ABC順3:ZYX順 新しいものしか埋められていない
-        def complementerAve(maxPkRslt,x):
-            videoIds0 = VideoInfo.objects.filter(videoCondition2=True)\
-                                            .values_list('videoId',"videoAge")#flat=True
-            if x==0:
-                videoIds = videoIds0.order_by("pk")#古い順に調査
-            if x==1:
-                videoIds = videoIds0.order_by("-pk")#新しい順に調査
-            if x==2:
-                videoIds = videoIds0.order_by("videoId")#ABC順に調査
-            if x==3:
-                videoIds = videoIds0.order_by("-videoId")#ZYX順に調査
-                
-            dtRsltsAgg = hololiveSongsResult.objects.select_related('info')\
-                            .exclude(aggregationDate=dt)\
-                            .filter(viewCount=0,likeCount=0)\
-                            .values_list('info__videoId', "aggregationDate")       
-            dtRsltsAge = hololiveSongsResult.objects.select_related('info')\
-                            .filter(viewCount=0,likeCount=0)\
-                            .values_list('info__videoId', "info__videoAge")
+        dataAge = hololiveSongsResult.objects.select_related('info')\
+            .filter(viewCount30=0)\
+            .order_by("pk")\
+            .values_list('info__videoId', 'info__title', 'info__videoAge', flat=False)
+        dataAgg = hololiveSongsResult.objects.select_related('info')\
+            .filter(viewCount30=0)\
+            .order_by("pk")\
+            .values_list('info__videoId', 'info__title', "aggregationDate",  flat=False)
             
-            diff_list = list(set(dtRsltsAgg) - set(dtRsltsAge))
+        
+        print(len(list(set(dataAge))))
+        print(len(list(set(dataAgg))))
+        
+        setData = set(list(dataAge)) ^ set(list(dataAgg))
+        print(len(setData))
+        
+        trueIds = VideoInfo.objects\
+                    .filter(videoCondition2=True)\
+                    .values_list('videoId', flat=True)
+        
+        # for trueId in tqdm(trueIds):
+        #     youtubeData = main.videoDetail2(trueId, API_KEY)
+        #     getPrivacyStatus = youtubeData["status"]["privacyStatus"]
+            
+        #     if getPrivacyStatus == "unlisted":#限定公開なので非公開と同義と判断
+        #         getVideoInfo = VideoInfo.objects.get(videoId=trueId)
+        #         getVideoInfo.videoCondition2=False
+        #         getVideoInfo.save()
+        #         print("unlisted")
 
-            for dat in tqdm(diff_list):
-                vid, vAge = dat[0], dat[1]
-                
-                dataAll = hololiveSongsResult.objects.select_related('info')\
-                            .exclude(aggregationDate=dt)\
-                            .filter(info__videoId=vid)\
-                            .order_by("aggregationDate")
-
-                noDataDate = [int((vAge-i.aggregationDate)/datetime.timedelta(days=1))\
-                                for i in dataAll\
-                                if i.viewCount == 0 and i.aggregationDate!=vAge]
-                
-                if noDataDate != []:#集計できていない日付がある動画の抽出
-                    existMax = max(noDataDate) + 1
-                    existMin = min(noDataDate) - 1
-                    
-                    print("X",vid, vAge, existMin, noDataDate, existMax)
-                    # print("VY",vid, vAge, existMin, noDataDate, existMax)
-                    # print("LY",vid, vAge, existMin, noDataDate, existMax)
+        print(trueIds)
+            
+        # print(list(trueIds))
         
+        # test = [datum.composer.name for datum in Composer.objects.all()]
+        # print(test)
         
-        
-        
+        # test2 = Composer.objects.values_list('composer__name', flat=True)
+        # print(list(test2))
         
         
         # print("getAutoResult2")
@@ -230,11 +219,7 @@ class Command(BaseCommand):
         
         
     # print(videoList)
-        # test = [datum.composer.name for datum in Composer.objects.all()]
-        # print(test)
         
-        # test2 = Composer.objects.values_list('composer__name', flat=True)
-        # print(list(test2))
         
         
         
@@ -268,10 +253,6 @@ class Command(BaseCommand):
         # print(anotherL)#.count()==0
         # ageData = VideoInfo.objects.filter(videoAge__year="2017").order_by("-videoAge")
         # print(ageData)
-        
-        testId = "UCSr1fIhHb1-kavzdBQZs1tg"
-        aa = VideoInfo.objects.filter(videoId=testId).count()
-        print(aa)
         #TODO:ボトルネックの調査
         ##########################################################
         c_profile.disable()
