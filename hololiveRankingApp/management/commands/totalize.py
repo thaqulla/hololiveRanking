@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 from django.core.management.base import BaseCommand
-from hololiveRankingApp.models import VideoInfo, hololiveSongsResult,\
+from django.core.exceptions import ObjectDoesNotExist
+from hololiveRankingApp.models import VideoInfo, hololiveSongsResult,hololiveChannel2,\
     videoTypeJudgement, Lyricist, Composer, Arranger, Mixer, Musician, VideoEditor,\
     Illustrator, CoStar, OriginalSinger, hololiveChannel2, AutoChannel,AnotherPerson
 from hololiveRankingApp.management.commands import main
@@ -71,12 +72,7 @@ class Command(BaseCommand):
                 # main.makeCompleteData2(API_KEY)
                 main.manualAdd(API_KEY)#95s7KabUo8A 以降が一部不完全
                 print("manualAdd2")
-                # main.getData7AndData30Old()
-                # print("makeCompleteData")
-                # main.makeCompleteData(maxPkRslt,API_KEY)
-                # print("flyingStartVideo")
-                # main.flyingStartVideo_plusDescription(API_KEY)
-                # print("ObjectDoesNotExist")
+
             except ObjectDoesNotExist:
                 print("ObjectDoesNotExist")
                 main.getRanking3(5, API_KEY)
@@ -90,8 +86,6 @@ class Command(BaseCommand):
                 main.getData7AndData30Old()
                 print("makeCompleteData")
                 main.makeCompleteData(maxPkRslt,API_KEY)
-                print("flyingStartVideo")
-                main.flyingStartVideo_plusDescription(API_KEY)
                 print("ObjectDoesNotExist")
                 
         #     #進捗状況の確認(「木の芽時の空 - 路地裏ロジック」を選択中)
@@ -120,46 +114,82 @@ class Command(BaseCommand):
         c_profile = cProfile.Profile()
         c_profile.enable()
         ##########################################################
+        autoLists = list(AutoChannel.objects.values_list("pk","channelId", "lastUpdateDate", flat=False))
+        holoLists = list(hololiveChannel2.objects.values_list("pk","channelId", "lastUpdateDate", flat=False))
+        channelLists = autoLists + holoLists
         
-        # dataAge = hololiveSongsResult.objects.select_related('info')\
-        #     .filter(viewCount30=0)\
-        #     .order_by("pk")\
-        #     .values_list('info__videoId', 'info__title', 'info__videoAge', flat=False)
-        # dataAgg = hololiveSongsResult.objects.select_related('info')\
-        #     .filter(viewCount30=0)\
-        #     .order_by("pk")\
-        #     .values_list('info__videoId', 'info__title', "aggregationDate",  flat=False)
-            
+        div = self.autoModuleNumber
+        modSerial = dt0 % div
         
-        # print(len(list(set(dataAge))))
-        # print(len(list(set(dataAgg))))
+        # checkLists = [[data[1],data[2]] for data in channelLists if data[0] % div == modSerial and data[2]!=dt]
+        # checkedLists = [[data[1],data[2]] for data in channelLists if data[0] % div == modSerial and data[2]==dt]
         
-        # setData = set(list(dataAge)) ^ set(list(dataAgg))
-        # print(len(setData))
-        
-        
-        # vids = VideoInfo.objects.exclude(lastUpdateDate=dt).order_by("-pk")\
-        #     .values_list('videoId', 'title', flat=False)#flat=True
-        # print(vids)
+        # print(checkLists)
+        # print(checkedLists)
+        lastUpdateDate0 = AutoChannel.objects.get(channelId="UC6NE76qpGZJfi20wL-OyKZw").lastUpdateDate
+    
+        checkLists = [["UCdxOqA9jmSBN9VidinCL54Q",lastUpdateDate0]]#,["UCw6x6MUxg2gLbLe8O1p7RTA",lastUpdateDate1]
 
-        getVideoInfo = VideoInfo.objects.get(videoId="NjtIAuZQN_E")
-        condition = getVideoInfo.videoCondition2
-        print(condition)
+        maxresults = self.maxresults
         
-        # videoIds = VideoInfo.objects.filter(videoCondition2=True).exclude(lastUpdateDate=dt)\
-        #         .values_list('videoId', flat=True)
+        for num, checkData in enumerate(checkLists):
+            
+            channelId = checkData[0]
+            lastUpdate = checkData[1]
+
+            def createNew(API_KEY, channelId, maxresults, lastUpdate):
+                # listData = main.details2(API_KEY, channelId, maxresults, lastUpdate)
+                # with open(f"./TXT/temporarily-createNew.txt", "wb") as listDataTXT:
+                #     pickle.dump(listData, listDataTXT)
+                with open(f"./TXT/temporarily-createNew.txt", "rb") as savedTXT:
+                    savedLists = pickle.load(savedTXT)['items']
+                
+                for checkData in savedLists:
+                    
+                    videoId = checkData["id"]["videoId"]
+                    title = checkData["snippet"]["title"]
+                    default = checkData["snippet"]["thumbnails"]["default"]["url"]#wxh=120x90
+                    medium = checkData["snippet"]["thumbnails"]["medium"]["url"]#wxh=320x180
+                    high = checkData["snippet"]["thumbnails"]["high"]["url"]#wxh=480x360
+                    publishedAt = checkData["snippet"]["publishedAt"][:10]
+                    
+                    description = checkData["snippet"]["description"]
+                    # omitCheck = checkData["snippet"]["description"][-4:]
+                    # if omitCheck == " ...":
+                    #     description = main.videoDetail2(videoId, API_KEY)["snippet"]["description"]
+                    # else:
+                    #     description = checkData["snippet"]["description"]
+                    
+                    existence = VideoInfo.objects.filter(videoId=videoId).count()
+                    exclusions = ["(Instrumental","（Instrumental","(instrumental","（instrumental"]
+                    songType = True #True:歌 False:Instrumental
+                    
+                    for exc in exclusions:
+                        songType = songType and (exc not in title)
+                    
+                # if songType is True and existence==0:#ここで新規を登録
+                #     VideoInfo.objects.create(title=title,
+                #                             videoId=videoId,
+                #                             videoAge=publishedAt,
+                #                             lastUpdateDate=dtstr,
+                #                             description=description)
+                    print(videoId, title, publishedAt, description)
+                    
+            createNew(API_KEY, channelId, maxresults, lastUpdate)
+            try:
+                checkChannel= AutoChannel.objects.get(channelId=channelId)
+            except ObjectDoesNotExist:
+                checkChannel = hololiveChannel2.objects.get(channelId=channelId)
+            print(checkChannel)
+            # checkChannel.lastUpdateDate = dt
+            # checkChannel.save()
+            
+            
+        dtLatest = list(max(set(hololiveSongsResult.objects.all().values_list("aggregationDate"))))[0]
+
+        print(dtLatest)
+        
         ##########################################################    
-            
-        # getData7AndData30(maxPkRslt)
-        # print("getData7AndData30Old")
-        # getData7AndData30Old()
-        # print("makeCompleteData")
-        # makeCompleteData(maxPkRslt,API_KEY)
-        # print("flyingStartVideo")
-        # flyingStartVideo_plusDescription(API_KEY)
-        
-        
-            
         #TODO:ボトルネックの調査
         ##########################################################
         c_profile.disable()

@@ -14,7 +14,7 @@ from .forms import LoginForm
 from .forms import VideoInfoForm, AdminVideoInfoForm, AdminTitleForm, \
   LyricistAddForm, ComposerAddForm, ArrangerAddForm, MixerAddForm, MusicianAddForm,\
   VideoEditorAddForm, IllustratorAddForm, CoStarAddForm, OriginalSingerAddForm
-from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, \
+from .models import VideoInfo, hololiveChannel2, hololiveSongsResult, AutoChannel,\
   videoTypeJudgement, Lyricist,Composer,Arranger,Mixer,Musician,VideoEditor,\
   Illustrator,CoStar,OriginalSinger,AnotherPerson
 
@@ -58,6 +58,9 @@ def get_header_context_data(context):
                                           |Q(category__GenName="３期生(ID)")).distinct()
   
   exTalents = hololiveChannel2.objects.filter(category__GenName="卒業生()").distinct()
+  
+  context["autoTest"] = AutoChannel.objects.all()#.filter(category__GenName="Auto0期生")
+  
   context["exTalents"] = exTalents
   context["exChannelId"] = [ex.channelId for ex in exTalents]
 
@@ -110,6 +113,9 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     context["gen2IDs"] = hololiveChannel2.objects.filter(category__GenName="２期生(ID)")
     context["gen3IDs"] = hololiveChannel2.objects.filter(category__GenName="３期生(ID)")
     
+    
+    
+    
     context["channnels"] = hololiveChannel2.objects.all()#.order_by("")
     context["lyricists"] = Lyricist.objects.all().order_by("lyricist__name")[0:]
     context["composers"] = Composer.objects.all().order_by("composer__name")[0:]
@@ -127,10 +133,11 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     weeklyKanji = ["月曜日","火曜日","水曜日","木曜日","金曜日","土曜日","日曜日"]
     weekEnglish = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
 
-    def minusCalcDt(base,x):
+    def minusCalcDt(base, x):#
       minusDt = base - datetime.timedelta(days=x)
       DOW_ja = weeklyKanji[minusDt.weekday()]
       DOW_en = weekEnglish[minusDt.weekday()]
+      
       return minusDt, DOW_ja, DOW_en
 
     baseDt = dt
@@ -153,11 +160,19 @@ class TopView(ListView):#トップVideoInfoページのView LoginRequiredMixin,
     return context
   
 class Login(LoginView):
-  template_name = 'hololiveRankingApp/admin/login.html'
+  template_name = 'hololiveRankingApp/user/login.html'
   form_class = LoginForm
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
     
 class Logout(LogoutView):
-  template_name = 'hololiveRankingApp/admin/logout.html'
+  template_name = 'hololiveRankingApp/user/logout.html'
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context = get_header_context_data(context)
+    return context
   
 class UserCreateView(CreateView):
   template_name = 'hololiveRankingApp/user/create.html'

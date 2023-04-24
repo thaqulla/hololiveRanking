@@ -29,19 +29,51 @@
 }
 
 .header_talent_title {
-  background-color: red;
+  /* background-color: red; */
+  padding: 5px;
+  margin: 5px;
+  text-align: center;
 }
 
-.dropdown-menu_latout {
+.header_talent_title span {
+  background-color: #0f0f0f;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.dropdown-menu_layout {
   background-color: #202124;
   color: #f1f1f1;
+  border-radius: 10px;
+}
+
+.header_grid_layout {
+  display: grid;
+  grid-template-columns: 23% 23% 23% 23%;
+  column-gap: 2%;
+}
+
+.header_grid_layout div li {
+  /* background-color: green; */
+  /* margin: 2px; */
+  padding: 2px 5px 2px 2px;
 }
 
 .dropdown-item_layout {
-  margin: 2px;
+  /* margin: 2px; */
+  /* padding: 5px; */
   background-color: #62f4ff;
+  /* border-width: 2px; */
+  border-color: yellow;
   border-radius: 10px;
 }
+
+.dropdown-item_layout span{
+  font-size: 9px;
+  color: #063f5c;
+  font-weight: bold;
+}
+
 
 .nav-pills>.nav-item>.nav-link.active {
   background-color: #62f4ff;

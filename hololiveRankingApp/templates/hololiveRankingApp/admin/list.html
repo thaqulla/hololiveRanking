@@ -1,3 +1,4 @@
+<!-- ヘッダー＞管理者権限＞楽曲 -->
 {% extends 'base.html' %}
 {% block title %}追加楽曲{% endblock title %}
 {% block content %}
@@ -16,7 +17,7 @@
   <div class="list_sheet_layout">
 
     {% for item in object_list reversed %}
-      {% if item.pk >= 7777 %}
+      {% if item.pk >= 8587 %}
         <div class="list_cell_layout" style="text-align: center;">
           <a href="{{ item.getVideoUrl }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ item.getThumbnailDefault }}" alt="thumbnailImage">

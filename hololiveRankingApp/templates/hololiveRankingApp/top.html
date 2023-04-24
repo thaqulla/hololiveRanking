@@ -1,3 +1,4 @@
+<!-- 127.0.0.1:8000 トップページ -->
 {% load static %}
 {% load simple_calc %}
 <!DOCTYPE html>
@@ -35,7 +36,9 @@
           <p></p>
           また新たな仲間も加わり続け、今日に至るまで我々を楽しませてくれた。<br>
           <p></p>
-          特に彼女たちの歌声は我々の耳を癒してくれた。歌ってみたは本家の存在を我々に教えてくださり、<br>
+          特に彼女たちの歌声は我々の耳を癒してくれた。<br>
+          <p></p>
+          歌ってみたは本家の存在を我々に教えてくださり、<br>
           <p></p>
           オリジナルソングは彼女たちの努力が詰まったものが提供されている。<br>
           <p></p>
@@ -54,7 +57,7 @@
       </div>
     </div>
   </div>
-
+  <br>
   <section class="section section-secoundary" style="border-radius: 10px;">
     <h1 class="section-headline">使い方</h1>
     <div class="layout_how_to_use">
@@ -510,29 +513,40 @@
 
         </div>
         <h4>曜日</h4>
-        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-          {% with today="今日" saishin="最新" %}
-          {% for week in weekList %}
-          {% if week.0 == today %}
-          <input type="radio" class="btn-check " id="{{ week.4 }}" 
-                autocomplete="off" name="DOW" value="{{ week.5 }}" checked>
-          <label class="btn btn-outline-info" style="text-align: center;" for="{{ week.4 }}">
-            {{ week.2 }}<br>({{ week.0 }})
-          </label>
-          {% else %}
-          <input type="radio" class="btn-check " id="{{ week.4 }}" 
-                autocomplete="off" name="DOW" value="{{ week.5 }}">
-          <label class="btn btn-outline-info" style="text-align: center;" for="{{ week.4 }}">
-          {% if week.0 == saishin %}
-            {{ week.2 }}<br>({{ week.1 }})
-          {% else %}
-            {{ week.2 }}<br>({{ week.0 }})
-          {% endif %}
-          </label>
-          {% endif %}
-          {% endfor %}
-          {% endwith %}
+        <div style="
+        
+                  text-align: center;
+                  ">
+          <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+          
+          
+            {% for week in weekList %}
+            {% with date_relative=week.0 date_ja=week.1 DOW_ja=week.2 DOW_en=week.3 dateAndDOW=week.4 date_hyphen=week.5 %}
+            {% if date_relative == "今日" %}
+  
+            <input type="radio" class="btn-check " id="{{ dateAndDOW }}" 
+                  autocomplete="off" name="DOW" value="{{ date_hyphen }}" checked>
+            <label class="btn btn-outline-info" style="text-align: center;" for="{{ dateAndDOW }}">
+              {{ DOW_ja }}<br>({{ date_relative }})
+            </label>
+            {% else %}
+            <input type="radio" class="btn-check " id="{{ dateAndDOW }}" 
+                  autocomplete="off" name="DOW" value="{{ date_hyphen }}">
+            <label class="btn btn-outline-info" style="text-align: center;" for="{{ dateAndDOW }}">
+            {% if date_relative == "最新" %}
+              {{ DOW_ja }}<br>({{ date_ja }})
+            {% else %}
+              {{ DOW_ja }}<br>({{ date_relative }})
+            {% endif %}
+            </label>
+  
+            {% endif %}
+            {% endwith %}
+            {% endfor %}
+            
+          </div>
         </div>
+        
         <h4>期間設定</h4>
         <div style="
                   display: grid;
